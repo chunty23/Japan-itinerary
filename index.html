@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japan 2026 · Family Itinerary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#C41E3A;--dark-red:#8B0000;--cream:#FFF8F0;--bg:#FAFAF7;--black:#1a1a1a;--gold:#D4AF37;--slate:#475569;--light-slate:#94a3b8;--border:#e2e0db;--card:#ffffff;--shadow:0 2px 8px rgba(0,0,0,.06);--shadow-lg:0 8px 24px rgba(0,0,0,.1);--radius:12px;--radius-sm:8px}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--black);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Noto Serif JP','Inter',serif}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a0a0a 0%,#3d0c0c 40%,#5a1a1a 100%);color:#fff;padding:3rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative;z-index:1;max-width:800px;margin:0 auto}
+.hero h1{font-size:2.2rem;font-weight:700;margin-bottom:.5rem;letter-spacing:.5px}
+.hero h1 .flag{font-size:1.8rem}
+.hero .subtitle{font-size:.95rem;color:#e8c4c4;margin-bottom:.75rem;line-height:1.5}
+.hero .travelers{font-size:.85rem;color:#d4a0a0;margin-bottom:1rem}
+.hero .quick-info{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;font-size:.75rem}
+.hero .qi-tag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:.25rem .75rem;border-radius:20px;color:#e8c4c4}
+
+/* TAB NAV */
+.tab-nav{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;display:flex;padding:0;scrollbar-width:none}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;padding:.75rem 1.1rem;border:none;background:none;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;color:var(--slate);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.tab-btn:hover{color:var(--red);background:rgba(196,30,58,.04)}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red);font-weight:600}
+
+/* MAIN CONTAINER */
+.container{max-width:960px;margin:0 auto;padding:1rem}
+.tab-content{display:none;animation:fadeIn .3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* TAB HEADER */
+.tab-header{text-align:center;padding:1.5rem 1rem;margin-bottom:1rem}
+.tab-header h2{font-size:1.5rem;color:var(--black);margin-bottom:.25rem}
+.tab-header p{color:var(--slate);font-size:.9rem}
+
+/* REGION DIVIDER */
+.region-divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0 1rem;padding:.5rem 0}
+.region-divider .line{flex:1;height:1px;background:var(--border)}
+.region-divider .label{font-family:'Noto Serif JP',serif;font-size:.95rem;font-weight:600;color:var(--dark-red);white-space:nowrap;letter-spacing:.5px}
+
+/* DAY CARD */
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.75rem;overflow:hidden;transition:box-shadow .2s}
+.day-card:hover{box-shadow:var(--shadow-lg)}
+.day-card-header{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;cursor:pointer;user-select:none}
+.day-num{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--red),var(--dark-red));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.day-info{flex:1;min-width:0}
+.day-info .date{font-size:.75rem;color:var(--slate);font-weight:500}
+.day-info .city{font-size:1rem;font-weight:600;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-info .teaser{font-size:.8rem;color:var(--light-slate);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.expand-icon{color:var(--light-slate);transition:transform .3s;font-size:1.2rem;flex-shrink:0}
+.day-card.open .expand-icon{transform:rotate(180deg)}
+.day-card-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.day-card.open .day-card-body{max-height:2000px}
+.day-details{padding:0 1.25rem 1.25rem}
+.detail-section{margin-bottom:1rem}
+.detail-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin-bottom:.35rem}
+.detail-text{font-size:.85rem;color:var(--black);line-height:1.7}
+.detail-text li{margin-bottom:.25rem;padding-left:.25rem}
+.badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;margin-left:.35rem;vertical-align:middle}
+.badge-booked{background:#dcfce7;color:#166534}
+.badge-forward{background:#fef3c7;color:#92400e}
+.badge-flight{background:#dbeafe;color:#1e40af}
+.badge-type{background:#f1f5f9;color:var(--slate)}
+.badge-price{background:#fef3c7;color:#92400e}
+.badge-must{background:#fce7f3;color:#9d174d}
+.badge-star{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff}
+
+/* SECTION CARD (for other tabs) */
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.75rem;overflow:hidden}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;cursor:pointer;user-select:none;font-weight:600;font-size:.95rem;color:var(--black)}
+.section-header:hover{background:rgba(196,30,58,.03)}
+.section-header .shicon{transition:transform .3s;color:var(--light-slate)}
+.section-card.open .section-header .shicon{transform:rotate(180deg)}
+.section-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.section-card.open .section-body{max-height:20000px}
+.section-inner{padding:0 1.25rem 1.25rem}
+
+/* ITEM GRID */
+.item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem}
+.item-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;transition:box-shadow .2s,border-color .2s}
+.item-card:hover{box-shadow:var(--shadow);border-color:#d0cec9}
+.item-card.must-try{border-left:3px solid var(--gold)}
+.item-card .ic-name{font-weight:600;font-size:.9rem;margin-bottom:.25rem}
+.item-card .ic-sub{font-size:.75rem;color:var(--slate);margin-bottom:.4rem}
+.item-card .ic-badges{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.4rem}
+.item-card .ic-desc{font-size:.8rem;color:#555;line-height:1.5}
+
+/* TIP CARD */
+.tip-card{display:flex;gap:.75rem;padding:.85rem 1rem;border-bottom:1px solid var(--border)}
+.tip-card:last-child{border-bottom:none}
+.tip-card .tip-icon{font-size:1.1rem;flex-shrink:0;margin-top:2px}
+.tip-card .tip-text{font-size:.85rem;color:var(--black);line-height:1.6}
+
+/* TABLE STYLES (for transportation etc) */
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:.5rem 0}
+.data-table th{text-align:left;padding:.6rem .75rem;background:#f8f7f4;border-bottom:2px solid var(--border);font-weight:600;color:var(--slate);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.data-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--black);line-height:1.5}
+.data-table tr:hover td{background:rgba(196,30,58,.02)}
+.data-table .highlight-row td{background:#fef3c7}
+
+/* WARD GUIDE */
+.ward-section{margin-bottom:.5rem}
+.ward-header{padding:.6rem 1rem;background:#f8f7f4;font-weight:600;font-size:.85rem;color:var(--dark-red);border-bottom:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.ward-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.ward-section.open .ward-body{max-height:10000px}
+.ward-item{display:flex;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);align-items:flex-start}
+.ward-item:last-child{border-bottom:none}
+.ward-item .wi-star{color:var(--gold);flex-shrink:0;font-size:.9rem;margin-top:2px}
+.ward-item .wi-info{flex:1}
+.ward-item .wi-name{font-weight:600;font-size:.85rem}
+.ward-item .wi-meta{font-size:.75rem;color:var(--slate);margin:.15rem 0}
+.ward-item .wi-desc{font-size:.8rem;color:#555;line-height:1.5}
+
+/* ICN TIMELINE */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:.75rem;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:1.25rem}
+.tl-item::before{content:'';position:absolute;left:-1.25rem;top:.4rem;width:10px;height:10px;border-radius:50%;background:var(--red);border:2px solid var(--card);z-index:1}
+.tl-time{font-size:.75rem;font-weight:600;color:var(--red)}
+.tl-title{font-weight:600;font-size:.9rem;margin:.15rem 0}
+.tl-desc{font-size:.8rem;color:#555;line-height:1.5}
+
+/* DINING CARD */
+.dining-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.75rem}
+.dining-card.top-pick{border-left:4px solid var(--gold)}
+.dining-card .dc-name{font-weight:700;font-size:.95rem;margin-bottom:.15rem}
+.dining-card .dc-type{font-size:.8rem;color:var(--slate);margin-bottom:.5rem}
+.dining-card .dc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;font-size:.8rem}
+.dining-card .dc-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--slate);font-weight:600}
+.dining-card .dc-val{color:var(--black)}
+.dining-card .dc-desc{font-size:.8rem;color:#555;line-height:1.5;border-top:1px solid var(--border);padding-top:.5rem;margin-top:.25rem}
+.dc-flags{display:flex;flex-wrap:wrap;gap:.3rem;margin:.4rem 0}
+
+/* UTILITY */
+.scroll-top{position:fixed;bottom:1.5rem;right:1.5rem;width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;border:none;cursor:pointer;font-size:1.1rem;box-shadow:var(--shadow-lg);opacity:0;transition:opacity .3s;z-index:50}
+.scroll-top.visible{opacity:1}
+.nowrap{white-space:nowrap}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .hero h1{font-size:1.6rem}
+  .hero .subtitle{font-size:.82rem}
+  .tab-btn{padding:.65rem .85rem;font-size:.72rem}
+  .container{padding:.75rem}
+  .item-grid{grid-template-columns:1fr}
+  .day-card-header{padding:.85rem 1rem}
+  .day-num{width:38px;height:38px;font-size:.75rem}
+  .day-info .city{font-size:.9rem}
+  .data-table{display:block;overflow-x:auto}
+  .dining-card .dc-grid{grid-template-columns:1fr}
+}
+
+/* PRINT */
+@media print{
+  .tab-nav,.scroll-top{display:none}
+  .tab-content{display:block!important}
+  .day-card-body,.section-body,.ward-body{max-height:none!important}
+  .hero{background:#333!important;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-content">
+    <h1><span class="flag">🎌</span> Japan 2026 · Family Itinerary</h1>
+    <p class="subtitle">May 21 – June 8 · 19 Days · Kagoshima › Fukuoka › Kumamoto › Hiroshima › Miyajima › Kyoto › Hakone › Tokyo › Atami › Home</p>
+    <p class="travelers">👨‍👩‍👧‍👦 Kyle & Charlie (K&C) · Bob & Wendy (B&W) · Cody & JJ · Brady</p>
+    <div class="quick-info">
+      <span class="qi-tag">📌 Suica (mobile)</span>
+      <span class="qi-tag">🚄 LEFT side Kyoto→Tokyo for Fuji</span>
+      <span class="qi-tag">✓ = booked</span>
+      <span class="qi-tag">🍽️ Dining Guide tab</span>
+      <span class="qi-tag">✈️ ICN tab (Day 19)</span>
+    </div>
+  </div>
+</header>
+
+<!-- TAB NAV -->
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="itinerary">🗾 Itinerary</button>
+  <button class="tab-btn" data-tab="food">🍜 Food</button>
+  <button class="tab-btn" data-tab="attractions">🏯 Attractions</button>
+  <button class="tab-btn" data-tab="shopping">🛍️ Shopping</button>
+  <button class="tab-btn" data-tab="tips">💡 Tips</button>
+  <button class="tab-btn" data-tab="sams">📖 Sam's Guide</button>
+  <button class="tab-btn" data-tab="icn">🇰🇷 ICN Skincare</button>
+  <button class="tab-btn" data-tab="dining">🍽️ Dining</button>
+  <button class="tab-btn" data-tab="transport">🚄 Transport</button>
+</nav>
+
+<div class="container">
+  <!-- All tabs rendered by JS -->
+  <div class="tab-content active" id="tab-itinerary"></div>
+  <div class="tab-content" id="tab-food"></div>
+  <div class="tab-content" id="tab-attractions"></div>
+  <div class="tab-content" id="tab-shopping"></div>
+  <div class="tab-content" id="tab-tips"></div>
+  <div class="tab-content" id="tab-sams"></div>
+  <div class="tab-content" id="tab-icn"></div>
+  <div class="tab-content" id="tab-dining"></div>
+  <div class="tab-content" id="tab-transport"></div>
+</div>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
