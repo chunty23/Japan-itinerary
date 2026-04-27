@@ -398,6 +398,105 @@ body.dark .phrase-cat h3{color:#e8a4a4}
 .map-legend span{display:inline-flex;align-items:center;gap:.3rem}
 .map-legend .swatch{width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.2)}
 
+/* ──────── ENHANCED MAP TAB ──────── */
+.map-toolbar{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;align-items:center}
+.map-chip{
+  display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .7rem;border-radius:999px;
+  background:var(--card);border:1px solid var(--border);font-size:.72rem;color:var(--muted);
+  cursor:pointer;transition:all .15s;font-weight:500;white-space:nowrap;user-select:none;
+}
+.map-chip:hover{border-color:var(--accent);color:var(--accent)}
+.map-chip.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.map-chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.map-chip .count{font-size:.65rem;opacity:.75;margin-left:.15rem}
+.map-toolbar-divider{width:1px;height:18px;background:var(--border);margin:0 .25rem}
+.map-layout{
+  display:grid;grid-template-columns:300px 1fr;gap:.85rem;align-items:stretch;
+  height:600px;
+}
+.map-list{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.map-list-empty{padding:1.5rem 1rem;text-align:center;color:var(--muted);font-size:.82rem}
+.map-list-city{
+  padding:.5rem .85rem;background:var(--hinoki-2);font-size:.65rem;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;color:var(--vermilion-dark);
+  position:sticky;top:0;border-bottom:1px solid var(--border);z-index:1;
+}
+body.dark .map-list-city{color:#e8a4a4}
+.map-list-item{
+  display:flex;gap:.6rem;padding:.65rem .85rem;border-bottom:1px solid var(--border-2);
+  cursor:pointer;transition:background .12s;align-items:flex-start;
+}
+.map-list-item:hover{background:rgba(188,0,45,.04)}
+.map-list-item.selected{background:rgba(188,0,45,.08);border-left:3px solid var(--accent);padding-left:calc(.85rem - 3px)}
+body.dark .map-list-item:hover{background:rgba(224,57,90,.06)}
+body.dark .map-list-item.selected{background:rgba(224,57,90,.1)}
+.map-list-emoji{font-size:1rem;line-height:1.4;flex-shrink:0}
+.map-list-info{flex:1;min-width:0}
+.map-list-name{font-size:.82rem;font-weight:500;color:var(--text);line-height:1.35;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.map-list-meta{font-size:.68rem;color:var(--muted);margin-top:.15rem}
+#mapEnhanced{height:100%;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);background:#e6e0d3}
+.map-place-panel{
+  position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);
+  background:var(--card);border-left:1px solid var(--border);
+  box-shadow:-12px 0 40px rgba(0,0,0,.18);
+  z-index:200;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.map-place-panel.open{transform:translateX(0)}
+.mpp-overlay{
+  position:fixed;inset:0;background:rgba(20,15,10,.5);opacity:0;pointer-events:none;
+  transition:opacity .35s;z-index:199;
+}
+.mpp-overlay.open{opacity:1;pointer-events:auto}
+.mpp-header{
+  padding:.85rem 1rem;border-bottom:1px solid var(--border);display:flex;
+  align-items:center;gap:.6rem;background:var(--hinoki-2);
+}
+.mpp-emoji{font-size:1.2rem}
+.mpp-title{flex:1;min-width:0}
+.mpp-name{font-size:.95rem;font-weight:600;color:var(--text);line-height:1.3;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mpp-cat{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:.1rem}
+.mpp-close{
+  width:32px;height:32px;border:none;background:rgba(0,0,0,.05);border-radius:50%;
+  cursor:pointer;font-size:1.05rem;color:var(--text);transition:background .15s;flex-shrink:0;
+}
+.mpp-close:hover{background:rgba(0,0,0,.1)}
+body.dark .mpp-close{background:rgba(255,255,255,.08)}
+body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
+.mpp-note{padding:.85rem 1rem;font-size:.82rem;color:var(--text);line-height:1.55;border-bottom:1px solid var(--border-2);background:var(--card)}
+.mpp-note .mpp-addr{font-size:.74rem;color:var(--muted);margin-bottom:.4rem}
+.mpp-embed{flex:1;min-height:0;position:relative;background:var(--hinoki-2)}
+.mpp-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mpp-actions{padding:.6rem 1rem;border-top:1px solid var(--border);display:flex;gap:.4rem;background:var(--card)}
+.mpp-action{
+  flex:1;padding:.5rem .6rem;border-radius:8px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);font-size:.74rem;font-weight:500;
+  cursor:pointer;text-align:center;text-decoration:none;display:inline-flex;
+  align-items:center;justify-content:center;gap:.3rem;transition:all .15s;
+}
+.mpp-action:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
+.mpp-action.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.mpp-action.primary:hover{background:var(--vermilion-dark);color:#fff}
+.leaflet-popup-content-wrapper{border-radius:var(--radius-sm)}
+.leaflet-popup-content{margin:.6rem .8rem;font-size:.82rem;color:var(--text);font-family:'Inter',sans-serif}
+.leaflet-popup-content strong{color:var(--text);display:block;margin-bottom:.15rem}
+.leaflet-popup-content button.popup-open{
+  background:var(--accent);color:#fff;border:none;padding:.35rem .6rem;border-radius:6px;
+  font-size:.72rem;font-weight:500;cursor:pointer;margin-top:.3rem;
+}
+@media(max-width:780px){
+  .map-layout{grid-template-columns:1fr;height:auto;gap:.5rem}
+  .map-list{max-height:320px;order:2}
+  #mapEnhanced{height:380px;order:1}
+  .map-toolbar{font-size:.7rem}
+  .map-place-panel{width:100vw}
+}
+
 /* ──────── SEARCH ──────── */
 .search-wrap{margin-bottom:1rem;position:relative}
 .search-wrap input{
@@ -503,6 +602,7 @@ body.dark .phrase-cat h3{color:#e8a4a4}
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Top">↑</button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="config.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>

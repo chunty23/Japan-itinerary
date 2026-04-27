@@ -281,38 +281,249 @@ function renderBookings(){
 }
 
 // ── MAP TAB ─────────────────────────────────────────
+const MAP_CITIES_ORDER = ['Kagoshima','Kumamoto','Hiroshima','Miyajima','Himeji','Osaka','Nara','Nagano','Kyoto','Kyoto-North','Hakone','Atami','Izu','Tokyo','Narita','Seoul'];
+const MAP_CAT_META = {
+  'Dining':      {emoji:'🍜', color:'#E63946'},
+  'Cafe':        {emoji:'☕', color:'#B5651D'},
+  'Sightseeing': {emoji:'🏯', color:'#1D4ED8'},
+  'Shopping':    {emoji:'🛍️', color:'#16A34A'},
+  'Hotel':       {emoji:'🏨', color:'#7C3AED'},
+  'Nightlife':   {emoji:'🌃', color:'#DB2777'},
+  'Transit':     {emoji:'🚉', color:'#6B7280'},
+  'Cultural':    {emoji:'🎌', color:'#C9A227'}
+};
+const mapState = {map:null, markers:new Map(), cityFilter:'all', catFilter:'all', selectedIdx:null};
 let mapInited = false;
+
+function filteredPlaces(){
+  const places = DATA.savedPlaces || [];
+  return places.map((p,i)=>({...p,_i:i})).filter(p => {
+    if (mapState.cityFilter !== 'all' && p.city !== mapState.cityFilter) return false;
+    if (mapState.catFilter !== 'all' && p.category !== mapState.catFilter) return false;
+    return true;
+  });
+}
+
 function initMap(){
   if (mapInited) return;
   const el = $('#tab-map');
-  el.innerHTML = `<div class="tab-header"><h2>🗺️ Interactive Trip Map</h2><p>Hotels in red, attractions in gold. Click a pin for details and Maps link.</p></div>
-    <div id="map"></div>
-    <div class="map-legend">
-      <span><span class="swatch" style="background:#bc002d"></span> Hotels</span>
-      <span><span class="swatch" style="background:#C9A227"></span> Attractions</span>
-      <span style="margin-left:auto"><a href="https://www.google.com/maps/d/" target="_blank" rel="noopener">Tip: long-press a pin to copy</a></span>
-    </div>`;
+  const places = DATA.savedPlaces || [];
+  const cityCounts = {};
+  const catCounts = {};
+  places.forEach(p => {
+    cityCounts[p.city] = (cityCounts[p.city]||0)+1;
+    catCounts[p.category] = (catCounts[p.category]||0)+1;
+  });
+  const orderedCities = MAP_CITIES_ORDER.filter(c => cityCounts[c]).concat(
+    Object.keys(cityCounts).filter(c => !MAP_CITIES_ORDER.includes(c)).sort()
+  );
+  const orderedCats = Object.keys(MAP_CAT_META).filter(c => catCounts[c]);
+
+  const cityChips = `<button class="map-chip active" data-city="all">All Cities <span class="count">${places.length}</span></button>`
+    + orderedCities.map(c => `<button class="map-chip" data-city="${esc(c)}">${esc(c)} <span class="count">${cityCounts[c]}</span></button>`).join('');
+  const catChips = `<button class="map-chip active" data-cat="all">All Categories</button>`
+    + orderedCats.map(c => {
+      const m = MAP_CAT_META[c];
+      return `<button class="map-chip" data-cat="${esc(c)}"><span class="dot" style="background:${m.color}"></span>${m.emoji} ${esc(c)} <span class="count">${catCounts[c]}</span></button>`;
+    }).join('');
+
+  el.innerHTML = `
+    <div class="tab-header">
+      <h2>🗺️ Interactive Trip Map</h2>
+      <p>Click any pin or list item to see the live Google Maps listing — photos, reviews, hours, website.</p>
+    </div>
+    <div class="map-toolbar" id="mapCityBar">${cityChips}</div>
+    <div class="map-toolbar" id="mapCatBar">${catChips}</div>
+    <div class="map-layout">
+      <div class="map-list" id="mapList"></div>
+      <div id="mapEnhanced"></div>
+    </div>
+    <div class="mpp-overlay" id="mppOverlay"></div>
+    <aside class="map-place-panel" id="mppPanel" aria-hidden="true">
+      <header class="mpp-header">
+        <div class="mpp-emoji" id="mppEmoji"></div>
+        <div class="mpp-title">
+          <div class="mpp-name" id="mppName"></div>
+          <div class="mpp-cat" id="mppCat"></div>
+        </div>
+        <button class="mpp-close" id="mppClose" aria-label="Close">×</button>
+      </header>
+      <div class="mpp-note" id="mppNote"></div>
+      <div class="mpp-embed">
+        <iframe id="mppEmbed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+      <div class="mpp-actions" id="mppActions"></div>
+    </aside>
+  `;
+
   setTimeout(()=>{
-    const map = L.map('map', {scrollWheelZoom:false}).setView([34.5,135.5], 5);
+    const map = L.map('mapEnhanced', {scrollWheelZoom:true}).setView([35.5, 136.5], 5);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors © CARTO',
       subdomains: 'abcd'
     }).addTo(map);
-    const points = DATA.mapPoints || [];
-    const bounds = [];
-    points.forEach(p => {
-      const isHotel = p.type === 'hotel';
-      const color = isHotel ? '#bc002d' : '#C9A227';
-      const marker = L.circleMarker([p.lat, p.lon], {
-        radius: isHotel?10:7, fillColor:color, color:'#fff', weight:2, opacity:1, fillOpacity:.9
-      }).addTo(map);
-      marker.bindPopup(`<strong>${esc(p.name)}</strong><br><small>${esc(p.city)} · Day ${p.day}</small><br><a href="${esc(p.url)}" target="_blank">Open in Maps →</a>`);
-      bounds.push([p.lat, p.lon]);
+    mapState.map = map;
+
+    // build all markers once
+    places.forEach((p, i) => {
+      if (typeof p.lat !== 'number' || typeof p.lng !== 'number') return;
+      const meta = MAP_CAT_META[p.category] || {color:'#6B7280', emoji:'📍'};
+      const marker = L.circleMarker([p.lat, p.lng], {
+        radius: 7, fillColor: meta.color, color:'#fff', weight:2, opacity:1, fillOpacity:.95
+      });
+      marker.on('click', () => openPlacePanel(i));
+      marker.bindTooltip(`${meta.emoji} ${esc(p.name)}`, {direction:'top', offset:[0,-6]});
+      mapState.markers.set(i, marker);
     });
-    if (bounds.length) map.fitBounds(bounds, {padding:[30,30]});
-  }, 60);
+
+    // wire chip handlers
+    el.querySelectorAll('#mapCityBar .map-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        el.querySelectorAll('#mapCityBar .map-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        mapState.cityFilter = btn.dataset.city;
+        refreshMapView();
+      });
+    });
+    el.querySelectorAll('#mapCatBar .map-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        el.querySelectorAll('#mapCatBar .map-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        mapState.catFilter = btn.dataset.cat;
+        refreshMapView();
+      });
+    });
+
+    // close handlers
+    $('#mppClose').addEventListener('click', closePlacePanel);
+    $('#mppOverlay').addEventListener('click', closePlacePanel);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && $('#mppPanel') && $('#mppPanel').classList.contains('open')) closePlacePanel();
+    });
+
+    refreshMapView();
+  }, 80);
+
   mapInited = true;
+}
+
+function refreshMapView(){
+  const map = mapState.map;
+  if (!map) return;
+  const visible = filteredPlaces();
+  const visibleIdx = new Set(visible.map(p => p._i));
+  const bounds = [];
+  mapState.markers.forEach((marker, idx) => {
+    if (visibleIdx.has(idx)){
+      if (!map.hasLayer(marker)) marker.addTo(map);
+      const ll = marker.getLatLng();
+      bounds.push([ll.lat, ll.lng]);
+    } else {
+      if (map.hasLayer(marker)) map.removeLayer(marker);
+    }
+  });
+  if (bounds.length){
+    map.fitBounds(bounds, {padding:[40,40], maxZoom: 14});
+  }
+  renderMapList(visible);
+}
+
+function renderMapList(visible){
+  const list = $('#mapList');
+  if (!list) return;
+  if (!visible.length){
+    list.innerHTML = '<div class="map-list-empty">No places match these filters.</div>';
+    return;
+  }
+  // group by city in current order
+  const groups = {};
+  visible.forEach(p => { (groups[p.city] = groups[p.city] || []).push(p); });
+  const cityOrder = Object.keys(groups).sort((a,b)=>{
+    const ai = MAP_CITIES_ORDER.indexOf(a), bi = MAP_CITIES_ORDER.indexOf(b);
+    return (ai<0?999:ai) - (bi<0?999:bi);
+  });
+  let html = '';
+  cityOrder.forEach(city => {
+    html += `<div class="map-list-city">${esc(city)} · ${groups[city].length}</div>`;
+    groups[city].forEach(p => {
+      const meta = MAP_CAT_META[p.category] || {color:'#6B7280', emoji:'📍'};
+      const isSel = mapState.selectedIdx === p._i ? ' selected' : '';
+      const sub = p.note || p.address || '';
+      html += `<div class="map-list-item${isSel}" data-idx="${p._i}" role="button" tabindex="0">
+        <span class="map-list-emoji" style="color:${meta.color}">${meta.emoji}</span>
+        <span class="map-list-info">
+          <span class="map-list-name">${esc(p.name)}</span>
+          <span class="map-list-meta">${esc(sub)}</span>
+        </span>
+      </div>`;
+    });
+  });
+  list.innerHTML = html;
+  list.querySelectorAll('.map-list-item').forEach(btn => {
+    btn.addEventListener('click', () => openPlacePanel(parseInt(btn.dataset.idx, 10)));
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        openPlacePanel(parseInt(btn.dataset.idx, 10));
+      }
+    });
+  });
+}
+
+function openPlacePanel(idx){
+  const p = (DATA.savedPlaces || [])[idx];
+  if (!p) return;
+  mapState.selectedIdx = idx;
+  const meta = MAP_CAT_META[p.category] || {color:'#6B7280', emoji:'📍'};
+  $('#mppEmoji').textContent = meta.emoji;
+  $('#mppName').textContent = p.name;
+  $('#mppCat').innerHTML = `<span style="color:${meta.color};font-weight:600">${esc(p.category)}</span> · ${esc(p.city)}`;
+  const noteHtml = (p.address ? `<div class="mpp-addr">📍 ${esc(p.address)}</div>` : '')
+                 + (p.note ? esc(p.note) : '');
+  $('#mppNote').innerHTML = noteHtml || '<em style="color:var(--muted)">No notes yet.</em>';
+
+  const apiKey = window.GOOGLE_MAPS_API_KEY;
+  const query = encodeURIComponent(p.name + (p.address ? ', ' + p.address : ', ' + p.city + ', Japan'));
+  const iframe = $('#mppEmbed');
+  if (apiKey){
+    iframe.src = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${query}&zoom=16`;
+    iframe.style.display = '';
+  } else {
+    iframe.removeAttribute('src');
+    iframe.style.display = 'none';
+  }
+
+  const mapsUrl = p.url || `https://www.google.com/maps/search/?api=1&query=${query}`;
+  const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${query}`;
+  $('#mppActions').innerHTML = `
+    <a class="mpp-action primary" href="${esc(mapsUrl)}" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+    <a class="mpp-action" href="${esc(dirUrl)}" target="_blank" rel="noopener">Directions →</a>
+  `;
+
+  $('#mppPanel').classList.add('open');
+  $('#mppPanel').setAttribute('aria-hidden', 'false');
+  $('#mppOverlay').classList.add('open');
+
+  if (mapState.map && typeof p.lat === 'number' && typeof p.lng === 'number'){
+    mapState.map.setView([p.lat, p.lng], Math.max(mapState.map.getZoom(), 14), {animate:true});
+  }
+  // re-render list to update selection state
+  renderMapList(filteredPlaces());
+}
+
+function closePlacePanel(){
+  const panel = $('#mppPanel');
+  const overlay = $('#mppOverlay');
+  if (panel){
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+  }
+  if (overlay) overlay.classList.remove('open');
+  const iframe = $('#mppEmbed');
+  if (iframe) iframe.removeAttribute('src');
+  mapState.selectedIdx = null;
+  renderMapList(filteredPlaces());
 }
 
 // ── PACKING TAB ─────────────────────────────────────
