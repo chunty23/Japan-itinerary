@@ -37,7 +37,11 @@ window.toggleOpen = toggleOpen;
   const topbar = document.getElementById('topbar');
   if (!topbar) return;
   const setH = () => {
-    document.documentElement.style.setProperty('--topbar-h', topbar.offsetHeight + 'px');
+    // Use getBoundingClientRect().height + Math.ceil to capture sub-pixel height
+    // accurately. offsetHeight rounds down, leaving a 1px seam where the sticky
+    // tab-nav meets the toolbar bottom — content scrolling underneath shows through.
+    const h = Math.ceil(topbar.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--topbar-h', h + 'px');
   };
   if (document.readyState !== 'loading') setH();
   else document.addEventListener('DOMContentLoaded', setH);
