@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#8b1a1a">
+<meta name="theme-color" content="#0d0606" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0d0606">
 <title>Japan 2026 · Family Itinerary</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23fff'/%3E%3Ccircle cx='50' cy='50' r='28' fill='%23bc002d'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,30 +63,47 @@ body{
   font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
   background:var(--bg);color:var(--text);line-height:1.6;
   -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-feature-settings:'cv11','ss01','ss03';
   transition:background .3s,color .3s;
   padding-bottom:env(safe-area-inset-bottom);
+  overscroll-behavior-y:none;
 }
 h1,h2,h3,.serif{font-family:'Noto Serif JP','Inter',serif;letter-spacing:.01em}
+/* Tabular numerals for counts/dates so they don't jiggle */
+.tabular,.day-num,.next-up-cd,.cd-units,.pp-day-num,.pp-day-date,.qi-tag{ font-variant-numeric: tabular-nums; }
+/* Selection styling */
+::selection{ background: rgba(188,0,45,.22); color: var(--text); }
+body.dark ::selection{ background: rgba(224,57,90,.32); color:#fff; }
+/* App-wide focus-visible ring */
+:focus{ outline: none; }
+:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+button, [role="button"]{ -webkit-tap-highlight-color: transparent; }
+/* Honour OS-level reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+}
 
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 
 /* ──────── HERO ──────── */
 .hero{
+  --hero-pad-x: max(1.5rem, env(safe-area-inset-right));
+  --hero-pad-x-l: max(1.5rem, env(safe-area-inset-left));
   background:
     radial-gradient(ellipse at 20% 30%, rgba(188,0,45,.55) 0%, transparent 55%),
     radial-gradient(ellipse at 85% 70%, rgba(122,0,29,.5) 0%, transparent 60%),
     linear-gradient(135deg,#0d0606 0%,#2b0a0d 50%,#4a0e16 100%);
   color:#fff;text-align:center;position:relative;overflow:hidden;
   border-bottom:1px solid var(--border);
-  /* Apple HIG: respect Dynamic Island / notch / status bar safe area.
-     Buttons are absolutely positioned at top:safe-area+0.6rem and are ~38px
-     tall — so the title must start at least safe-area + ~4rem below the top
-     to clear BOTH the status bar AND the PDF / theme buttons. */
-  padding-top: max(5rem, calc(env(safe-area-inset-top) + 4rem));
-  padding-right: max(1.5rem, env(safe-area-inset-right));
-  padding-bottom: 2.4rem;
-  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding: 0 var(--hero-pad-x) 2.4rem var(--hero-pad-x-l);
 }
 .hero::before{
   content:'';position:absolute;inset:0;
@@ -95,61 +113,157 @@ a:hover{text-decoration:underline}
   pointer-events:none;
 }
 .hero::after{
-  content:'';position:absolute;top:1.2rem;left:50%;transform:translateX(-50%);
+  content:'';position:absolute;top:5.5rem;left:50%;transform:translateX(-50%);
   width:74px;height:74px;border-radius:50%;
   background:radial-gradient(circle, #ff2a4f 0 60%, #cc0033 100%);
   box-shadow:0 0 40px rgba(255,42,79,.55), inset 0 0 30px rgba(255,255,255,.15);
-  opacity:.18;
+  opacity:.18;pointer-events:none;
 }
-.hero-content{position:relative;z-index:1;max-width:840px;margin:0 auto}
-.hero h1{font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:700;margin-bottom:.5rem}
-.hero h1 .flag{margin-right:.4rem}
-.hero .subtitle{font-size:.95rem;color:#f0d4d4;margin-bottom:.6rem;font-weight:400}
+
+/* ──────── TOP TOOLBAR (Apple HIG ─ sticky, blurred, real flow layout) ──────── */
+.topbar{
+  position:sticky; top:0; z-index:30;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.5rem;
+  /* Status-bar safe area padding-top + 8pt breathing room.
+     Toolbar bar height itself is 44pt per Apple HIG. */
+  padding: calc(env(safe-area-inset-top) + .5rem) max(.85rem, env(safe-area-inset-right)) .55rem max(.85rem, env(safe-area-inset-left));
+  background: linear-gradient(180deg, rgba(13,6,6,.92) 0%, rgba(13,6,6,.78) 60%, rgba(13,6,6,0) 100%);
+  -webkit-backdrop-filter: blur(0px) saturate(140%);
+  backdrop-filter: blur(0px) saturate(140%);
+  transition: background .25s ease, backdrop-filter .25s ease, -webkit-backdrop-filter .25s ease, box-shadow .25s ease;
+}
+.topbar.scrolled{
+  background: rgba(13,6,6,.72);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.06), 0 8px 24px rgba(0,0,0,.18);
+}
+.topbar-title{
+  flex:1; min-width:0;
+  font-family:'Noto Serif JP','Inter',serif;
+  font-size:1rem; font-weight:600; letter-spacing:.01em;
+  color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  /* Inline title appears only when hero scrolls out of view */
+  opacity:0; transform: translateY(4px);
+  transition: opacity .25s ease, transform .25s ease;
+  text-align:center;
+  padding: 0 .25rem;
+}
+.topbar.scrolled .topbar-title{ opacity:1; transform:none; }
+@media(max-width:520px){
+  /* On narrow phones the PDF + theme buttons need the title's space.
+     Show a shorter inline title and let it shrink. */
+  .topbar-title{ font-size:.92rem; }
+}
+@media(max-width:380px){
+  .topbar-title{ display:none; }
+}
+.topbar-actions{
+  display:flex; align-items:center; gap:.45rem;
+  flex-shrink:0;
+}
+.topbar-actions.left{ justify-content:flex-start; }
+.topbar-actions.right{ justify-content:flex-end; }
+.icon-btn{
+  width:40px; height:40px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.16);
+  color:#fff; border-radius: 999px;
+  cursor:pointer; padding:0;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: background .15s ease, transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  font-family:inherit;
+}
+.icon-btn svg{ width:20px; height:20px; display:block; }
+.icon-btn:hover{ background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.28); }
+.icon-btn:active{ transform:scale(.94); background:rgba(255,255,255,.22); }
+.icon-btn:focus-visible{ outline:none; box-shadow: 0 0 0 3px rgba(255,255,255,.45), 0 0 0 5px rgba(188,0,45,.55); }
+.icon-btn[aria-pressed="true"]{ background:rgba(255,255,255,.2); border-color:rgba(255,255,255,.35); }
+.icon-btn .icon-sun{ display:none; }
+.icon-btn .icon-moon{ display:block; }
+body.dark .icon-btn .icon-sun{ display:block; }
+body.dark .icon-btn .icon-moon{ display:none; }
+
+/* Pill action button (e.g. "PDF") sits beside icon buttons */
+.pill-btn{
+  height:40px; padding: 0 .95rem;
+  display:inline-flex; align-items:center; gap:.4rem;
+  background:rgba(255,255,255,.10); color:#fff;
+  border:1px solid rgba(255,255,255,.18); border-radius:999px;
+  font-family:inherit; font-size:.82rem; font-weight:600; letter-spacing:.01em;
+  cursor:pointer;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: background .15s ease, transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.pill-btn svg{ width:16px; height:16px; flex-shrink:0; }
+.pill-btn:hover{ background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.3); }
+.pill-btn:active{ transform:scale(.97); background:rgba(255,255,255,.22); }
+.pill-btn:focus-visible{ outline:none; box-shadow: 0 0 0 3px rgba(255,255,255,.45), 0 0 0 5px rgba(188,0,45,.55); }
+
+/* ──────── HERO CONTENT ──────── */
+.hero-content{
+  position:relative; z-index:1; max-width:840px; margin:0 auto;
+  padding-top: 1.4rem;  /* breathing room below toolbar */
+}
+.hero h1{
+  font-size:clamp(1.85rem,4.5vw,2.55rem); font-weight:700;
+  margin: 0 0 .5rem; letter-spacing:-.01em; line-height:1.15;
+}
+.hero h1 .flag{margin-right:.4rem; display:inline-block; transform:translateY(-1px);}
+.hero .subtitle{font-size:.95rem;color:#f0d4d4;margin-bottom:.85rem;font-weight:400;line-height:1.55}
 .hero .countdown-pill{
-  display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-  padding:.5rem 1rem;border-radius:999px;font-size:.85rem;font-weight:600;letter-spacing:.5px;color:#fff;
-  backdrop-filter:blur(8px);margin-top:.3rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);
+  padding:.5rem 1rem;border-radius:999px;font-size:.82rem;font-weight:600;letter-spacing:.3px;color:#fff;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  margin-top:.25rem;
 }
-.hero .travelers{font-size:.82rem;color:#dcb4b4;margin-top:.8rem}
-.hero .qi-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin-top:1rem}
+.hero .travelers{font-size:.82rem;color:#dcb4b4;margin-top:.95rem;line-height:1.5}
+.hero .qi-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin-top:1.05rem}
 .hero .qi-tag{
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
-  padding:.28rem .8rem;border-radius:999px;color:#f0d4d4;font-size:.72rem;
-  backdrop-filter:blur(8px);
+  padding:.32rem .85rem;border-radius:999px;color:#f4e0e0;font-size:.74rem;font-weight:500;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition: background .15s, border-color .15s;
 }
-.dark-toggle{
-  position:absolute;background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.2);color:#fff;width:38px;height:38px;border-radius:50%;
-  cursor:pointer;display:grid;place-items:center;font-size:.95rem;backdrop-filter:blur(8px);
-  transition:transform .2s;z-index:5;
-  /* Anchor 0.6rem (~10pt) below Dynamic Island per Apple HIG */
-  top: max(1rem, calc(env(safe-area-inset-top) + .6rem));
-  right: max(1rem, calc(env(safe-area-inset-right) + .35rem));
-}
-.dark-toggle:hover{transform:scale(1.08)}
+.hero .qi-tag:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.25)}
 
 /* ──────── TAB NAV ──────── */
+:root{ --topbar-h: 56px; }
 .tab-nav{
-  position:sticky;top:0;z-index:100;background:var(--card);
+  position:sticky; top:var(--topbar-h); z-index:25;
   border-bottom:1px solid var(--border);
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
-  display:flex;padding:0 .25rem;scrollbar-width:none;
-  backdrop-filter:saturate(180%) blur(10px);
-  background:rgba(255,255,255,.92);
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+  display:flex; padding:0 .25rem; scrollbar-width:none;
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
+  background:rgba(255,255,255,.85);
+  scroll-snap-type: x proximity;
 }
-body.dark .tab-nav{background:rgba(34,27,20,.92)}
-.tab-nav::-webkit-scrollbar{display:none}
+body.dark .tab-nav{ background:rgba(34,27,20,.82); }
+.tab-nav::-webkit-scrollbar{ display:none; }
 .tab-btn{
-  flex-shrink:0;padding:.85rem 1rem;border:none;background:none;
-  font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;color:var(--muted);
-  cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;
+  flex-shrink:0; padding:.85rem .95rem; border:none; background:none;
+  font-family:'Inter',sans-serif; font-size:.78rem; font-weight:500; color:var(--muted);
+  cursor:pointer; position:relative;
+  transition: color .2s ease;
+  white-space:nowrap;
+  scroll-snap-align: center;
+  border-radius: 8px;
 }
-.tab-btn:hover{color:var(--accent)}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-.tab-btn.pulse::after{
-  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);
-  margin-left:.4rem;vertical-align:middle;animation:pulse 1.6s infinite ease-in-out;
+.tab-btn::after{
+  content:''; position:absolute; left:50%; right:50%; bottom:-1px;
+  height:2.5px; background:var(--accent); border-radius:2px 2px 0 0;
+  transition: left .28s cubic-bezier(.32,.72,0,1), right .28s cubic-bezier(.32,.72,0,1), opacity .2s;
+  opacity:0;
 }
+.tab-btn.active::after{ opacity:1; }
+.tab-btn:hover{ color:var(--accent); }
+.tab-btn:focus-visible{ outline: none; box-shadow: 0 0 0 2px var(--accent) inset; }
+.tab-btn.active{ color:var(--accent); font-weight:600; }
+.tab-btn.active::after{ left:.95rem; right:.95rem; }
 @keyframes pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
 
 /* ──────── CONTAINER ──────── */
@@ -221,9 +335,13 @@ body.dark .region-divider .label{color:#e8a4a4}
 /* ──────── DAY CARD ──────── */
 .day-card{
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-  margin-bottom:.75rem;overflow:hidden;transition:all .2s;
+  margin-bottom:.75rem;overflow:hidden;
+  transition: box-shadow .25s ease, border-color .2s ease, transform .15s ease;
+  contain: layout paint;
 }
 .day-card:hover{box-shadow:var(--shadow);border-color:var(--border-2)}
+.day-card-header:active{ background: rgba(0,0,0,.02); }
+body.dark .day-card-header:active{ background: rgba(255,255,255,.03); }
 .day-card.today-highlight{border-left:3px solid var(--accent);box-shadow:0 0 0 2px rgba(188,0,45,.07), var(--shadow)}
 .day-card-header{display:flex;align-items:center;gap:.85rem;padding:1rem 1.1rem;cursor:pointer;user-select:none}
 .day-num{
@@ -551,15 +669,11 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 
 /* ──────── RESPONSIVE ──────── */
 @media(max-width:640px){
-  /* Keep safe-area on mobile — split padding so we don't override env().
-     Top padding must clear BOTH the status bar AND the button row above
-     the title (buttons occupy safe-area + .6rem to safe-area + ~3rem). */
+  /* Toolbar handles safe-area; hero just gets normal interior padding on mobile. */
   .hero{
-    padding-top: max(5rem, calc(env(safe-area-inset-top) + 3.75rem));
-    padding-right: max(1rem, env(safe-area-inset-right));
-    padding-bottom: 1.8rem;
-    padding-left: max(1rem, env(safe-area-inset-left));
+    padding: 0 max(1rem, env(safe-area-inset-right)) 1.8rem max(1rem, env(safe-area-inset-left));
   }
+  .hero-content{ padding-top: 1rem; }
   .tab-btn{padding:.7rem .85rem;font-size:.72rem}
   .container{padding:.85rem .8rem 4rem}
   .item-grid{grid-template-columns:1fr}
@@ -571,22 +685,6 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
   .booking-row{grid-template-columns:64px 1fr;grid-template-rows:auto auto}
   .booking-actions{grid-column:1/-1;flex-direction:row;justify-content:flex-end}
   #map{height:420px}
-}
-
-/* ──────── PDF / PRINT BUTTON ──────── */
-.pdf-btn{position:absolute;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:.42rem .85rem;font-size:.78rem;font-weight:600;cursor:pointer;backdrop-filter:blur(4px);transition:all .18s;z-index:5;
-  /* Vertical: same top as dark-toggle so they align.
-     Horizontal: dark-toggle is 38px wide at right:1rem (occupies 16-54px
-     from right); we leave a 12px gap → pdf-btn right ≥ 4.1rem */
-  top: max(1rem, calc(env(safe-area-inset-top) + .6rem));
-  right: max(4.1rem, calc(env(safe-area-inset-right) + 3.45rem));
-}
-.pdf-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-1px)}
-@media(max-width:640px){
-  .pdf-btn{padding:.36rem .7rem;font-size:.72rem;
-    top: max(1rem, calc(env(safe-area-inset-top) + .6rem));
-    right: max(3.85rem, calc(env(safe-area-inset-right) + 3.2rem));
-  }
 }
 
 /* ──────── JUMP-TO-TODAY BUTTON ──────── */
@@ -782,17 +880,31 @@ body.printing > *:not(#printableRoot){display:none!important}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   a{color:#5a0014!important;text-decoration:none}
   /* Hide chrome on regular print (e.g. browser print without our button) */
-  .tab-nav,.scroll-top,.dark-toggle,.pdf-btn,.map-toolbar,.map-legend,#map,.map-place-panel,.day-rail,.search-wrap{display:none!important}
+  .tab-nav,.scroll-top,.topbar,.map-toolbar,.map-legend,#map,.map-place-panel,.day-rail,.search-wrap{display:none!important}
   @page{margin:.5in .55in;size:Letter}
 }
 </style>
 </head>
 <body>
 
+<!-- TOP TOOLBAR (sticky, blurs on scroll) -->
+<div class="topbar" id="topbar" role="toolbar" aria-label="App toolbar">
+  <div class="topbar-actions left"></div>
+  <h2 class="topbar-title">Japan 2026 · Family Itinerary</h2>
+  <div class="topbar-actions right">
+    <button class="pill-btn" id="pdfBtn" type="button" aria-label="Export itinerary as PDF" title="Export PDF">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span>PDF</span>
+    </button>
+    <button class="icon-btn" id="darkToggle" type="button" aria-label="Toggle theme" aria-pressed="false" title="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+  </div>
+</div>
+
 <!-- HERO -->
 <header class="hero">
-  <button class="dark-toggle" id="darkToggle" title="Toggle theme">🌓</button>
-  <button class="pdf-btn" id="pdfBtn" title="Export itinerary as PDF">🖨️ PDF</button>
   <div class="hero-content">
     <h1><span class="flag">🎌</span> Japan 2026 · Family Itinerary</h1>
     <p class="subtitle">May 21 – June 8 · 19 Days · Kyushu › Hiroshima › Kyoto › Hakone › Tokyo › Atami › Home</p>

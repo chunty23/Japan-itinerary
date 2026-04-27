@@ -16,10 +16,49 @@ window.toggleOpen = toggleOpen;
     document.body.classList.add('dark');
   }
   const btn = $('#darkToggle');
+  const syncPressed = () => {
+    if (!btn) return;
+    btn.setAttribute('aria-pressed', document.body.classList.contains('dark') ? 'true' : 'false');
+  };
+  syncPressed();
   if (btn) btn.addEventListener('click', () => {
     document.body.classList.toggle('dark');
-    localStorage.setItem('jp2026-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('jp2026-theme', isDark ? 'dark' : 'light');
+    syncPressed();
+    // keep <meta name="theme-color"> in sync so iOS status bar tints right
+    const meta = document.querySelector('meta[name="theme-color"]:not([media])');
+    if (meta) meta.setAttribute('content', isDark ? '#15110d' : '#0d0606');
   });
+})();
+
+// ── Sticky toolbar: measure height and toggle .scrolled class
+(function(){
+  const topbar = document.getElementById('topbar');
+  if (!topbar) return;
+  const setH = () => {
+    document.documentElement.style.setProperty('--topbar-h', topbar.offsetHeight + 'px');
+  };
+  if (document.readyState !== 'loading') setH();
+  else document.addEventListener('DOMContentLoaded', setH);
+  window.addEventListener('load', setH);
+  window.addEventListener('resize', setH);
+  let lastScrolled = false;
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const s = window.scrollY > 24;
+      if (s !== lastScrolled){
+        topbar.classList.toggle('scrolled', s);
+        lastScrolled = s;
+      }
+      ticking = false;
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 })();
 
 // ── Tab switching
@@ -31,6 +70,10 @@ function switchTab(name, opts){
   const pane = document.getElementById('tab-'+name);
   if (btn) btn.classList.add('active');
   if (pane) pane.classList.add('active');
+  // Center the active tab in the horizontal nav so the underline is always visible
+  if (btn && btn.scrollIntoView) {
+    try { btn.scrollIntoView({ inline:'center', block:'nearest', behavior:'smooth' }); } catch(_){ }
+  }
   if (name === 'map') initMap();
   if (!opts.noScroll) window.scrollTo({top:0,behavior:'smooth'});
   // When entering Itinerary tab, auto-scroll to today's day-card unless explicitly disabled
