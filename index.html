@@ -287,6 +287,24 @@ body.dark .tab-nav{ background: #1a1410; }
 .tab-btn.active::after{ left:.95rem; right:.95rem; }
 @keyframes pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
 
+/* Tablet/small-laptop (900–1279px): tighten button padding so the strip
+   fits without horizontal scroll, but keep left-aligned because at these
+   widths it still overflows on some viewports. Mobile is unchanged. */
+@media (min-width: 900px){
+  .tab-btn{ padding: .8rem .55rem; font-size: .78rem; }
+}
+/* Desktop (1280+): all 14 tabs fit comfortably — center the strip. */
+@media (min-width: 1280px){
+  .tab-nav{ justify-content: center; padding: 0 .5rem; }
+  .tab-btn{ padding: .8rem .5rem; font-size: .76rem; }
+}
+@media (min-width: 1440px){
+  .tab-btn{ padding: .85rem .7rem; font-size: .8rem; }
+}
+@media (min-width: 1600px){
+  .tab-btn{ padding: .85rem .9rem; font-size: .84rem; }
+}
+
 /* ──────── CONTAINER ──────── */
 .container{max-width:1000px;margin:0 auto;
   padding:1.25rem max(1rem, env(safe-area-inset-right)) calc(4rem + env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
