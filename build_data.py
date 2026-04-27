@@ -93,7 +93,7 @@ bookings = [
     {"category": "Activities", "day": 6, "date": "2026-05-26", "time": "11:00 JST", "title": "Hozugawa-kudari Boat Ride", "who": "All 7", "details": "Arashiyama river boat (~2 hrs). Ends near Togetsukyo / Arashiyama. Pair with Bamboo Grove first.", "url": "https://www.hozugawakudari.jp/en", "status": "Booked"},
     {"category": "Activities", "day": 6, "date": "2026-05-26", "time": "19:00 JST", "title": "TeamLab Kyoto", "who": "All 7", "details": "Entry 7:00–7:30 pm. Allow ~90 min inside.", "url": "https://www.teamlab.art/e/kyoto/", "status": "Booked"},
     {"category": "To Book", "day": 6, "date": "2026-05-26", "time": "Lunch", "title": "Lunch at Itsuki Chaya Arashiyama Honten", "who": "All 7", "details": "Right at Togetsukyo. Yudofu and obanzai set lunch — perfect post-boat. Reservation not yet made.", "url": "https://maps.google.com/?q=Itsuki+Chaya+Arashiyama+Honten", "status": "To Book"},
-    {"category": "To Book", "day": 14, "date": "2026-06-03", "time": "Dinner", "title": "Chanko Wanko — Sumo Show + Chanko Nabe Dinner", "who": "All 7", "details": "Ryogoku sumo district. Walk past Kokugikan beforehand. Confirm broth is non-seafood for Cody & JJ. Reservation not yet made.", "url": "https://maps.google.com/?q=Chanko+Wanko+Tokyo", "status": "To Book"},
+    {"category": "Activities", "day": 14, "date": "2026-06-03", "time": "18:00 JST", "title": "Chanko Wanko — Sumo Show + Chanko Nabe Dinner", "who": "All 7", "details": "Ryogoku sumo district. Walk past Kokugikan beforehand. Confirm broth is non-seafood for Cody & JJ.", "url": "https://maps.google.com/?q=Chanko+Wanko+Tokyo", "status": "Booked"},
     # TO-BOOK (high priority)
     {"category": "To Book", "day": 12, "date": "2026-06-01", "time": "Sunset slot", "title": "Shibuya Sky observation deck", "who": "All 7", "details": "¥3,400 pp · Book 4 weeks ahead for sunset slot. shibuya-sky.tokyo", "url": "https://www.shibuya-scramble-square.com/sky/", "status": "To Book"},
     {"category": "To Book", "day": 13, "date": "2026-06-02", "time": "Morning", "title": "Betty Smith Custom Jeans Workshop — Ebisu", "who": "Group of choice", "details": "2-3 hr workshop · betty-smith.com — book well ahead.", "url": "https://betty-smith.com/", "status": "To Book"},
@@ -274,22 +274,31 @@ for d in data.get('days', []):
     for k in ('highlights','activities','notes'):
         if k not in d: continue
         v = d[k]
-        # Remove "✓ BOOKED" only from lines mentioning Itsuki Chaya OR Chanko/Wanko (food, not yet booked)
         new_lines = []
         for line in v.split('\n'):
-            if ('Itsuki Chaya' in line or 'Chanko' in line or 'Wanko' in line) and '✓ BOOKED' in line:
+            # Itsuki Chaya is still TO BOOK — strip any '✓ BOOKED' marker.
+            if 'Itsuki Chaya' in line and '✓ BOOKED' in line:
                 line = line.replace(' ✓ BOOKED', '').replace('✓ BOOKED','').rstrip()
+            # Chanko Wanko / Sumo Show dinner IS booked — ensure marker present.
+            if ('Chanko' in line or 'Wanko' in line or 'Sumo Show Dinner' in line) and '✓ BOOKED' not in line:
+                line = line.rstrip() + '  ✓ BOOKED'
             new_lines.append(line)
         d[k] = '\n'.join(new_lines)
-# Dining list: rewrite Chanko Wanko entry to reflect "to book" reality
+# Dining list: Chanko Wanko IS booked — keep the booked badge, just sand off
+# the loud "ALREADY BOOKED" copy that read like marketing.
 for entry in data.get('dining', []):
     if isinstance(entry, dict) and 'Chanko Wanko' in entry.get('name',''):
-        entry['name'] = 'Chanko Wanko'
-        entry['price'] = entry.get('price','').replace('already agreed','TBD').replace('Group rate','Group rate')
-        entry['seats'] = '⚠️ To book · group of 7'
-        entry['reservation'] = 'To book · target Wed Jun 3, 6:00pm'
+        entry['name'] = 'Chanko Wanko ✅ Booked'
+        entry['price'] = 'Group rate'
+        entry['seats'] = '✅ Group of 7 booked'
+        entry['reservation'] = '✅ Booked · Wed Jun 3, 6:00 pm'
         det = entry.get('details','')
-        det = det.replace('Already confirmed!','Reservation not yet made.').replace('already confirmed','reservation not yet made')
+        # Repair stale sanitizer artifacts from earlier passes.
+        det = det.replace('Reservation not yet made.','Confirmed.')
+        det = det.replace('Already confirmed!','Confirmed.').replace('already confirmed','confirmed')
+        # Make sure the leading sentence reads as confirmed.
+        if not det.lstrip().startswith('Confirmed'):
+            det = 'Confirmed group reservation. ' + det.lstrip()
         entry['details'] = det
 # Strip the "TOP BOOKED" / "✓ BOOKED" labels from any other dining highlights field
 for entry in data.get('dining', []):
@@ -302,7 +311,7 @@ for sec in data.get('itinerarySections', []) if isinstance(data.get('itinerarySe
     if isinstance(sec, dict) and isinstance(sec.get('data'), list):
         sec['data'] = [
             (cell.replace('\n(✓ BOOKED)','').replace('(✓ BOOKED)','').rstrip()
-             if isinstance(cell, str) and ('Itsuki' in cell or 'Chanko' in cell or 'Wanko' in cell)
+             if isinstance(cell, str) and 'Itsuki' in cell
              else cell)
             for cell in sec['data']
         ]
