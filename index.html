@@ -58,6 +58,9 @@ body.dark{
   --gold:#e0c050;
 }
 
+/* Set --topbar-h directly in CSS so it includes env(safe-area-inset-top) before JS runs.
+   Real measured value is set by JS on load/resize for accuracy. */
+:root{ --topbar-h: calc(env(safe-area-inset-top) + 60px); }
 html{scroll-behavior:smooth}
 body{
   font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
@@ -103,7 +106,11 @@ a:hover{text-decoration:underline}
     linear-gradient(135deg,#0d0606 0%,#2b0a0d 50%,#4a0e16 100%);
   color:#fff;text-align:center;position:relative;overflow:hidden;
   border-bottom:1px solid var(--border);
-  padding: 0 var(--hero-pad-x) 2.4rem var(--hero-pad-x-l);
+  /* Pull hero up so it sits BEHIND the sticky transparent toolbar — one
+     unified header surface. padding-top reserves space below the buttons. */
+  margin-top: calc(-1 * var(--topbar-h));
+  padding: var(--topbar-h) var(--hero-pad-x) 2.4rem var(--hero-pad-x-l);
+  z-index: 1;
 }
 .hero::before{
   content:'';position:absolute;inset:0;
@@ -113,7 +120,7 @@ a:hover{text-decoration:underline}
   pointer-events:none;
 }
 .hero::after{
-  content:'';position:absolute;top:5.5rem;left:50%;transform:translateX(-50%);
+  content:'';position:absolute;top:calc(var(--topbar-h) + 1.4rem);left:50%;transform:translateX(-50%);
   width:74px;height:74px;border-radius:50%;
   background:radial-gradient(circle, #ff2a4f 0 60%, #cc0033 100%);
   box-shadow:0 0 40px rgba(255,42,79,.55), inset 0 0 30px rgba(255,255,255,.15);
@@ -126,18 +133,24 @@ a:hover{text-decoration:underline}
   display:flex; align-items:center; justify-content:space-between;
   gap:.5rem;
   /* Status-bar safe area padding-top + 8pt breathing room.
-     Toolbar bar height itself is 44pt per Apple HIG. */
+     Toolbar bar height itself is 40pt buttons. */
   padding: calc(env(safe-area-inset-top) + .5rem) max(.85rem, env(safe-area-inset-right)) .55rem max(.85rem, env(safe-area-inset-left));
-  background: linear-gradient(180deg, rgba(13,6,6,.92) 0%, rgba(13,6,6,.78) 60%, rgba(13,6,6,0) 100%);
-  -webkit-backdrop-filter: blur(0px) saturate(140%);
-  backdrop-filter: blur(0px) saturate(140%);
-  transition: background .25s ease, backdrop-filter .25s ease, -webkit-backdrop-filter .25s ease, box-shadow .25s ease;
+  /* Transparent on load — the hero's dark-red background shows through
+     so toolbar + hero read as one unified header surface. */
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  transition: background .35s ease, backdrop-filter .35s ease, -webkit-backdrop-filter .35s ease, box-shadow .35s ease;
 }
 .topbar.scrolled{
-  background: rgba(13,6,6,.72);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  backdrop-filter: blur(18px) saturate(180%);
+  /* Hero has scrolled away — toolbar becomes opaque iOS-style chrome. */
+  background: rgba(13,6,6,.82);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
   box-shadow: 0 1px 0 rgba(255,255,255,.06), 0 8px 24px rgba(0,0,0,.18);
+}
+body.dark .topbar.scrolled{
+  background: rgba(15,11,9,.85);
 }
 .topbar-title{
   flex:1; min-width:0;
@@ -205,7 +218,7 @@ body.dark .icon-btn .icon-moon{ display:none; }
 /* ──────── HERO CONTENT ──────── */
 .hero-content{
   position:relative; z-index:1; max-width:840px; margin:0 auto;
-  padding-top: 1.4rem;  /* breathing room below toolbar */
+  padding-top: .65rem;  /* small breathing gap; hero already padded by --topbar-h */
 }
 .hero h1{
   font-size:clamp(1.85rem,4.5vw,2.55rem); font-weight:700;
@@ -231,7 +244,6 @@ body.dark .icon-btn .icon-moon{ display:none; }
 .hero .qi-tag:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.25)}
 
 /* ──────── TAB NAV ──────── */
-:root{ --topbar-h: 56px; }
 .tab-nav{
   position:sticky; top:var(--topbar-h); z-index:25;
   border-bottom:1px solid var(--border);
@@ -669,11 +681,14 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 
 /* ──────── RESPONSIVE ──────── */
 @media(max-width:640px){
-  /* Toolbar handles safe-area; hero just gets normal interior padding on mobile. */
+  /* Toolbar handles safe-area on top; mobile keeps the same vertical-merge layout. */
   .hero{
-    padding: 0 max(1rem, env(safe-area-inset-right)) 1.8rem max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: 1.8rem;
+    padding-left: max(1rem, env(safe-area-inset-left));
+    /* padding-top kept at var(--topbar-h) from base rule */
   }
-  .hero-content{ padding-top: 1rem; }
+  .hero-content{ padding-top: .5rem; }
   .tab-btn{padding:.7rem .85rem;font-size:.72rem}
   .container{padding:.85rem .8rem 4rem}
   .item-grid{grid-template-columns:1fr}

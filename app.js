@@ -43,22 +43,29 @@ window.toggleOpen = toggleOpen;
   else document.addEventListener('DOMContentLoaded', setH);
   window.addEventListener('load', setH);
   window.addEventListener('resize', setH);
-  let lastScrolled = false;
-  let ticking = false;
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const s = window.scrollY > 24;
-      if (s !== lastScrolled){
-        topbar.classList.toggle('scrolled', s);
-        lastScrolled = s;
+  // Toggle .scrolled (opaque blurred chrome + inline title) only once the hero
+  // content has actually scrolled past the toolbar. Uses IntersectionObserver
+  // so the toolbar stays transparent + unified with the hero on load and
+  // during the first bit of scroll — no jarring "dual title" flash.
+  const arm = () => {
+    const heroContent = document.querySelector('.hero-content');
+    if (!heroContent) return;
+    const topbarH = topbar.offsetHeight || 60;
+    const io = new IntersectionObserver(entries => {
+      for (const entry of entries){
+        // "Gone" = hero-content's bottom edge has passed above the toolbar bottom.
+        const gone = entry.boundingClientRect.bottom <= topbarH + 4;
+        topbar.classList.toggle('scrolled', gone);
       }
-      ticking = false;
+    }, {
+      // Fire when the bottom of hero-content crosses the line just below the toolbar
+      rootMargin: `-${topbarH + 4}px 0px 0px 0px`,
+      threshold: [0, 1]
     });
+    io.observe(heroContent);
   };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  if (document.readyState !== 'loading') arm();
+  else document.addEventListener('DOMContentLoaded', arm);
 })();
 
 // ── Tab switching
