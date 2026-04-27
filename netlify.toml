@@ -5,3 +5,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # GOOGLE_MAPS_API_KEY is a client-side key (must be in the page HTML for the
+  # Maps Embed API to work). It's restricted by HTTP referrer in Google Cloud
+  # Console to japan2026clegg.netlify.app + localhost. In Netlify env settings,
+  # this var should NOT be marked "Contains secret values".
