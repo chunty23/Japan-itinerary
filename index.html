@@ -459,7 +459,7 @@ body.dark .map-list-item.selected{background:rgba(224,57,90,.1)}
 .mpp-emoji{font-size:1.2rem}
 .mpp-title{flex:1;min-width:0}
 .mpp-name{font-size:.95rem;font-weight:600;color:var(--text);line-height:1.3;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
 .mpp-cat{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:.1rem}
 .mpp-close{
   width:32px;height:32px;border:none;background:rgba(0,0,0,.05);border-radius:50%;
@@ -468,7 +468,7 @@ body.dark .map-list-item.selected{background:rgba(224,57,90,.1)}
 .mpp-close:hover{background:rgba(0,0,0,.1)}
 body.dark .mpp-close{background:rgba(255,255,255,.08)}
 body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
-.mpp-note{padding:.85rem 1rem;font-size:.82rem;color:var(--text);line-height:1.55;border-bottom:1px solid var(--border-2);background:var(--card)}
+.mpp-note{padding:.85rem 1rem;font-size:.82rem;color:var(--text);line-height:1.55;border-bottom:1px solid var(--border-2);background:var(--card);word-wrap:break-word;overflow-wrap:break-word}
 .mpp-note .mpp-addr{font-size:.74rem;color:var(--muted);margin-bottom:.4rem}
 .mpp-embed{flex:1;min-height:0;position:relative;background:var(--hinoki-2)}
 .mpp-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -494,7 +494,24 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
   .map-list{max-height:320px;order:2}
   #mapEnhanced{height:380px;order:1}
   .map-toolbar{font-size:.7rem}
-  .map-place-panel{width:100vw}
+  /* Mobile place panel: bottom sheet that slides up */
+  .map-place-panel{
+    width:100vw;left:0;right:0;top:auto;
+    height:88vh;height:88dvh;
+    border-left:none;border-top:1px solid var(--border);
+    border-top-left-radius:18px;border-top-right-radius:18px;
+    transform:translateY(100%);
+    box-shadow:0 -12px 40px rgba(0,0,0,.25);
+  }
+  .map-place-panel.open{transform:translateY(0)}
+  /* Drag handle affordance */
+  .map-place-panel::before{
+    content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+    width:42px;height:4px;border-radius:2px;background:var(--border);z-index:1;
+  }
+  .mpp-header{padding-top:1.25rem}
+  /* Lock body scroll while panel is open */
+  body.mpp-open{overflow:hidden;position:fixed;width:100%}
 }
 
 /* ──────── SEARCH ──────── */
@@ -603,6 +620,7 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="config.js"></script>
+<script src="config.local.js" onerror="this.remove()"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>

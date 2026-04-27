@@ -12,8 +12,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/The+Pizza+Bar+On+38th/data=!4m2!3m1!1s0x6018895562e77a3b:0xe3c077a9dbbe0dcd",
-    "lat": 35.6862,
-    "lng": 139.7724
+    "lat": 35.6869744,
+    "lng": 139.7730333
   },
   {
     "name": "ぎょうざのみっちー 中央駅店",
@@ -24,8 +24,8 @@ DATA.savedPlaces = [
     "city": "Kagoshima",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/%E3%81%8E%E3%82%87%E3%81%86%E3%81%96%E3%81%AE%E3%81%BF%E3%81%A3%E3%81%A1%E3%83%BC+%E4%B8%AD%E5%A4%AE%E9%A7%85%E5%BA%97/data=!4m2!3m1!1s0x353e6722438bc273:0x618f8382f38ed11a",
-    "lat": 31.5836,
-    "lng": 130.5443
+    "lat": 31.5852583,
+    "lng": 130.5413191
   },
   {
     "name": "Kagoshima Furusato Yataimura Area Li-Ka",
@@ -36,8 +36,8 @@ DATA.savedPlaces = [
     "city": "Kagoshima",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Kagoshima+Furusato+Yataimura+Area+Li-Ka/data=!4m2!3m1!1s0x353e67c0cdd63f6b:0xf9dfccce3c3fdd9e",
-    "lat": 31.5841,
-    "lng": 130.5408
+    "lat": 31.582882,
+    "lng": 130.543009
   },
   {
     "name": "Kagoshima Furusato Yataimura BUSCHIKA",
@@ -48,8 +48,8 @@ DATA.savedPlaces = [
     "city": "Kagoshima",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Kagoshima+Furusato+Yataimura+BUSCHIKA/data=!4m2!3m1!1s0x353e674c62a6f6fb:0x997410bbd0bf128e",
-    "lat": 31.5841,
-    "lng": 130.5408
+    "lat": 31.5835895,
+    "lng": 130.5442134
   },
   {
     "name": "Otachidokoro Sushi Ki",
@@ -59,9 +59,9 @@ DATA.savedPlaces = [
     "emoji": "🍜",
     "city": "Tokyo",
     "color": "#E63946",
-    "url": "https://www.google.com/maps/place/Otachidokoro+Sushi+Ki/data=!4m2!3m1!1s0x60010918b92ec009:0x1445c198430d82b8",
-    "lat": 35.6713,
-    "lng": 139.7637
+    "url": "https://www.google.com/maps/search/Sushi+Ki+5-9-19+Ginza+Chuo+Tokyo/@35.671502,139.7644686,17z/data=!4m2!2m1!6e5?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D",
+    "lat": 35.671502,
+    "lng": 139.7644686
   },
   {
     "name": "Gyukatsu Motomura",
@@ -71,9 +71,9 @@ DATA.savedPlaces = [
     "emoji": "🍜",
     "city": "Tokyo",
     "color": "#E63946",
-    "url": "https://www.google.com/maps/place/Gyukatsu+Motomura/data=!4m2!3m1!1s0x6001090007cf1b6f:0x1aa3b00a872e2ad3",
-    "lat": 35.654458,
-    "lng": 139.756177
+    "url": "https://www.google.com/maps/search/%E7%89%9B%E3%81%8B%E3%81%A4+%E3%82%82%E3%81%A8%E6%9D%91+%E6%96%B0%E6%A9%8B+3-18-10/@35.69298,139.7366406,13z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D",
+    "lat": 35.69298,
+    "lng": 139.7366406
   },
   {
     "name": "Kyoto Tonkatsu Katsuda Shijokarasuma",
@@ -84,8 +84,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Kyoto+Tonkatsu+Katsuda+Shijokarasuma/data=!4m2!3m1!1s0x600109e588185ff9:0xaf237f6e37cb19c0",
-    "lat": 35.0033,
-    "lng": 135.7589
+    "lat": 35.0012535,
+    "lng": 135.7594566
   },
   {
     "name": "Gion Duck Noodles Arashiyama",
@@ -96,8 +96,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Gion+Duck+Noodles+Arashiyama/data=!4m2!3m1!1s0x6001a93798a692c7:0xc241920f2e64040e",
-    "lat": 35.01527,
-    "lng": 135.678763
+    "lat": 35.0151789,
+    "lng": 135.6787448
   },
   {
     "name": "Steak Otsuka",
@@ -132,8 +132,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Arashiyama+Itsukichaya/data=!4m2!3m1!1s0x60010712b368466b:0x1d95f39ac2644e8d",
-    "lat": 35.018,
-    "lng": 135.677
+    "lat": 35.0120532,
+    "lng": 135.6798012
   },
   {
     "name": "Yudofu Sagano",
@@ -144,8 +144,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Yudofu+Sagano/data=!4m2!3m1!1s0x6001aa004f350df9:0x32503d2276812d7c",
-    "lat": 35.019,
-    "lng": 135.6695
+    "lat": 35.0144388,
+    "lng": 135.6744736
   },
   {
     "name": "PIZZERIA MAMA",
@@ -155,9 +155,9 @@ DATA.savedPlaces = [
     "emoji": "🍜",
     "city": "Atami",
     "color": "#E63946",
-    "url": "https://www.google.com/maps/place/PIZZERIA+MAMA/data=!4m2!3m1!1s0x600107f36515e387:0x65e58aec2e4d8c97",
-    "lat": 35.0962,
-    "lng": 139.0739
+    "url": "https://www.google.com/maps/search/PIZZERIA+MAMA+%E7%86%B1%E6%B5%B7+Tawarahoncho/@35.1198705,139.0733401,14z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D",
+    "lat": 35.1198705,
+    "lng": 139.0733401
   },
   {
     "name": "MOA Museum of Art",
@@ -168,8 +168,8 @@ DATA.savedPlaces = [
     "city": "Atami",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/MOA+Museum+of+Art/data=!4m2!3m1!1s0x6019be7c174af88d:0x40dcc7041d54c2e1",
-    "lat": 35.109262,
-    "lng": 139.075334
+    "lat": 35.1092776,
+    "lng": 139.0751998
   },
   {
     "name": "Kiunkaku",
@@ -180,8 +180,8 @@ DATA.savedPlaces = [
     "city": "Atami",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kiunkaku/data=!4m2!3m1!1s0x6019be6803275d81:0xe0eef8507f743b0e",
-    "lat": 35.092735,
-    "lng": 139.071436
+    "lat": 35.0928633,
+    "lng": 139.0710177
   },
   {
     "name": "Atami Castle",
@@ -192,8 +192,8 @@ DATA.savedPlaces = [
     "city": "Atami",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Atami+Castle/data=!4m2!3m1!1s0x6019be577c8d1903:0x1b8dad7aafa20ff",
-    "lat": 35.086378,
-    "lng": 139.078682
+    "lat": 35.086391,
+    "lng": 139.078634
   },
   {
     "name": "Kawana Dolphin Beach",
@@ -204,8 +204,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kawana+Dolphin+Beach/data=!4m2!3m1!1s0x6019c47d52ebb793:0xd9df11608f38382f",
-    "lat": 34.9264,
-    "lng": 139.1297
+    "lat": 34.9531907,
+    "lng": 139.132117
   },
   {
     "name": "Mt. Omuro Summit",
@@ -216,8 +216,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Mt.+Omuro+Summit/data=!4m2!3m1!1s0x6019c3671cc9a10d:0xe1632b89da8b59b3",
-    "lat": 34.9006,
-    "lng": 139.1014
+    "lat": 34.903092,
+    "lng": 139.0946697
   },
   {
     "name": "Okuno Dam",
@@ -228,8 +228,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Okuno+Dam/data=!4m2!3m1!1s0x6019c3eaf44a7df1:0x5804e9e37c805014",
-    "lat": 34.912,
-    "lng": 139.075
+    "lat": 34.9362253,
+    "lng": 139.0696019
   },
   {
     "name": "Tatadohama beach",
@@ -240,8 +240,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Tatadohama+beach/data=!4m2!3m1!1s0x601758efafafcd6b:0xbc85bca66662aa5f",
-    "lat": 34.6722,
-    "lng": 138.9417
+    "lat": 34.6608977,
+    "lng": 138.9319856
   },
   {
     "name": "Perry Road",
@@ -252,8 +252,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Perry+Road/data=!4m2!3m1!1s0x601759a1ad8fb785:0xc2897e2eee52385b",
-    "lat": 34.6797,
-    "lng": 138.9447
+    "lat": 34.6718226,
+    "lng": 138.9429561
   },
   {
     "name": "Shimoda Ropeway Summit Station (Nesugatayama Station)",
@@ -264,8 +264,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#6B7280",
     "url": "https://www.google.com/maps/place/Shimoda+Ropeway+Summit+Station+(Nesugatayama+Station)/data=!4m2!3m1!1s0x601758b712e95555:0xef57ed6f66a38fe7",
-    "lat": 34.68,
-    "lng": 138.9381
+    "lat": 34.6791517,
+    "lng": 138.9518565
   },
   {
     "name": "Cape Tsumekizaki Lighthouse.",
@@ -276,8 +276,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Cape+Tsumekizaki+Lighthouse./data=!4m2!3m1!1s0x60175eeea281bd11:0x701ac0c509003d27",
-    "lat": 34.6011,
-    "lng": 138.9397
+    "lat": 34.6587659,
+    "lng": 138.9869156
   },
   {
     "name": "Shirahama Central Beach",
@@ -288,8 +288,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Shirahama+Central+Beach/data=!4m2!3m1!1s0x60175f5951ea7339:0xc7083d59a055824e",
-    "lat": 34.6986,
-    "lng": 138.9608
+    "lat": 34.7001131,
+    "lng": 138.9752289
   },
   {
     "name": "Sotoura Beach",
@@ -300,8 +300,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Sotoura+Beach/data=!4m2!3m1!1s0x60175f2532a64a6f:0x7cbb9cd8b2cd07ec",
-    "lat": 34.6889,
-    "lng": 138.9633
+    "lat": 34.6750322,
+    "lng": 138.9725093
   },
   {
     "name": "Izu Oceanic Park",
@@ -312,8 +312,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Izu+Oceanic+Park/data=!4m2!3m1!1s0x6019db709d859f7d:0x9f72fa0a8b1a464d",
-    "lat": 34.8783,
-    "lng": 139.1297
+    "lat": 34.8850096,
+    "lng": 139.132575
   },
   {
     "name": "Tajima Falls",
@@ -324,8 +324,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Tajima+Falls/data=!4m2!3m1!1s0x6019ddeaea7397c1:0x4c8a8b5a82235b1b",
-    "lat": 34.8419,
-    "lng": 138.9622
+    "lat": 34.8711757,
+    "lng": 139.1093464
   },
   {
     "name": "Kadowakisaki Lighthouse",
@@ -336,8 +336,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kadowakisaki+Lighthouse/data=!4m2!3m1!1s0x6019db51eb9a2d6b:0x991e5b119d6d525d",
-    "lat": 34.8847,
-    "lng": 139.1336
+    "lat": 34.8900397,
+    "lng": 139.1384591
   },
   {
     "name": "Jogasaki Coast",
@@ -348,8 +348,8 @@ DATA.savedPlaces = [
     "city": "Izu",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Jogasaki+Coast/data=!4m2!3m1!1s0x6019db691c5b3e3f:0xc25bdc9a934e34cc",
-    "lat": 34.8917,
-    "lng": 139.1397
+    "lat": 34.8910482,
+    "lng": 139.1399205
   },
   {
     "name": "Hotel Grand Bach Atami crescendo",
@@ -360,8 +360,8 @@ DATA.savedPlaces = [
     "city": "Atami",
     "color": "#7C3AED",
     "url": "https://www.google.com/maps/place/Hotel+Grand+Bach+Atami+crescendo/data=!4m2!3m1!1s0x6019bdd89411d749:0x55c991e151279e7c",
-    "lat": 35.095,
-    "lng": 139.0762
+    "lat": 35.1107653,
+    "lng": 139.0680987
   },
   {
     "name": "Curry Station Niagara",
@@ -372,8 +372,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Curry+Station+Niagara/data=!4m2!3m1!1s0x60188b4af5ce3a0f:0x8cac56d67d098d89",
-    "lat": 35.639115,
-    "lng": 139.692735
+    "lat": 35.639117,
+    "lng": 139.6927582
   },
   {
     "name": "PokéPark Kanto",
@@ -384,8 +384,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Pok%C3%A9Park+Kanto/data=!4m2!3m1!1s0x6018fb2f0e9098ab:0x3ac8b697f2a3589c",
-    "lat": 35.626157,
-    "lng": 139.520396
+    "lat": 35.6242581,
+    "lng": 139.5173938
   },
   {
     "name": "Takayamashichiten Hanbaikasugaten",
@@ -395,9 +395,9 @@ DATA.savedPlaces = [
     "emoji": "🍜",
     "city": "Nara",
     "color": "#E63946",
-    "url": "https://www.google.com/maps/place/Takayamashichiten+Hanbaikasugaten/data=!4m2!3m1!1s0x354191104673218d:0xf47fec42e68f28b1",
-    "lat": 34.685,
-    "lng": 135.8463
+    "url": "https://www.google.com/maps/search/%E9%AB%98%E5%B1%B1%E3%82%B5%E3%83%96%E3%83%AC%E6%98%A5%E6%97%A5%E5%BA%97+16+Kasuganocho+Nara/@34.6790965,135.8604412,15z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D",
+    "lat": 34.6790965,
+    "lng": 135.8604412
   },
   {
     "name": "Men-ya Inoichi Hanare",
@@ -408,8 +408,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Men-ya+Inoichi+Hanare/data=!4m2!3m1!1s0x60010897d87c1661:0x812e4a3fcbb81f03",
-    "lat": 35.0033,
-    "lng": 135.7589
+    "lat": 34.9999817,
+    "lng": 135.763261
   },
   {
     "name": "TAKEO KIKUCHI",
@@ -420,8 +420,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/TAKEO+KIKUCHI/data=!4m2!3m1!1s0x60188ca86b0df3db:0x885f994435138e02",
-    "lat": 35.665983,
-    "lng": 139.703346
+    "lat": 35.6608392,
+    "lng": 139.7003004
   },
   {
     "name": "TAKEO KIKUCHI",
@@ -432,8 +432,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/TAKEO+KIKUCHI/data=!4m2!3m1!1s0x60188ea001096719:0xd48bf123218db1f8",
-    "lat": 35.665983,
-    "lng": 139.703346
+    "lat": 35.7076765,
+    "lng": 139.7735226
   },
   {
     "name": "Kapital",
@@ -444,8 +444,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Kapital/data=!4m2!3m1!1s0x60188b3fbc5e7fdd:0x30a327453527f19e",
-    "lat": 35.643716,
-    "lng": 139.709867
+    "lat": 35.6437093,
+    "lng": 139.7098244
   },
   {
     "name": "mont-bell Shibuya",
@@ -456,8 +456,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/mont-bell+Shibuya/data=!4m2!3m1!1s0x60188ca93864d0d7:0xa311ee2a69accd57",
-    "lat": 35.6612,
-    "lng": 139.6985
+    "lat": 35.66239,
+    "lng": 139.697547
   },
   {
     "name": "mont-bell Okachimachi Store",
@@ -468,8 +468,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/mont-bell+Okachimachi+Store/data=!4m2!3m1!1s0x60188ea01376dc31:0xef53753108c20a2c",
-    "lat": 35.708,
-    "lng": 139.7752
+    "lat": 35.7064151,
+    "lng": 139.7737829
   },
   {
     "name": "mont-bell Tokyo Kyobashi",
@@ -480,8 +480,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/mont-bell+Tokyo+Kyobashi/data=!4m2!3m1!1s0x60188be372353d69:0xfb583fcec3cd7b9a",
-    "lat": 35.675846,
-    "lng": 139.768891
+    "lat": 35.6759537,
+    "lng": 139.768802
   },
   {
     "name": "MOMOTARO JEANS Aoyama",
@@ -492,8 +492,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/MOMOTARO+JEANS+Aoyama/data=!4m2!3m1!1s0x60188b5ff62dc42d:0xe65fa7032da1d5d1",
-    "lat": 35.6635,
-    "lng": 139.7148
+    "lat": 35.663737,
+    "lng": 139.7105572
   },
   {
     "name": "KANEKO GANKYO-TEN Tokyo Solamachi",
@@ -504,8 +504,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/KANEKO+GANKYO-TEN+Tokyo+Solamachi/data=!4m2!3m1!1s0x60188fb51d77659b:0xadaae86f581067a3",
-    "lat": 35.7106,
-    "lng": 139.8107
+    "lat": 35.7102819,
+    "lng": 139.8121474
   },
   {
     "name": "OWNDAYS 上野マルイ店",
@@ -516,8 +516,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/OWNDAYS+%E4%B8%8A%E9%87%8E%E3%83%9E%E3%83%AB%E3%82%A4%E5%BA%97/data=!4m2!3m1!1s0x60188e9ef0e55559:0xdd667e2ecdb70b4c",
-    "lat": 35.708,
-    "lng": 139.7752
+    "lat": 35.7110338,
+    "lng": 139.7757613
   },
   {
     "name": "HANDS Ginza",
@@ -528,8 +528,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/HANDS+Ginza/data=!4m2!3m1!1s0x60188be4ff39a9c9:0x2071625429c1ecbd",
-    "lat": 35.674249,
-    "lng": 139.765345
+    "lat": 35.6743799,
+    "lng": 139.765406
   },
   {
     "name": "Sekaido Shinjuku",
@@ -540,8 +540,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Sekaido+Shinjuku/data=!4m2!3m1!1s0x60188cdb568a6c15:0x4c84ac4975ce203",
-    "lat": 35.689905,
-    "lng": 139.706325
+    "lat": 35.6900298,
+    "lng": 139.7063963
   },
   {
     "name": "つば屋庖丁店 | CUTLERY TSUBAYA",
@@ -552,8 +552,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/%E3%81%A4%E3%81%B0%E5%B1%8B%E5%BA%96%E4%B8%81%E5%BA%97+%7C+CUTLERY+TSUBAYA/data=!4m2!3m1!1s0x60188e95ed06f00f:0xf24252ba57136ee",
-    "lat": 35.7104,
-    "lng": 139.7895
+    "lat": 35.7144792,
+    "lng": 139.7891586
   },
   {
     "name": "music bar Beatle momo",
@@ -564,8 +564,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#DB2777",
     "url": "https://www.google.com/maps/place/music+bar+Beatle+momo/data=!4m2!3m1!1s0x6001089529fa0783:0xb23b36db1daf21ed",
-    "lat": 35.004,
-    "lng": 135.7749
+    "lat": 35.0055501,
+    "lng": 135.7706747
   },
   {
     "name": "Coffee PUNKTO",
@@ -576,8 +576,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/Coffee+PUNKTO/data=!4m2!3m1!1s0x60188cd1e83302cb:0xe03eb5e58e43a952",
-    "lat": 35.661,
-    "lng": 139.7
+    "lat": 35.6867622,
+    "lng": 139.6974995
   },
   {
     "name": "Owl Village Cafe Harajuku",
@@ -588,8 +588,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/Owl+Village+Cafe+Harajuku/data=!4m2!3m1!1s0x60188cba57e6d69d:0x850545d8d4d99d5c",
-    "lat": 35.6695,
-    "lng": 139.706
+    "lat": 35.6722382,
+    "lng": 139.7034753
   },
   {
     "name": "Shisha Cafe tone.",
@@ -600,8 +600,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/Shisha+Cafe+tone./data=!4m2!3m1!1s0x60188df78917a527:0xf94bbfa8b5b5821e",
-    "lat": 35.71,
-    "lng": 139.777
+    "lat": 35.6659697,
+    "lng": 139.7046097
   },
   {
     "name": "Chiku Chiku Cafe",
@@ -612,8 +612,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/Chiku+Chiku+Cafe/data=!4m2!3m1!1s0x60188b5861a076bf:0xe557882c96cad475",
-    "lat": 35.659889,
-    "lng": 139.703743
+    "lat": 35.6599526,
+    "lng": 139.703746
   },
   {
     "name": "DyCE Global Board Game Cafe",
@@ -624,8 +624,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/DyCE+Global+Board+Game+Cafe/data=!4m2!3m1!1s0x60188d62349a4c67:0xfb304e4c7aeafc60",
-    "lat": 35.6938,
-    "lng": 139.7039
+    "lat": 35.6608154,
+    "lng": 139.7056963
   },
   {
     "name": "Cafe Legato",
@@ -636,8 +636,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/Cafe+Legato/data=!4m2!3m1!1s0x60188b55f7afffff:0x47cf9a4abb76fbb5",
-    "lat": 35.65748,
-    "lng": 139.695676
+    "lat": 35.6574935,
+    "lng": 139.6955514
   },
   {
     "name": "GOOD COFFEE FARMS Cafe & Bar",
@@ -648,8 +648,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/GOOD+COFFEE+FARMS+Cafe+%26+Bar/data=!4m2!3m1!1s0x60188b0804660319:0xcd977316ef068c69",
-    "lat": 35.647,
-    "lng": 139.71
+    "lat": 35.6810778,
+    "lng": 139.771698
   },
   {
     "name": "NORTHERNWOOD GINZA",
@@ -660,8 +660,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/NORTHERNWOOD+GINZA/data=!4m2!3m1!1s0x60188bdb7a57814f:0x10659cc088290341",
-    "lat": 35.667329,
-    "lng": 139.762942
+    "lat": 35.6673621,
+    "lng": 139.7628847
   },
   {
     "name": "Cafe＆Bar Living Room 浅草",
@@ -672,8 +672,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/Cafe%EF%BC%86Bar+Living+Room+%E6%B5%85%E8%8D%89/data=!4m2!3m1!1s0x60188f4ddf975045:0x6652e5d184a336c9",
-    "lat": 35.71,
-    "lng": 139.796
+    "lat": 35.7121206,
+    "lng": 139.7975615
   },
   {
     "name": "COFFEE&BEER HI-CONDITION Asakusa",
@@ -684,8 +684,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/COFFEE%26BEER+HI-CONDITION+Asakusa/data=!4m2!3m1!1s0x60188fe4d8036cc5:0x252cef5fafcd2f0",
-    "lat": 35.711,
-    "lng": 139.796
+    "lat": 35.7115603,
+    "lng": 139.7955721
   },
   {
     "name": "GEISHA COFFEE ゲイシャコーヒー",
@@ -696,8 +696,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/GEISHA+COFFEE+%E3%82%B2%E3%82%A4%E3%82%B7%E3%83%A3%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC/data=!4m2!3m1!1s0x60188fac1b8c5321:0xbb45a0166d7dc53b",
-    "lat": 35.7113,
-    "lng": 139.7945
+    "lat": 35.7120675,
+    "lng": 139.7952366
   },
   {
     "name": "KIELO COFFEE ASAKUSA",
@@ -708,8 +708,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/KIELO+COFFEE+ASAKUSA/data=!4m2!3m1!1s0x60188fa4e5367f53:0xc317f8a781d6432f",
-    "lat": 35.712,
-    "lng": 139.795
+    "lat": 35.7098979,
+    "lng": 139.7954655
   },
   {
     "name": "ART CAFE T8 ASAKUSA ‐Japanese Cultural Art Experience‐",
@@ -720,8 +720,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/ART+CAFE+T8+ASAKUSA+%E2%80%90Japanese+Cultural+Art+Experience%E2%80%90/data=!4m2!3m1!1s0x60188ff1ab7e9f81:0x3e76b64f84152546",
-    "lat": 35.7128,
-    "lng": 139.792
+    "lat": 35.7114815,
+    "lng": 139.7960348
   },
   {
     "name": "pignic cafe Asakusa【mini pig cafe】",
@@ -732,8 +732,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/pignic+cafe+Asakusa%E3%80%90mini+pig+cafe%E3%80%91/data=!4m2!3m1!1s0x60188f0029d611b3:0x2b0f48b5a6960f4",
-    "lat": 35.713,
-    "lng": 139.796
+    "lat": 35.7115271,
+    "lng": 139.7948321
   },
   {
     "name": "Gyukatsu Motomura Shibuya Branch",
@@ -744,8 +744,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Gyukatsu+Motomura+Shibuya+Branch/data=!4m2!3m1!1s0x60188b597868619f:0x7c65d128da208a9c",
-    "lat": 35.661,
-    "lng": 139.6985
+    "lat": 35.656977,
+    "lng": 139.7039981
   },
   {
     "name": "Gyukatsu - motomura",
@@ -756,8 +756,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Gyukatsu+-+motomura/data=!4m2!3m1!1s0x60188d7b80fadd73:0x8577998714f494d9",
-    "lat": 35.654458,
-    "lng": 139.756177
+    "lat": 35.6607062,
+    "lng": 139.6981907
   },
   {
     "name": "Yoshinoya Shibuya 109 Mae",
@@ -768,8 +768,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Yoshinoya+Shibuya+109+Mae/data=!4m2!3m1!1s0x60188ca829b1439b:0xb03c4befeebfa34e",
-    "lat": 35.6595,
-    "lng": 139.6981
+    "lat": 35.6592869,
+    "lng": 139.6992147
   },
   {
     "name": "Yoshinoya Shinjuku Keio mall",
@@ -780,8 +780,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Yoshinoya+Shinjuku+Keio+mall/data=!4m2!3m1!1s0x60188d01035d3a53:0xf063a26cdea3f439",
-    "lat": 35.6892,
-    "lng": 139.7008
+    "lat": 35.6898009,
+    "lng": 139.6986633
   },
   {
     "name": "Yoshinoya Yaechika Shop",
@@ -792,8 +792,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Yoshinoya+Yaechika+Shop/data=!4m2!3m1!1s0x60188b835f0698c3:0x6e1691c004b41495",
-    "lat": 35.68,
-    "lng": 139.7693
+    "lat": 35.6799137,
+    "lng": 139.7704136
   },
   {
     "name": "Yoshinoya",
@@ -804,8 +804,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Yoshinoya/data=!4m2!3m1!1s0x60188e9eca60cbd9:0x46f98132be849619",
-    "lat": 35.71119,
-    "lng": 139.782108
+    "lat": 35.7124103,
+    "lng": 139.7778238
   },
   {
     "name": "Yoshinoya Asakusa",
@@ -816,8 +816,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Yoshinoya+Asakusa/data=!4m2!3m1!1s0x60188ec6af0c8eef:0x85cdc4634ec06e59",
-    "lat": 35.714064,
-    "lng": 139.793201
+    "lat": 35.71206,
+    "lng": 139.798
   },
   {
     "name": "Omotesando Ukai Tei",
@@ -828,8 +828,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Omotesando+Ukai+Tei/data=!4m2!3m1!1s0x60188ca3fa7bb73f:0x5a0c19ac3a13ab24",
-    "lat": 35.666,
-    "lng": 139.7081
+    "lat": 35.6673882,
+    "lng": 139.7067871
   },
   {
     "name": "Shibuya Kappo Sancho",
@@ -840,8 +840,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Shibuya+Kappo+Sancho/data=!4m2!3m1!1s0x60188caa74d70b77:0x515c82d9111fe583",
-    "lat": 35.6595,
-    "lng": 139.6975
+    "lat": 35.6576133,
+    "lng": 139.6948873
   },
   {
     "name": "Shabusen Ginza Ten",
@@ -852,8 +852,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Shabusen+Ginza+Ten/data=!4m2!3m1!1s0x60188be65dfeb9b1:0xea0d4535363ebfbf",
-    "lat": 35.672,
-    "lng": 139.7637
+    "lat": 35.670661,
+    "lng": 139.7640411
   },
   {
     "name": "GINZA kappou ukai nikusho",
@@ -864,8 +864,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/GINZA+kappou+ukai+nikusho/data=!4m2!3m1!1s0x60188be87b4d0f57:0x41fb9e73f4989107",
-    "lat": 35.67,
-    "lng": 139.7625
+    "lat": 35.6679333,
+    "lng": 139.7619934
   },
   {
     "name": "Kuroge Wagyu Ichinoya Asakusa",
@@ -876,8 +876,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Kuroge+Wagyu+Ichinoya+Asakusa/data=!4m2!3m1!1s0x60188f048f799e7f:0xd3cf44241683f24b",
-    "lat": 35.7128,
-    "lng": 139.7965
+    "lat": 35.7122837,
+    "lng": 139.7972069
   },
   {
     "name": "Kukurihime Coffee Asakusa cafe",
@@ -888,8 +888,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/Kukurihime+Coffee+Asakusa+cafe/data=!4m2!3m1!1s0x60188fa15e85cae1:0x85acb057fab6e7b",
-    "lat": 35.7128,
-    "lng": 139.7935
+    "lat": 35.7115121,
+    "lng": 139.7957893
   },
   {
     "name": "Asakusa Gyukatsu",
@@ -900,8 +900,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Asakusa+Gyukatsu/data=!4m2!3m1!1s0x60188ec6df6c0001:0xd205e882474ee0a0",
-    "lat": 35.7115,
-    "lng": 139.795
+    "lat": 35.7107673,
+    "lng": 139.7959519
   },
   {
     "name": "TORASUZU",
@@ -912,8 +912,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/TORASUZU/data=!4m2!3m1!1s0x60188f42c05f4731:0x47979e243105b2c0",
-    "lat": 35.7128,
-    "lng": 139.7965
+    "lat": 35.7111602,
+    "lng": 139.7969337
   },
   {
     "name": "Kobe beef Daia",
@@ -924,8 +924,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Kobe+beef+Daia/data=!4m2!3m1!1s0x60188ff7ab74f5f9:0x405669a00c04e43c",
-    "lat": 35.7113,
-    "lng": 139.796
+    "lat": 35.7111059,
+    "lng": 139.795686
   },
   {
     "name": "Kura",
@@ -936,8 +936,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Kura/data=!4m2!3m1!1s0x60188ec0d7c0072f:0x1b8d326014a3b1e",
-    "lat": 35.660595,
-    "lng": 139.702093
+    "lat": 35.7121802,
+    "lng": 139.7958829
   },
   {
     "name": "LaVASARA CAFE&GRILL",
@@ -948,8 +948,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/LaVASARA+CAFE%26GRILL/data=!4m2!3m1!1s0x60188ec146283731:0xd0e324f6b893b4be",
-    "lat": 35.7115,
-    "lng": 139.7955
+    "lat": 35.7133079,
+    "lng": 139.7971484
   },
   {
     "name": "ASAKUSA SUMO CLUB",
@@ -960,8 +960,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/ASAKUSA+SUMO+CLUB/data=!4m2!3m1!1s0x60188f006825a021:0x15fde3a1f54b9a8c",
-    "lat": 35.7128,
-    "lng": 139.792
+    "lat": 35.7141548,
+    "lng": 139.7932306
   },
   {
     "name": "Hibiya Park",
@@ -972,8 +972,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Hibiya+Park/data=!4m2!3m1!1s0x60188bf23857acc7:0x709c7696a9fafab4",
-    "lat": 35.674041,
-    "lng": 139.75632
+    "lat": 35.6736115,
+    "lng": 139.7558769
   },
   {
     "name": "Ryogoku Kokugikan Sumo Arena",
@@ -984,8 +984,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/Ryogoku+Kokugikan+Sumo+Arena/data=!4m2!3m1!1s0x6018893554b8eb19:0x70237cc76b1dfa74",
-    "lat": 35.697,
-    "lng": 139.7935
+    "lat": 35.6970048,
+    "lng": 139.7935122
   },
   {
     "name": "Asahi Group Head Office Super Dry Hall",
@@ -996,8 +996,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Asahi+Group+Head+Office+Super+Dry+Hall/data=!4m2!3m1!1s0x60188ec597400001:0xed63aa75e03d5f0f",
-    "lat": 35.7104,
-    "lng": 139.8
+    "lat": 35.7099095,
+    "lng": 139.8002747
   },
   {
     "name": "Samurai Ninja Museum Asakusa Tokyo",
@@ -1008,8 +1008,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/Samurai+Ninja+Museum+Asakusa+Tokyo/data=!4m2!3m1!1s0x600109820f1fa99b:0x775d0a52495beff1",
-    "lat": 35.711573,
-    "lng": 139.791783
+    "lat": 35.7115126,
+    "lng": 139.7917746
   },
   {
     "name": "Tempura Asakusa SAKURA",
@@ -1020,8 +1020,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Tempura+Asakusa+SAKURA/data=!4m2!3m1!1s0x60188f3bf8584559:0xb9ea49637a52a4d0",
-    "lat": 35.710192,
-    "lng": 139.796649
+    "lat": 35.7101986,
+    "lng": 139.7967206
   },
   {
     "name": "Ichiran Asakusa",
@@ -1032,8 +1032,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Ichiran+Asakusa/data=!4m2!3m1!1s0x60188ec6be01feef:0x9736b3e4d24be9de",
-    "lat": 35.714443,
-    "lng": 139.793577
+    "lat": 35.7111828,
+    "lng": 139.7976164
   },
   {
     "name": "Kan'non-dōri",
@@ -1044,8 +1044,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kan'non-d%C5%8Dri/data=!4m2!3m1!1s0x60188f4b2ba4ea3d:0x6773251bd712ea4f",
-    "lat": 35.7128,
-    "lng": 139.796
+    "lat": 35.7109857,
+    "lng": 139.7970041
   },
   {
     "name": "KOBE BEEF DAIA TEPPAN-YAKI KAMINARIMON EAST BRANCH",
@@ -1056,8 +1056,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/KOBE+BEEF+DAIA+TEPPAN-YAKI+KAMINARIMON+EAST+BRANCH/data=!4m2!3m1!1s0x60188f55b4938c03:0xb17ac4a91d7fb858",
-    "lat": 35.7113,
-    "lng": 139.7965
+    "lat": 35.7112046,
+    "lng": 139.796664
   },
   {
     "name": "Nakamise Shopping Street",
@@ -1068,8 +1068,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Nakamise+Shopping+Street/data=!4m2!3m1!1s0x60188ec130fbdd3d:0x5135221a7fa19dbc",
-    "lat": 35.712282,
-    "lng": 139.796486
+    "lat": 35.7118413,
+    "lng": 139.7964542
   },
   {
     "name": "Sensō-ji",
@@ -1080,8 +1080,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Sens%C5%8D-ji/data=!4m2!3m1!1s0x60188ec1a4463df1:0x6c0d289a8292810d",
-    "lat": 35.713403,
-    "lng": 139.795526
+    "lat": 35.7147651,
+    "lng": 139.7966553
   },
   {
     "name": "Ueno Ameyoko Shopping Street",
@@ -1092,8 +1092,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Ueno+Ameyoko+Shopping+Street/data=!4m2!3m1!1s0x60188f00af83b787:0x654b0a29a45fcf0a",
-    "lat": 35.708,
-    "lng": 139.7752
+    "lat": 35.7090028,
+    "lng": 139.7746259
   },
   {
     "name": "Shinobazu Pond",
@@ -1104,8 +1104,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Shinobazu+Pond/data=!4m2!3m1!1s0x60188c20944ac5a3:0x58638bc622e5b86a",
-    "lat": 35.711875,
-    "lng": 139.770865
+    "lat": 35.7122453,
+    "lng": 139.7708284
   },
   {
     "name": "Ueno Park",
@@ -1116,8 +1116,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Ueno+Park/data=!4m2!3m1!1s0x60188e9b45906ac3:0xb1cb3623124e645a",
-    "lat": 35.715291,
-    "lng": 139.773828
+    "lat": 35.7147557,
+    "lng": 139.7734312
   },
   {
     "name": "Tokyo National Museum",
@@ -1128,8 +1128,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Tokyo+National+Museum/data=!4m2!3m1!1s0x60188e8314d77d11:0x232fd618bd4977dd",
-    "lat": 35.719045,
-    "lng": 139.775968
+    "lat": 35.7188351,
+    "lng": 139.7765215
   },
   {
     "name": "Akihabara Electric Town",
@@ -1140,8 +1140,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Akihabara+Electric+Town/data=!4m2!3m1!1s0x60188c1da0983467:0x6fc7ec7e7222177c",
-    "lat": 35.699173,
-    "lng": 139.772629
+    "lat": 35.6997178,
+    "lng": 139.7713799
   },
   {
     "name": "First Avenue Tokyo Station",
@@ -1152,8 +1152,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/First+Avenue+Tokyo+Station/data=!4m2!3m1!1s0x60188bfc40f10f69:0x30bde288c0edfb04",
-    "lat": 35.681903,
-    "lng": 139.768432
+    "lat": 35.6822889,
+    "lng": 139.7684903
   },
   {
     "name": "Tokyo Station",
@@ -1164,8 +1164,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#6B7280",
     "url": "https://www.google.com/maps/place/Tokyo+Station/data=!4m2!3m1!1s0x60188bfbee1467bb:0x410f8b6e7e3ee34f",
-    "lat": 35.6812,
-    "lng": 139.7671
+    "lat": 35.68098,
+    "lng": 139.767057
   },
   {
     "name": "Imperial Palace",
@@ -1176,8 +1176,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Imperial+Palace/data=!4m2!3m1!1s0x60188c0d02d8064d:0xd11a5f0b379e6db7",
-    "lat": 35.683847,
-    "lng": 139.750686
+    "lat": 35.685175,
+    "lng": 139.7527995
   },
   {
     "name": "Meiji Jingu Gaien Ginkgo Avenue",
@@ -1188,8 +1188,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Meiji+Jingu+Gaien+Ginkgo+Avenue/data=!4m2!3m1!1s0x60188c9afc587cfd:0xdfa0dacae2e42000",
-    "lat": 35.6781,
-    "lng": 139.7193
+    "lat": 35.6727172,
+    "lng": 139.7205745
   },
   {
     "name": "Godzilla Head",
@@ -1200,8 +1200,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Godzilla+Head/data=!4m2!3m1!1s0x60188d74dcc81ccd:0x2d7e490be8560647",
-    "lat": 35.69507,
-    "lng": 139.701882
+    "lat": 35.6950521,
+    "lng": 139.7019117
   },
   {
     "name": "Tokyo Metropolitan Government Building North Observation Deck",
@@ -1212,8 +1212,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Tokyo+Metropolitan+Government+Building+North+Observation+Deck/data=!4m2!3m1!1s0x60188cd4c86bcb9d:0xe5b1c573920cfe2e",
-    "lat": 35.6896,
-    "lng": 139.6921
+    "lat": 35.689733,
+    "lng": 139.6916563
   },
   {
     "name": "Takeshita Shopping Street",
@@ -1224,8 +1224,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Takeshita+Shopping+Street/data=!4m2!3m1!1s0x60188d0011fb9989:0xa2275d75aa4fc105",
-    "lat": 35.6713,
-    "lng": 139.7045
+    "lat": 35.6715743,
+    "lng": 139.7032371
   },
   {
     "name": "Meiji Jingu",
@@ -1236,8 +1236,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Meiji+Jingu/data=!4m2!3m1!1s0x60188cb79a4c26e5:0x8fca893849103f73",
-    "lat": 35.674842,
-    "lng": 139.699627
+    "lat": 35.6763976,
+    "lng": 139.6993259
   },
   {
     "name": "Yoyogi Park",
@@ -1248,8 +1248,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Yoyogi+Park/data=!4m2!3m1!1s0x60188cb479620a33:0x34bcc78ce7f8bf3e",
-    "lat": 35.671405,
-    "lng": 139.695167
+    "lat": 35.6700649,
+    "lng": 139.6949656
   },
   {
     "name": "Shibuya Sky",
@@ -1260,8 +1260,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Shibuya+Sky/data=!4m2!3m1!1s0x60188b6825f61ae1:0x6ff47ee61e522473",
-    "lat": 35.658286,
-    "lng": 139.702262
+    "lat": 35.6586719,
+    "lng": 139.7019848
   },
   {
     "name": "Shibuya Crossing",
@@ -1272,8 +1272,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Shibuya+Crossing/data=!4m2!3m1!1s0x60188bcaeb0cd12b:0x20e563a2e0aec969",
-    "lat": 35.659495,
-    "lng": 139.700498
+    "lat": 35.659482,
+    "lng": 139.7005596
   },
   {
     "name": "Mori Art Museum",
@@ -1284,8 +1284,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Mori+Art+Museum/data=!4m2!3m1!1s0x60188b770f429483:0xff33d131dc8d6e9",
-    "lat": 35.660432,
-    "lng": 139.729261
+    "lat": 35.6604621,
+    "lng": 139.7292785
   },
   {
     "name": "Roppongi Hills - Tokyo City View",
@@ -1296,8 +1296,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Roppongi+Hills+-+Tokyo+City+View/data=!4m2!3m1!1s0x60188b770edd442b:0x667ab47030771257",
-    "lat": 35.6604,
-    "lng": 139.729
+    "lat": 35.6600712,
+    "lng": 139.7292907
   },
   {
     "name": "Tokyo Tower",
@@ -1308,8 +1308,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Tokyo+Tower/data=!4m2!3m1!1s0x60188bbd9009ec09:0x481a93f0d2a409dd",
-    "lat": 35.658449,
-    "lng": 139.745536
+    "lat": 35.6585805,
+    "lng": 139.7454329
   },
   {
     "name": "GINZA SIX",
@@ -1320,8 +1320,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/GINZA+SIX/data=!4m2!3m1!1s0x60188bef472c0001:0xcfcb0363f18109fc",
-    "lat": 35.669533,
-    "lng": 139.764049
+    "lat": 35.6697688,
+    "lng": 139.7641762
   },
   {
     "name": "Kabuki-za",
@@ -1332,8 +1332,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/Kabuki-za/data=!4m2!3m1!1s0x60188be74819406d:0x1e8b565e11fc118",
-    "lat": 35.669657,
-    "lng": 139.768111
+    "lat": 35.6694253,
+    "lng": 139.7677446
   },
   {
     "name": "Lake Ashi",
@@ -1344,8 +1344,8 @@ DATA.savedPlaces = [
     "city": "Hakone",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Lake+Ashi/data=!4m2!3m1!1s0x6019a3741ff081db:0x4b0bded72d89c01a",
-    "lat": 35.214483,
-    "lng": 139.001997
+    "lat": 35.2046361,
+    "lng": 139.0074137
   },
   {
     "name": "Tōgendai Observation Deck",
@@ -1356,8 +1356,8 @@ DATA.savedPlaces = [
     "city": "Hakone",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/T%C5%8Dgendai+Observation+Deck/data=!4m2!3m1!1s0x60199f3598e03fd9:0xcdd2c3ae9472b90e",
-    "lat": 35.2271,
-    "lng": 139.009
+    "lat": 35.237613,
+    "lng": 138.9958793
   },
   {
     "name": "Sōunzan Station",
@@ -1368,8 +1368,8 @@ DATA.savedPlaces = [
     "city": "Hakone",
     "color": "#6B7280",
     "url": "https://www.google.com/maps/place/S%C5%8Dunzan+Station/data=!4m2!3m1!1s0x60199f5391dfbfdf:0xd1609fe5c91f05ae",
-    "lat": 35.246383,
-    "lng": 139.035603
+    "lat": 35.2466626,
+    "lng": 139.0355416
   },
   {
     "name": "Gora Station",
@@ -1380,8 +1380,8 @@ DATA.savedPlaces = [
     "city": "Hakone",
     "color": "#6B7280",
     "url": "https://www.google.com/maps/place/Gora+Station/data=!4m2!3m1!1s0x6019a1f8e2cf7ce1:0xde5366adc0f07c4f",
-    "lat": 35.250636,
-    "lng": 139.048217
+    "lat": 35.250852,
+    "lng": 139.048205
   },
   {
     "name": "Spark",
@@ -1392,8 +1392,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#DB2777",
     "url": "https://www.google.com/maps/place/Spark/data=!4m2!3m1!1s0x60013989b562700b:0x4d8a1b2c1f51d0ca",
-    "lat": 34.699743,
-    "lng": 135.488319
+    "lat": 34.6808382,
+    "lng": 135.8290796
   },
   {
     "name": "Shinsekai",
@@ -1404,8 +1404,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Shinsekai/data=!4m2!3m1!1s0x6000e7607657a257:0x36b1d7d86ab8d6fb",
-    "lat": 34.65209,
-    "lng": 135.506191
+    "lat": 34.6516013,
+    "lng": 135.5059562
   },
   {
     "name": "Tennoji Park",
@@ -1416,8 +1416,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Tennoji+Park/data=!4m2!3m1!1s0x6000ddf14727f4e7:0x9014f718527a4830",
-    "lat": 34.650845,
-    "lng": 135.509446
+    "lat": 34.6507248,
+    "lng": 135.5104151
   },
   {
     "name": "Magic Cafe & Bar Shinsekai",
@@ -1428,8 +1428,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#DB2777",
     "url": "https://www.google.com/maps/place/Magic+Cafe+%26+Bar+Shinsekai/data=!4m2!3m1!1s0x6000ddb8f06a4c89:0x80efe76099af452a",
-    "lat": 34.652,
-    "lng": 135.507
+    "lat": 34.6504792,
+    "lng": 135.5065119
   },
   {
     "name": "Namba City",
@@ -1440,8 +1440,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Namba+City/data=!4m2!3m1!1s0x6000e7696859de15:0x645df8a533b0f531",
-    "lat": 34.663904,
-    "lng": 135.501507
+    "lat": 34.6639784,
+    "lng": 135.5015554
   },
   {
     "name": "Hirobun",
@@ -1452,8 +1452,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Hirobun/data=!4m2!3m1!1s0x6001a5e289c9c6a9:0xf4a59ade2fcabb8d",
-    "lat": 35.124899,
-    "lng": 135.763925
+    "lat": 35.1252812,
+    "lng": 135.7638998
   },
   {
     "name": "Arashiyama Monkey Park Iwatayama",
@@ -1464,8 +1464,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Arashiyama+Monkey+Park+Iwatayama/data=!4m2!3m1!1s0x600100ab6efb49bd:0x1b3493b0430734b2",
-    "lat": 35.0096,
-    "lng": 135.6753
+    "lat": 35.011395,
+    "lng": 135.6766245
   },
   {
     "name": "Hozugawa River Boat Ride (Hozugawa Kudari)",
@@ -1476,8 +1476,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/Hozugawa+River+Boat+Ride+(Hozugawa+Kudari)/data=!4m2!3m1!1s0x600054c4aef4efe5:0x33dcd3376bf7a157",
-    "lat": 35.0142,
-    "lng": 135.59
+    "lat": 35.017202,
+    "lng": 135.5868593
   },
   {
     "name": "MUSIC BAR universe -GION-",
@@ -1488,8 +1488,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#DB2777",
     "url": "https://www.google.com/maps/place/MUSIC+BAR+universe+-GION-/data=!4m2!3m1!1s0x600109d13f137989:0x5416b5f1c9f8a0bd",
-    "lat": 35.004,
-    "lng": 135.7758
+    "lat": 35.0045507,
+    "lng": 135.7766668
   },
   {
     "name": "Pop",
@@ -1500,8 +1500,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#DB2777",
     "url": "https://www.google.com/maps/place/Pop/data=!4m2!3m1!1s0x60010f69f9b7259d:0x275ccb45d2e46a49",
-    "lat": 35.058852,
-    "lng": 135.437428
+    "lat": 35.0042389,
+    "lng": 135.7702445
   },
   {
     "name": "VINYL RECORD MUSIC BAR 『P.M.SOUNDS KYOTO』",
@@ -1512,8 +1512,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#DB2777",
     "url": "https://www.google.com/maps/place/VINYL+RECORD+MUSIC+BAR+%E3%80%8EP.M.SOUNDS+KYOTO%E3%80%8F/data=!4m2!3m1!1s0x600109badf96cbb5:0x3cc0caae5d139630",
-    "lat": 35.0095,
-    "lng": 135.772
+    "lat": 35.0080411,
+    "lng": 135.7696243
   },
   {
     "name": "Jigokudani Yaen-Koen",
@@ -1524,8 +1524,8 @@ DATA.savedPlaces = [
     "city": "Nagano",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Jigokudani+Yaen-Koen/data=!4m2!3m1!1s0x601df3ec4ca220cf:0xf64d8b73ef8dd61f",
-    "lat": 36.7325,
-    "lng": 138.4651
+    "lat": 36.7326856,
+    "lng": 138.4621364
   },
   {
     "name": "Tōdai-ji",
@@ -1536,8 +1536,8 @@ DATA.savedPlaces = [
     "city": "Nara",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/T%C5%8Ddai-ji/data=!4m2!3m1!1s0x600139907a0876dd:0xf890ac3f9dd53c8f",
-    "lat": 34.688244,
-    "lng": 135.839757
+    "lat": 34.6889851,
+    "lng": 135.8398158
   },
   {
     "name": "Amanohashidate",
@@ -1548,8 +1548,8 @@ DATA.savedPlaces = [
     "city": "Kyoto-North",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Amanohashidate/data=!4m2!3m1!1s0x5fff972dc7c1e297:0xba61cef3b2e46c81",
-    "lat": 35.568002,
-    "lng": 135.190638
+    "lat": 35.5698022,
+    "lng": 135.1918204
   },
   {
     "name": "Mount Kinugasa",
@@ -1560,8 +1560,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Mount+Kinugasa/data=!4m2!3m1!1s0x6001a91fced4515b:0xf3e6f49c488f1524",
-    "lat": 35.0432,
-    "lng": 135.7287
+    "lat": 35.0357689,
+    "lng": 135.7220717
   },
   {
     "name": "Ryōan-ji",
@@ -1572,8 +1572,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Ry%C5%8Dan-ji/data=!4m2!3m1!1s0x6001a82a301cbaa7:0xe1ab173e46d78542",
-    "lat": 35.033463,
-    "lng": 135.718088
+    "lat": 35.0344943,
+    "lng": 135.7182634
   },
   {
     "name": "Nishiki Market",
@@ -1584,8 +1584,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Nishiki+Market/data=!4m2!3m1!1s0x6001089ccd8ccb4f:0xb69ea31001ec6c9c",
-    "lat": 35.005024,
-    "lng": 135.76557
+    "lat": 35.0050258,
+    "lng": 135.764723
   },
   {
     "name": "Kiyomizu-dera",
@@ -1596,8 +1596,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kiyomizu-dera/data=!4m2!3m1!1s0x600108d385dcfb07:0x62af658650c434ba",
-    "lat": 34.994303,
-    "lng": 135.784439
+    "lat": 34.9946662,
+    "lng": 135.784661
   },
   {
     "name": "Hozukyo Observatory",
@@ -1608,8 +1608,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Hozukyo+Observatory/data=!4m2!3m1!1s0x6001aa48e31d6c15:0xa078939d138390c1",
-    "lat": 35.019,
-    "lng": 135.6585
+    "lat": 35.0319464,
+    "lng": 135.6542213
   },
   {
     "name": "Arashiyama",
@@ -1620,8 +1620,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Arashiyama/data=!4m2!3m1!1s0x6001075451efd3e3:0xabaad64f597b014c",
-    "lat": 35.009047,
-    "lng": 135.674496
+    "lat": 35.009449,
+    "lng": 135.666773
   },
   {
     "name": "Fushimi Inari Taisha",
@@ -1632,8 +1632,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Fushimi+Inari+Taisha/data=!4m2!3m1!1s0x60010f153d2e6d21:0x7b1aca1c753ae2e9",
-    "lat": 34.967519,
-    "lng": 135.77971
+    "lat": 34.9676945,
+    "lng": 135.7791876
   },
   {
     "name": "Kinkaku-ji",
@@ -1644,8 +1644,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kinkaku-ji/data=!4m2!3m1!1s0x6001a820c0eb46bd:0xee4272b1c22645f",
-    "lat": 35.039529,
-    "lng": 135.729537
+    "lat": 35.03937,
+    "lng": 135.7292431
   },
   {
     "name": "Osaka Castle",
@@ -1656,8 +1656,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Osaka+Castle/data=!4m2!3m1!1s0x6000e0cd5c283afd:0xf01d07d5ca11e41",
-    "lat": 34.687373,
-    "lng": 135.525856
+    "lat": 34.6872571,
+    "lng": 135.5258546
   },
   {
     "name": "American Village",
@@ -1668,8 +1668,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/American+Village/data=!4m2!3m1!1s0x6000e711ee4cf6ef:0x6ecfb23afa1519bc",
-    "lat": 34.672006,
-    "lng": 135.498801
+    "lat": 34.6722072,
+    "lng": 135.4978861
   },
   {
     "name": "Tonbori River Walk",
@@ -1680,8 +1680,8 @@ DATA.savedPlaces = [
     "city": "Osaka",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Tonbori+River+Walk/data=!4m2!3m1!1s0x6000e7148b0327f9:0xe0d44c6dfe050a8",
-    "lat": 34.669173,
-    "lng": 135.497285
+    "lat": 34.6689557,
+    "lng": 135.5052283
   },
   {
     "name": "Deer Park",
@@ -1692,8 +1692,8 @@ DATA.savedPlaces = [
     "city": "Nara",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Deer+Park/data=!4m2!3m1!1s0x60013994ba10e9c5:0x7653fbdfdd3b8e8e",
-    "lat": 34.680602,
-    "lng": 135.843096
+    "lat": 34.6810292,
+    "lng": 135.8430668
   },
   {
     "name": "Nintendo Museum",
@@ -1704,8 +1704,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/Nintendo+Museum/data=!4m2!3m1!1s0x60011188b83087d3:0x646fdf4a68b62b4d",
-    "lat": 34.89257,
-    "lng": 135.784205
+    "lat": 34.8927989,
+    "lng": 135.784166
   },
   {
     "name": "Ginkaku-ji",
@@ -1716,8 +1716,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Ginkaku-ji/data=!4m2!3m1!1s0x600109050b426fe1:0x258aca1ce888abc9",
-    "lat": 35.0269,
-    "lng": 135.798371
+    "lat": 35.0270213,
+    "lng": 135.7982058
   },
   {
     "name": "Kyoto Imperial Palace",
@@ -1728,8 +1728,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kyoto+Imperial+Palace/data=!4m2!3m1!1s0x600109005c95e905:0x7c20baf3fce34686",
-    "lat": 35.025264,
-    "lng": 135.762345
+    "lat": 35.0240977,
+    "lng": 135.7621436
   },
   {
     "name": "Kyoto Gyoen National Garden",
@@ -1740,8 +1740,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Kyoto+Gyoen+National+Garden/data=!4m2!3m1!1s0x6001087b148e5f1d:0x1f8b7a1904610955",
-    "lat": 35.0227,
-    "lng": 135.7621
+    "lat": 35.0230617,
+    "lng": 135.7634452
   },
   {
     "name": "Nijō Castle",
@@ -1752,8 +1752,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Nij%C5%8D+Castle/data=!4m2!3m1!1s0x600107d40a2b9b0b:0x106b8759906a2f2f",
-    "lat": 35.014008,
-    "lng": 135.748537
+    "lat": 35.0140379,
+    "lng": 135.7484258
   },
   {
     "name": "燕申堂",
@@ -1764,8 +1764,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#B5651D",
     "url": "https://www.google.com/maps/place/%E7%87%95%E7%94%B3%E5%A0%82/data=!4m2!3m1!1s0x600109002c0b3f53:0x56a4ae1ffde9c374",
-    "lat": 35.064391,
-    "lng": 135.786614
+    "lat": 34.9914201,
+    "lng": 135.762525
   },
   {
     "name": "Higashi Hongan-ji Temple",
@@ -1776,8 +1776,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Higashi+Hongan-ji+Temple/data=!4m2!3m1!1s0x600108a5b2ff6191:0x2def9c35f2f6c95a",
-    "lat": 34.991226,
-    "lng": 135.758393
+    "lat": 34.9909478,
+    "lng": 135.7584754
   },
   {
     "name": "Kawaramachi-dori St",
@@ -1788,8 +1788,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#16A34A",
     "url": "https://www.google.com/maps/place/Kawaramachi-dori+St/data=!4m2!3m1!1s0x60010895e68acd71:0x75ec60b80ce8416a",
-    "lat": 35.02622,
-    "lng": 135.769282
+    "lat": 35.0016984,
+    "lng": 135.7689646
   },
   {
     "name": "Samurai Kembu Theater",
@@ -1800,8 +1800,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/Samurai+Kembu+Theater/data=!4m2!3m1!1s0x60010cf870730c5d:0x469276a5ce5dc5d8",
-    "lat": 35.009506,
-    "lng": 135.775557
+    "lat": 35.0095371,
+    "lng": 135.7755388
   },
   {
     "name": "Kamo River Noryo-Yuka",
@@ -1812,8 +1812,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#E63946",
     "url": "https://www.google.com/maps/place/Kamo+River+Noryo-Yuka/data=!4m2!3m1!1s0x600108f2aa152a85:0xe33c214dbc9e9c41",
-    "lat": 35.007,
-    "lng": 135.7716
+    "lat": 35.0053447,
+    "lng": 135.7713594
   },
   {
     "name": "The Flower Corridor",
@@ -1824,8 +1824,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/The+Flower+Corridor/data=!4m2!3m1!1s0x600108eca2dfb7ed:0xd410b3020d287b97",
-    "lat": 35.004,
-    "lng": 135.7758
+    "lat": 35.0089781,
+    "lng": 135.7721
   },
   {
     "name": "Shirakawa Canal",
@@ -1836,8 +1836,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Shirakawa+Canal/data=!4m2!3m1!1s0x600109dc68b3c787:0x973caa294d46a998",
-    "lat": 35.007,
-    "lng": 135.7775
+    "lat": 35.0054778,
+    "lng": 135.7736473
   },
   {
     "name": "Yasaka Pagoda Photo Spot",
@@ -1848,8 +1848,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Yasaka+Pagoda+Photo+Spot/data=!4m2!3m1!1s0x600109000b25d3bf:0x5c488516b40e6f7d",
-    "lat": 34.999,
-    "lng": 135.78
+    "lat": 34.9981052,
+    "lng": 135.780259
   },
   {
     "name": "Ninenzaka",
@@ -1860,8 +1860,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Ninenzaka/data=!4m2!3m1!1s0x600108d018ab0c97:0xe6ae59775061be35",
-    "lat": 34.9967,
-    "lng": 135.7818
+    "lat": 34.9981744,
+    "lng": 135.7808578
   },
   {
     "name": "花見小路（南側）",
@@ -1872,8 +1872,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/%E8%8A%B1%E8%A6%8B%E5%B0%8F%E8%B7%AF%EF%BC%88%E5%8D%97%E5%81%B4%EF%BC%89/data=!4m2!3m1!1s0x60010900525b5f2d:0xb602f38ae095b4f8",
-    "lat": 35.002654,
-    "lng": 135.774868
+    "lat": 35.003611,
+    "lng": 135.775037
   },
   {
     "name": "Hanamikoji Street",
@@ -1884,8 +1884,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Hanamikoji+Street/data=!4m2!3m1!1s0x600109002a9ff16b:0x4dd27bbca3351b74",
-    "lat": 35.003835,
-    "lng": 135.773056
+    "lat": 35.0014922,
+    "lng": 135.7746403
   },
   {
     "name": "Chionin Temple",
@@ -1896,8 +1896,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Chionin+Temple/data=!4m2!3m1!1s0x600108dc414283b9:0x609373abd0eaf97c",
-    "lat": 35.006467,
-    "lng": 135.777701
+    "lat": 35.0051988,
+    "lng": 135.7833827
   },
   {
     "name": "Nanzen-ji",
@@ -1908,8 +1908,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Nanzen-ji/data=!4m2!3m1!1s0x600109217397fbfd:0x38b339a4c7e7004d",
-    "lat": 35.011525,
-    "lng": 135.792721
+    "lat": 35.0114138,
+    "lng": 135.7944841
   },
   {
     "name": "Himeji Castle",
@@ -1920,8 +1920,8 @@ DATA.savedPlaces = [
     "city": "Himeji",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Himeji+Castle/data=!4m2!3m1!1s0x3554e003a23324b3:0x7a4f8c2f6eba81b1",
-    "lat": 34.839331,
-    "lng": 134.69402
+    "lat": 34.839449,
+    "lng": 134.6939047
   },
   {
     "name": "Hiroshima National Peace Memorial Hall for the Atomic Bomb Victims",
@@ -1932,8 +1932,8 @@ DATA.savedPlaces = [
     "city": "Hiroshima",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Hiroshima+National+Peace+Memorial+Hall+for+the+Atomic+Bomb+Victims/data=!4m2!3m1!1s0x355aa20d45357859:0xdb8a027ea4994e41",
-    "lat": 34.393098,
-    "lng": 132.453566
+    "lat": 34.3930037,
+    "lng": 132.4533223
   },
   {
     "name": "Atomic Bomb Dome",
@@ -1944,8 +1944,8 @@ DATA.savedPlaces = [
     "city": "Hiroshima",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Atomic+Bomb+Dome/data=!4m2!3m1!1s0x355aa20cdb2780a9:0x34e6677ae0c6c096",
-    "lat": 34.395967,
-    "lng": 132.454132
+    "lat": 34.395483,
+    "lng": 132.453592
   },
   {
     "name": "Hiroshima Castle",
@@ -1956,8 +1956,8 @@ DATA.savedPlaces = [
     "city": "Hiroshima",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Hiroshima+Castle/data=!4m2!3m1!1s0x355a98a6eaf7e7c3:0xf57be92cb5339632",
-    "lat": 34.402146,
-    "lng": 132.45954
+    "lat": 34.4027456,
+    "lng": 132.4591055
   },
   {
     "name": "Itsukushima Jinja",
@@ -1968,8 +1968,8 @@ DATA.savedPlaces = [
     "city": "Miyajima",
     "color": "#1D4ED8",
     "url": "https://www.google.com/maps/place/Itsukushima+Jinja/data=!4m2!3m1!1s0x601ae3047ec76d8f:0x357228f7d0b5d590",
-    "lat": 34.296542,
-    "lng": 132.319008
+    "lat": 34.2959896,
+    "lng": 132.3198285
   },
   {
     "name": "Tomiaimachi Minamitanoshiri",
@@ -1980,8 +1980,8 @@ DATA.savedPlaces = [
     "city": "Kumamoto",
     "color": "#C9A227",
     "url": "https://www.google.com/maps/place/Tomiaimachi+Minamitanoshiri/data=!4m2!3m1!1s0x35408bcab8f953cb:0x92c6b8f30319e301",
-    "lat": 32.7367,
-    "lng": 130.6833
+    "lat": 32.6974304,
+    "lng": 130.6790901
   },
   {
     "name": "Solaria Nishitetsu Hotel Kagoshima",
@@ -1992,8 +1992,8 @@ DATA.savedPlaces = [
     "city": "Kagoshima",
     "color": "#7C3AED",
     "url": "https://www.google.com/maps/place/Solaria+Nishitetsu+Hotel+Kagoshima/data=!4m2!3m1!1s0x353f0ee10e51723d:0x18bd25ea1a14320d",
-    "lat": 31.5834,
-    "lng": 130.544
+    "lat": 31.5834426,
+    "lng": 130.5442352
   },
   {
     "name": "CANDEO HOTELS Kumamoto Shinshigai",
@@ -2004,8 +2004,8 @@ DATA.savedPlaces = [
     "city": "Kumamoto",
     "color": "#7C3AED",
     "url": "https://www.google.com/maps/place/CANDEO+HOTELS+Kumamoto+Shinshigai/data=!4m2!3m1!1s0x3540f51904228b41:0x81eb1a22aa3bc8fe",
-    "lat": 32.8013,
-    "lng": 130.7066
+    "lat": 32.7986429,
+    "lng": 130.7062251
   },
   {
     "name": "THE KNOT HIROSHIMA",
@@ -2016,8 +2016,8 @@ DATA.savedPlaces = [
     "city": "Hiroshima",
     "color": "#7C3AED",
     "url": "https://www.google.com/maps/place/THE+KNOT+HIROSHIMA/data=!4m2!3m1!1s0x355aa21307545537:0x3577cd31df89ecf7",
-    "lat": 34.3933,
-    "lng": 132.4595
+    "lat": 34.3894008,
+    "lng": 132.4552309
   },
   {
     "name": "Hotel Resol Kyoto Shijo Muromachi",
@@ -2028,8 +2028,8 @@ DATA.savedPlaces = [
     "city": "Kyoto",
     "color": "#7C3AED",
     "url": "https://www.google.com/maps/place/Hotel+Resol+Kyoto+Shijo+Muromachi/data=!4m2!3m1!1s0x600108993ee95da3:0xac7e58fea99c02f4",
-    "lat": 35.0033,
-    "lng": 135.7589
+    "lat": 35.0006295,
+    "lng": 135.7578639
   },
   {
     "name": "nol hakone myojindai",
@@ -2040,8 +2040,8 @@ DATA.savedPlaces = [
     "city": "Hakone",
     "color": "#7C3AED",
     "url": "https://www.google.com/maps/place/nol+hakone+myojindai/data=!4m2!3m1!1s0x6019a136a62db4dd:0x422f96db97a4acb3",
-    "lat": 35.2537,
-    "lng": 139.0411
+    "lat": 35.2604977,
+    "lng": 139.048987
   },
   {
     "name": "THE GATE HOTEL Kaminarimon by HULIC",
@@ -2052,8 +2052,8 @@ DATA.savedPlaces = [
     "city": "Tokyo",
     "color": "#7C3AED",
     "url": "https://www.google.com/maps/place/THE+GATE+HOTEL+Kaminarimon+by+HULIC/data=!4m2!3m1!1s0x60188ec73a51fbf3:0x7737c65c2fed1b14",
-    "lat": 35.7113,
-    "lng": 139.796
+    "lat": 35.7108653,
+    "lng": 139.7953066
   },
   {
     "name": "Kissaten Niki Niki",

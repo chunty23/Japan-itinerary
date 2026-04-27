@@ -1,0 +1,7 @@
+[build]
+  publish = "."
+  # Replace the placeholder in config.js with the env-var at deploy time.
+  command = "sed -i \"s|%GOOGLE_MAPS_API_KEY%|${GOOGLE_MAPS_API_KEY}|g\" config.js"
+
+[build.environment]
+  NODE_VERSION = "20"

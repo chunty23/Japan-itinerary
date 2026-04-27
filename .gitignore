@@ -1,0 +1,12 @@
+config.local.js
+coord-cache.json
+geocode-cache.json
+outlier-coords*.json
+flagged_urls.json
+*.zip
+preview-*.png
+m1.png
+m2.png
+m3.png
+__pycache__/
+.netlify/

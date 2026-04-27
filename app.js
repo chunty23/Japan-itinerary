@@ -504,6 +504,7 @@ function openPlacePanel(idx){
   $('#mppPanel').classList.add('open');
   $('#mppPanel').setAttribute('aria-hidden', 'false');
   $('#mppOverlay').classList.add('open');
+  document.body.classList.add('mpp-open');
 
   if (mapState.map && typeof p.lat === 'number' && typeof p.lng === 'number'){
     mapState.map.setView([p.lat, p.lng], Math.max(mapState.map.getZoom(), 14), {animate:true});
@@ -520,6 +521,7 @@ function closePlacePanel(){
     panel.setAttribute('aria-hidden', 'true');
   }
   if (overlay) overlay.classList.remove('open');
+  document.body.classList.remove('mpp-open');
   const iframe = $('#mppEmbed');
   if (iframe) iframe.removeAttribute('src');
   mapState.selectedIdx = null;
