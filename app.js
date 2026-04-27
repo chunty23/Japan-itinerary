@@ -441,20 +441,27 @@ function formatBookingDate(d){
 }
 
 function jumpToDay(dayNum){
+  const target = String(dayNum).trim();
   const tabBtn = document.querySelector('[data-tab="itinerary"]');
   if (tabBtn) tabBtn.click();
   setTimeout(()=>{
-    const cards = $$('#tab-itinerary .day-card');
-    cards.forEach(c=>{
-      const num = c.querySelector('.day-num');
-      if (num && num.textContent.trim().startsWith(String(dayNum))) {
-        c.classList.add('open');
-        c.scrollIntoView({behavior:'smooth', block:'center'});
-        c.style.transition='box-shadow .4s';
-        c.style.boxShadow='0 0 0 3px rgba(188,0,45,.4)';
-        setTimeout(()=>c.style.boxShadow='', 1500);
-      }
-    });
+    // Exact match by data-day attribute (not startsWith — "1" must NOT match 10–19)
+    let card = document.querySelector(`#tab-itinerary .day-card[data-day="${CSS.escape(target)}"]`);
+    if (!card) {
+      // Fallback: parse the leading digits of .day-num text content for exact match
+      $$('#tab-itinerary .day-card').forEach(c=>{
+        if (card) return;
+        const num = c.querySelector('.day-num');
+        const m = num && num.textContent.match(/^\s*(\d+)/);
+        if (m && m[1] === target) card = c;
+      });
+    }
+    if (!card) return;
+    card.classList.add('open');
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.style.transition='box-shadow .4s';
+    card.style.boxShadow='0 0 0 3px rgba(188,0,45,.4)';
+    setTimeout(()=>{ card.style.boxShadow=''; }, 1500);
   },180);
 }
 window.jumpToDay = jumpToDay;
@@ -495,7 +502,7 @@ function renderItinerary(){
     const cityShort = (d.city||'').split('\n')[0];
     const teaser = ((d.highlights||'').split('\n').filter(l=>l.trim())[0]) || '';
     const isToday = i === idx;
-    html += `<div class="day-card ${isToday?'today-highlight':''}" onclick="toggleOpen(this)">
+    html += `<div class="day-card ${isToday?'today-highlight':''}" data-day="${esc(String(d.day))}" onclick="toggleOpen(this)">
       <div class="day-card-header">
         <div class="day-num">${esc(d.day)}<small>DAY</small></div>
         <div class="day-info">
