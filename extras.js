@@ -17,6 +17,8 @@
 
   const SHEET_VIEW_URL = 'https://docs.google.com/spreadsheets/d/1vBAilO53g5teNXc3IisZ2-22_JfcPi7wiaMG-bFxCnM/edit';
   const TRAVELERS = ['Kyle', 'Charlie', 'Bob', 'Wendy', 'Cody', 'JJ', 'Brady'];
+  const IDENTITY_KEY = 'japan2026_identity';
+  const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const PLACE_CATEGORIES = ['Dining','Cafe','Sightseeing','Shopping','Hotel','Nightlife','Transit','Cultural','Activity'];
   const BOOKING_TYPES = ['Hotel','Restaurant','Activity','Tour','Other'];
   const TRANSPORT_MODES = ['Shinkansen','Train','Flight','Bus','Ferry','Taxi','Rental Car','Walk'];
@@ -258,7 +260,13 @@
     document.body.appendChild(btn);
   }
 
-  function openAddModal(){
+  async function openAddModal(){
+    const id = await ensureIdentity();
+    if (!id) return; // user cancelled identity prompt
+    showAddModal(id);
+  }
+
+  function showAddModal(identity){
     const existing = document.getElementById('extrasModal');
     if (existing) existing.remove();
     const m = document.createElement('div');
@@ -282,6 +290,10 @@
           <button type="button" class="extras-btn-primary" id="extrasSubmit">Add</button>
         </footer>
         <div class="extras-status" id="extrasStatus"></div>
+        <div class="extras-signed-in" id="extrasSignedIn">
+          Signed in as <span class="ex-who" id="extrasSignedInName">${esc(identity.name)}</span>
+          <button type="button" class="ex-switch" id="extrasSwitch">Sign in as someone else</button>
+        </div>
       </div>`;
     document.body.appendChild(m);
     document.body.style.overflow = 'hidden';
@@ -341,6 +353,14 @@
         status.className = 'extras-status err';
         submitBtn.disabled = false;
       }
+    });
+
+    // "Sign in as someone else" — clear identity, close add-modal, re-prompt
+    m.querySelector('#extrasSwitch').addEventListener('click', async () => {
+      clearIdentity();
+      close();
+      const next = await promptIdentity();
+      if (next) showAddModal(next);
     });
 
     // focus first input
@@ -403,7 +423,6 @@
             <option value="">Day (optional)</option>${dayOpts}
           </select>
           <textarea class="ex-input" id="exNotes" rows="2" placeholder="Notes (why you want to go, who suggested it…)"></textarea>
-          <input type="text" class="ex-input" id="exAddedBy" placeholder="Added by (your name)" />
         </div>
         <input type="hidden" id="exLat"><input type="hidden" id="exLng"><input type="hidden" id="exPlaceId">
         <input type="hidden" id="exGoogleUrl"><input type="hidden" id="exAddress"><input type="hidden" id="exWebsite"><input type="hidden" id="exRating">`;
@@ -439,7 +458,6 @@
           <input type="text" class="ex-input" id="exConfirmation" placeholder="Confirmation #" />
           <input type="url" class="ex-input" id="exLink" placeholder="Booking link (optional)" />
           <textarea class="ex-input" id="exNotes" rows="2" placeholder="Notes"></textarea>
-          <input type="text" class="ex-input" id="exAddedBy" placeholder="Added by (your name)" />
         </div>
         <input type="hidden" id="exLat"><input type="hidden" id="exLng"><input type="hidden" id="exPlaceId"><input type="hidden" id="exAddress">`;
       attachAutocomplete(el.querySelector('#exPacName'), data => {
@@ -469,7 +487,6 @@
           <input type="text" class="ex-input" id="exReference" placeholder="Reference / seat / booking #" />
           <input type="url" class="ex-input" id="exLink" placeholder="Link (optional)" />
           <textarea class="ex-input" id="exNotes" rows="2" placeholder="Notes"></textarea>
-          <input type="text" class="ex-input" id="exAddedBy" placeholder="Added by (your name)" />
         </div>`;
     }
     else if (type === 'Day_Items'){
@@ -489,7 +506,6 @@
           <input type="text" class="ex-input" id="exWho" placeholder="Who" />
           <input type="text" class="ex-input" id="exCost" placeholder="Cost (optional)" />
           <textarea class="ex-input" id="exNotes" rows="2" placeholder="Notes"></textarea>
-          <input type="text" class="ex-input" id="exAddedBy" placeholder="Added by (your name)" />
         </div>
         <input type="hidden" id="exPlaceId"><input type="hidden" id="exGoogleUrl">`;
       attachAutocomplete(el.querySelector('#exPacName'), data => {
@@ -520,12 +536,102 @@
     if (r){ r.hidden = false; r.innerHTML = `<span class="ex-pin">📍</span> ${esc(d.name)}<span class="ex-sub">${esc(d.address||'')}</span>`; }
   }
 
+  // ── IDENTITY ──────────────────────────────────────────────────────────────
+  function getIdentity(){
+    try {
+      const raw = localStorage.getItem(IDENTITY_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (obj && obj.name && obj.email && EMAIL_RE.test(obj.email)) return obj;
+      return null;
+    } catch(_) { return null; }
+  }
+  function saveIdentity(id){
+    try { localStorage.setItem(IDENTITY_KEY, JSON.stringify(id)); } catch(_) {}
+  }
+  function clearIdentity(){
+    try { localStorage.removeItem(IDENTITY_KEY); } catch(_) {}
+  }
+
+  // Show the identity prompt; resolves with the saved identity, or null if cancelled.
+  function promptIdentity(){
+    return new Promise(resolve => {
+      const existing = document.getElementById('extrasIdentityModal');
+      if (existing) existing.remove();
+      const m = document.createElement('div');
+      m.id = 'extrasIdentityModal';
+      m.className = 'extras-modal-backdrop';
+      const opts = TRAVELERS.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+      m.innerHTML = `
+        <div class="extras-modal" role="dialog" aria-modal="true" aria-labelledby="extrasIdentityTitle">
+          <header class="extras-modal-header">
+            <h3 id="extrasIdentityTitle">Who's adding this?</h3>
+            <button class="extras-modal-close" aria-label="Close">×</button>
+          </header>
+          <div class="extras-identity">
+            <p>So we can credit your additions and follow up if needed. Saved on this device only — no password required.</p>
+            <select class="ex-input" id="idName" aria-label="Your name">
+              <option value="">Pick your name…</option>
+              ${opts}
+              <option value="__other">Other…</option>
+            </select>
+            <input type="text" class="ex-input" id="idNameOther" placeholder="Your name" hidden />
+            <input type="email" class="ex-input" id="idEmail" placeholder="Email address" autocomplete="email" inputmode="email" />
+          </div>
+          <div class="extras-identity-err" id="idErr"></div>
+          <footer class="extras-modal-footer">
+            <button type="button" class="extras-btn-ghost" id="idCancel">Cancel</button>
+            <button type="button" class="extras-btn-primary" id="idSave">Continue</button>
+          </footer>
+        </div>`;
+      document.body.appendChild(m);
+      document.body.style.overflow = 'hidden';
+
+      const close = (val) => { m.remove(); document.body.style.overflow = ''; resolve(val || null); };
+      m.addEventListener('click', e => { if (e.target === m) close(null); });
+      m.querySelector('.extras-modal-close').addEventListener('click', () => close(null));
+      m.querySelector('#idCancel').addEventListener('click', () => close(null));
+      document.addEventListener('keydown', function esc(e){
+        if (e.key === 'Escape'){ close(null); document.removeEventListener('keydown', esc); }
+      });
+
+      const sel = m.querySelector('#idName');
+      const other = m.querySelector('#idNameOther');
+      sel.addEventListener('change', () => {
+        if (sel.value === '__other'){ other.hidden = false; setTimeout(() => other.focus(), 30); }
+        else { other.hidden = true; other.value = ''; }
+      });
+
+      m.querySelector('#idSave').addEventListener('click', () => {
+        const errEl = m.querySelector('#idErr');
+        let name = sel.value === '__other' ? other.value.trim() : sel.value;
+        const email = (m.querySelector('#idEmail').value || '').trim();
+        if (!name){ errEl.textContent = 'Pick your name (or choose Other and type it).'; return; }
+        if (!EMAIL_RE.test(email)){ errEl.textContent = 'Enter a valid email address.'; return; }
+        const id = { name, email };
+        saveIdentity(id);
+        close(id);
+      });
+
+      setTimeout(() => sel.focus(), 50);
+    });
+  }
+
+  async function ensureIdentity(){
+    const cur = getIdentity();
+    if (cur) return cur;
+    return await promptIdentity();
+  }
+
   function collectForm(type, form){
     const v = id => (form.querySelector('#'+id) && form.querySelector('#'+id).value || '').trim();
-    const addedBy = v('exAddedBy') || 'Anonymous';
+    const ident = getIdentity() || { name: 'Anonymous', email: '' };
+    const addedBy = ident.name;
+    const addedByEmail = ident.email;
     if (type === 'Places'){
       return {
-        added_by: addedBy, day: v('exDay'), city: v('exCity'),
+        added_by: addedBy, added_by_email: addedByEmail,
+        day: v('exDay'), city: v('exCity'),
         name: v('exName'), category: v('exCategory'),
         address: v('exAddress'),
         lat: v('exLat'), lng: v('exLng'),
@@ -536,7 +642,8 @@
     }
     if (type === 'Bookings'){
       return {
-        added_by: addedBy, type: v('exType'), name: v('exName'),
+        added_by: addedBy, added_by_email: addedByEmail,
+        type: v('exType'), name: v('exName'),
         city: v('exCity'),
         check_in: v('exCheckIn'), check_out: v('exCheckOut'),
         who: v('exWho'), confirmation: v('exConfirmation'),
@@ -548,7 +655,8 @@
     }
     if (type === 'Transport'){
       return {
-        added_by: addedBy, mode: v('exMode'),
+        added_by: addedBy, added_by_email: addedByEmail,
+        mode: v('exMode'),
         from: v('exFrom'), to: v('exTo'),
         depart_date: v('exDepartDate'),
         depart_time: v('exDepartTime'), arrive_time: v('exArriveTime'),
@@ -559,7 +667,8 @@
     }
     if (type === 'Day_Items'){
       return {
-        added_by: addedBy, day: v('exDay'), section: v('exSection'),
+        added_by: addedBy, added_by_email: addedByEmail,
+        day: v('exDay'), section: v('exSection'),
         title: v('exTitle'), time: v('exTime'),
         duration_min: v('exDuration'),
         place_id: v('exPlaceId'), google_url: v('exGoogleUrl'),

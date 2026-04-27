@@ -823,6 +823,30 @@ textarea.ex-input{ resize:vertical; min-height: 60px; }
 .extras-status.ok{ color: #16a34a; }
 .extras-status.err{ color: var(--accent); }
 
+/* Identity gate (sign-in modal) */
+.extras-identity{
+  display:flex; flex-direction:column; gap:.7rem; padding: 1.1rem 1.1rem .25rem;
+}
+.extras-identity p{
+  margin:0 0 .25rem; font-size:.86rem; line-height:1.45; color: var(--muted);
+}
+.extras-identity .ex-input{ width:100%; }
+.extras-identity-err{ font-size:.78rem; color: var(--accent); min-height:1em; padding: 0 1.1rem; }
+
+/* Signed-in chip in modal footer */
+.extras-signed-in{
+  display:flex; align-items:center; gap:.5rem;
+  padding: .55rem 1.1rem; border-top:1px solid var(--border);
+  font-size:.76rem; color: var(--muted); flex-shrink:0;
+}
+.extras-signed-in .ex-who{ color: var(--text); font-weight:600; }
+.extras-signed-in .ex-switch{
+  margin-left:auto; background:none; border:none; padding:0;
+  font: inherit; color: var(--accent); cursor:pointer; text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.extras-signed-in .ex-switch:hover{ opacity:.8; }
+
 /* Google Places Autocomplete dropdown — raise above modal */
 .pac-container{ z-index: 9200 !important; border-radius: 10px; box-shadow: 0 16px 40px rgba(0,0,0,.25); border:1px solid var(--border); margin-top:2px; }
 body.dark .pac-container{ background:#221b16; color:var(--text); }
@@ -1180,7 +1204,7 @@ body.printing > *:not(#printableRoot){display:none!important}
 <!-- Apps Script web-app URL for collaborative editing.
      Paste your URL into JAPAN2026_APPS_SCRIPT_URL below — see SETUP_EDITING.md.
      If left blank, the "+ Add" button will tell editors setup isn't finished. -->
-<script>window.JAPAN2026_APPS_SCRIPT_URL = "";</script>
+<script>window.JAPAN2026_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzs3zGL0C5mBU8o_VpJZ-52_GgDeBfBDMPo-ZSA-quileuEdfXKr62UX8ckuLpaP1UfkA/exec";</script>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="config.js"></script>
