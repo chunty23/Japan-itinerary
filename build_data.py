@@ -2,12 +2,45 @@
 """Build enriched data.js for Japan 2026 app."""
 import json, re, sys
 
-# Load existing data
+# Load existing data — robustly extract just the JSON object literal
+# (data.js may have `DATA.savedPlaces = [...]` appended after the main const)
 with open('data.js','r') as f:
     content = f.read()
-m = re.search(r'const DATA = (.*)', content, re.DOTALL)
-js = m.group(1).rstrip().rstrip(';').strip()
+m = re.search(r'const DATA = ', content)
+start = m.end()
+# Walk braces to find matching closing '}'
+depth = 0
+in_str = False
+esc = False
+end = None
+for i in range(start, len(content)):
+    ch = content[i]
+    if in_str:
+        if esc:
+            esc = False
+        elif ch == '\\':
+            esc = True
+        elif ch == '"':
+            in_str = False
+    else:
+        if ch == '"':
+            in_str = True
+        elif ch == '{':
+            depth += 1
+        elif ch == '}':
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+if end is None:
+    raise SystemExit('Could not find end of DATA object')
+js = content[start:end]
 data = json.loads(js)
+# Preserve any post-DATA tail (e.g. DATA.savedPlaces) so we can re-emit it.
+_tail = content[end:].lstrip(' ;\n')
+if _tail.startswith(';'):
+    _tail = _tail[1:]
+_post_data_tail = _tail.lstrip()
 
 # ── DAY METADATA: ISO dates, hotel info, key timed events ─────────────
 # JST = UTC+9
@@ -58,9 +91,9 @@ bookings = [
     {"category": "Trains", "day": 18, "date": "2026-06-07", "time": "16:19 JST", "title": "Train to Shinagawa → Narita Express", "who": "Kyle & Charlie", "details": "Tokyo → Narita Airport Terminal 1 (auto-imported from Gmail).", "url": "https://maps.google.com/?q=Shinagawa+Station", "status": "Booked", "source": "Google Calendar"},
     # ACTIVITIES — confirmed
     {"category": "Activities", "day": 6, "date": "2026-05-26", "time": "11:00 JST", "title": "Hozugawa-kudari Boat Ride", "who": "All 7", "details": "Arashiyama river boat (~2 hrs). Ends near Togetsukyo / Arashiyama. Pair with Bamboo Grove first.", "url": "https://www.hozugawakudari.jp/en", "status": "Booked"},
-    {"category": "Activities", "day": 6, "date": "2026-05-26", "time": "13:45 JST", "title": "Lunch at Itsuki Chaya Arashiyama Honten", "who": "All 7", "details": "Right at Togetsukyo. Yudofu and obanzai set lunch — perfect post-boat. Pulled from your Gmail confirmation.", "url": "https://maps.google.com/?q=Itsuki+Chaya+Arashiyama+Honten", "status": "Booked", "source": "Google Calendar"},
     {"category": "Activities", "day": 6, "date": "2026-05-26", "time": "19:00 JST", "title": "TeamLab Kyoto", "who": "All 7", "details": "Entry 7:00–7:30 pm. Allow ~90 min inside.", "url": "https://www.teamlab.art/e/kyoto/", "status": "Booked"},
-    {"category": "Activities", "day": 14, "date": "2026-06-03", "time": "18:00 JST", "title": "Chanko Wanko — Sumo Show + Chanko Nabe Dinner", "who": "All 7", "details": "Ryogoku sumo district. Walk past Kokugikan beforehand. Confirm broth is non-seafood for Cody & JJ.", "url": "https://maps.google.com/?q=Chanko+Wanko+Tokyo", "status": "Booked"},
+    {"category": "To Book", "day": 6, "date": "2026-05-26", "time": "Lunch", "title": "Lunch at Itsuki Chaya Arashiyama Honten", "who": "All 7", "details": "Right at Togetsukyo. Yudofu and obanzai set lunch — perfect post-boat. Reservation not yet made.", "url": "https://maps.google.com/?q=Itsuki+Chaya+Arashiyama+Honten", "status": "To Book"},
+    {"category": "To Book", "day": 14, "date": "2026-06-03", "time": "Dinner", "title": "Chanko Wanko — Sumo Show + Chanko Nabe Dinner", "who": "All 7", "details": "Ryogoku sumo district. Walk past Kokugikan beforehand. Confirm broth is non-seafood for Cody & JJ. Reservation not yet made.", "url": "https://maps.google.com/?q=Chanko+Wanko+Tokyo", "status": "To Book"},
     # TO-BOOK (high priority)
     {"category": "To Book", "day": 12, "date": "2026-06-01", "time": "Sunset slot", "title": "Shibuya Sky observation deck", "who": "All 7", "details": "¥3,400 pp · Book 4 weeks ahead for sunset slot. shibuya-sky.tokyo", "url": "https://www.shibuya-scramble-square.com/sky/", "status": "To Book"},
     {"category": "To Book", "day": 13, "date": "2026-06-02", "time": "Morning", "title": "Betty Smith Custom Jeans Workshop — Ebisu", "who": "Group of choice", "details": "2-3 hr workshop · betty-smith.com — book well ahead.", "url": "https://betty-smith.com/", "status": "To Book"},
@@ -109,8 +142,6 @@ packing = [
     {"category": "Carry-on Strategy", "item": "Pack 4-day carry-on for Atami", "note": "K&C only · same hotel = simple"},
     {"category": "Pre-Departure (1 wk)", "item": "Confirm Hozugawa boat (May 26 11:00)", "note": "Ride is rain-or-shine"},
     {"category": "Pre-Departure (1 wk)", "item": "Confirm TeamLab Kyoto (May 26 19:00)", "note": "QR ticket on phone"},
-    {"category": "Pre-Departure (1 wk)", "item": "Confirm Chanko Wanko Sumo dinner (Jun 3 18:00)", "note": "Confirm broth is non-seafood"},
-    {"category": "Pre-Departure (1 wk)", "item": "Confirm Itsuki Chaya lunch (May 26 13:45)", "note": "Tell them about no-egg + no-seafood requirements"},
     {"category": "Pre-Departure (1 wk)", "item": "Print 1-page itinerary backup", "note": "In case phone dies"},
 ]
 
@@ -157,14 +188,6 @@ for d in data['days']:
             d['activities'] = (
                 "🚄 Kyle & Charlie: Shinkansen Kagoshima-Chuo → Kumamoto (10:32 JST · ~50 min)\n"
                 "🚄 Bob & Wendy: Shinkansen Hakata → Kumamoto (10:38 JST · ~33 min)\n" + d['activities']
-            )
-    if d.get('day') == '6':
-        # Add Itsuki Chaya
-        if 'Itsuki Chaya' not in d.get('highlights','') and 'Itsuki Chaya' not in d.get('activities',''):
-            d['highlights'] = d['highlights'].rstrip() + "\n🍱 Lunch at Itsuki Chaya Arashiyama Honten — 1:45 pm  ✓ BOOKED"
-            d['activities'] = d['activities'].replace(
-                "🍜 Nagashi somen at Hirobun",
-                "🍱 Lunch: Itsuki Chaya Arashiyama Honten (1:45 pm) — yudofu & obanzai set, right at Togetsukyo · 100m from boat exit\n🍜 Optional: nagashi somen at Hirobun (if not full from lunch)"
             )
 
 # ── ATTACH meta to days
@@ -240,9 +263,58 @@ data['phrasebook'] = phrasebook
 data['mapPoints'] = map_points
 data['dayMeta'] = day_meta
 
+# ── SANITIZE booked-language for dining (we have NOT made any food reservations) ──
+# Days highlights/activities: strip " ✓ BOOKED" tags from food/dining-context lines only,
+# and " ✓ BOOKED" from the Chanko Wanko sumo dinner line. Keep transit/activity bookings intact.
+import re as _re
+_FOOD_BOOKED_PATTERNS = [
+    r' ✓ BOOKED(?=\\n|")',  # generic trailing tag
+]
+for d in data.get('days', []):
+    for k in ('highlights','activities','notes'):
+        if k not in d: continue
+        v = d[k]
+        # Remove "✓ BOOKED" only from lines mentioning Itsuki Chaya OR Chanko/Wanko (food, not yet booked)
+        new_lines = []
+        for line in v.split('\n'):
+            if ('Itsuki Chaya' in line or 'Chanko' in line or 'Wanko' in line) and '✓ BOOKED' in line:
+                line = line.replace(' ✓ BOOKED', '').replace('✓ BOOKED','').rstrip()
+            new_lines.append(line)
+        d[k] = '\n'.join(new_lines)
+# Dining list: rewrite Chanko Wanko entry to reflect "to book" reality
+for entry in data.get('dining', []):
+    if isinstance(entry, dict) and 'Chanko Wanko' in entry.get('name',''):
+        entry['name'] = 'Chanko Wanko'
+        entry['price'] = entry.get('price','').replace('already agreed','TBD').replace('Group rate','Group rate')
+        entry['seats'] = '⚠️ To book · group of 7'
+        entry['reservation'] = 'To book · target Wed Jun 3, 6:00pm'
+        det = entry.get('details','')
+        det = det.replace('Already confirmed!','Reservation not yet made.').replace('already confirmed','reservation not yet made')
+        entry['details'] = det
+# Strip the "TOP BOOKED" / "✓ BOOKED" labels from any other dining highlights field
+for entry in data.get('dining', []):
+    if not isinstance(entry, dict): continue
+    for k,v in list(entry.items()):
+        if isinstance(v, str):
+            entry[k] = v.replace('✓ BOOKED','').replace('TOP BOOKED','TOP PICK').replace('✅ BOOKED','To book')
+# Itinerary section data arrays may also reference "✓ BOOKED"
+for sec in data.get('itinerarySections', []) if isinstance(data.get('itinerarySections'), list) else []:
+    if isinstance(sec, dict) and isinstance(sec.get('data'), list):
+        sec['data'] = [
+            (cell.replace('\n(✓ BOOKED)','').replace('(✓ BOOKED)','').rstrip()
+             if isinstance(cell, str) and ('Itsuki' in cell or 'Chanko' in cell or 'Wanko' in cell)
+             else cell)
+            for cell in sec['data']
+        ]
+
 with open('data.js','w') as f:
     f.write("// Japan 2026 — enriched data, generated " + __import__('datetime').datetime.now().strftime('%Y-%m-%d') + "\n")
     f.write("const DATA = " + json.dumps(data, ensure_ascii=False) + ";\n")
+    if _post_data_tail:
+        f.write("\n")
+        f.write(_post_data_tail)
+        if not _post_data_tail.endswith('\n'):
+            f.write('\n')
 print("Wrote data.js")
 print("Days:", len(data['days']))
 print("Bookings:", len(bookings))
