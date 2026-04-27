@@ -79,9 +79,10 @@ a:hover{text-decoration:underline}
   color:#fff;text-align:center;position:relative;overflow:hidden;
   border-bottom:1px solid var(--border);
   /* Apple HIG: respect Dynamic Island / notch / status bar safe area.
-     Buffer = 1.5rem (24pt) below safe-area-inset-top so the title clears
-     status-bar icons + Dynamic Island per Apple's 16-24pt guidance. */
-  padding-top: max(3.2rem, calc(env(safe-area-inset-top) + 1.5rem));
+     Buttons are absolutely positioned at top:safe-area+0.6rem and are ~38px
+     tall — so the title must start at least safe-area + ~4rem below the top
+     to clear BOTH the status bar AND the PDF / theme buttons. */
+  padding-top: max(5rem, calc(env(safe-area-inset-top) + 4rem));
   padding-right: max(1.5rem, env(safe-area-inset-right));
   padding-bottom: 2.4rem;
   padding-left: max(1.5rem, env(safe-area-inset-left));
@@ -550,9 +551,11 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 
 /* ──────── RESPONSIVE ──────── */
 @media(max-width:640px){
-  /* Keep safe-area on mobile — split padding so we don't override env() */
+  /* Keep safe-area on mobile — split padding so we don't override env().
+     Top padding must clear BOTH the status bar AND the button row above
+     the title (buttons occupy safe-area + .6rem to safe-area + ~3rem). */
   .hero{
-    padding-top: max(3.5rem, calc(env(safe-area-inset-top) + 1.5rem));
+    padding-top: max(5rem, calc(env(safe-area-inset-top) + 3.75rem));
     padding-right: max(1rem, env(safe-area-inset-right));
     padding-bottom: 1.8rem;
     padding-left: max(1rem, env(safe-area-inset-left));
