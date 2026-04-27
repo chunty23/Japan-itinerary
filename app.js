@@ -55,19 +55,135 @@ function scrollToTodayCard(){
 }
 window.scrollToTodayCard = scrollToTodayCard;
 
-// ── Export itinerary as PDF (uses native browser print)
+// ── Export itinerary as PDF — builds a dedicated, clean printable view
+function escHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function buildPrintableHTML(){
+  const days = (DATA.days || []).filter(d => d.day && /^\d+$/.test(String(d.day)));
+  const meta = DATA.dayMeta || {};
+  const places = (DATA.savedPlaces || []);
+  const phrases = (DATA.phrasebook || []);
+  // Group savedPlaces by city
+  const placesByCity = {};
+  places.forEach(p => { (placesByCity[p.city] = placesByCity[p.city] || []).push(p); });
+
+  let html = '';
+
+  // Cover
+  html += `<section class="pp-cover">
+    <div class="pp-flag">🎌</div>
+    <h1>Japan 2026 · Family Itinerary</h1>
+    <p class="pp-sub">May 21 – June 8, 2026 · 19 Days</p>
+    <p class="pp-route">Kagoshima › Kumamoto › Hiroshima › Miyajima › Himeji › Osaka › Nara › Nagano › Kyoto › Hakone › Atami › Izu › Tokyo › Seoul</p>
+    <div class="pp-travelers">
+      <strong>Travelers (7):</strong> Kyle &amp; Charlie · Bob &amp; Wendy · Cody &amp; JJ · Brady
+    </div>
+    <div class="pp-dietary">
+      <strong>Dietary:</strong> Brady = no egg · Cody &amp; JJ = no seafood/shellfish/fish dashi
+    </div>
+    <div class="pp-legend">
+      <strong>Map color key</strong>
+      ${Object.keys(MAP_CAT_META).map(c=>`<span class="pp-legend-item"><span class="pp-legend-dot" style="background:${MAP_CAT_META[c].color}"></span>${MAP_CAT_META[c].emoji} ${c}</span>`).join('')}
+    </div>
+    <p class="pp-generated">Generated ${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}</p>
+  </section>`;
+
+  // Daily itinerary
+  html += `<section class="pp-section pp-itin"><h2>Day-by-Day Itinerary</h2>`;
+  let lastRegion = null;
+  days.forEach((d) => {
+    const region = d.region || '';
+    if (region && region !== lastRegion){
+      html += `<div class="pp-region">${escHtml(region)}</div>`;
+      lastRegion = region;
+    }
+    html += `<article class="pp-day"><div class="pp-day-head">
+      <span class="pp-day-num">Day ${escHtml(d.day)}</span>
+      <span class="pp-day-date">${escHtml(d.date)}</span>
+      <span class="pp-day-city">${escHtml(d.city||'').split('\n')[0]}</span>
+    </div>`;
+    if (d.hotel)     html += `<div class="pp-row"><span class="pp-lbl">Hotel:</span> ${escHtml(d.hotel)}</div>`;
+    if (d.transport) html += `<div class="pp-row"><span class="pp-lbl">Transport:</span> ${escHtml(d.transport)}</div>`;
+    if (d.highlights){
+      html += `<div class="pp-row"><span class="pp-lbl">Highlights:</span></div><ul class="pp-list">`;
+      String(d.highlights).split(/\n/).forEach(h => h.trim() && (html += `<li>${escHtml(h.trim())}</li>`));
+      html += `</ul>`;
+    }
+    if (d.activities){
+      html += `<div class="pp-row"><span class="pp-lbl">Activities &amp; Sights:</span></div><ul class="pp-list">`;
+      String(d.activities).split(/\n/).forEach(a => a.trim() && (html += `<li>${escHtml(a.trim())}</li>`));
+      html += `</ul>`;
+    }
+    if (d.food){
+      html += `<div class="pp-row"><span class="pp-lbl">Food picks:</span> ${escHtml(d.food)}</div>`;
+    }
+    if (d.notes){
+      html += `<div class="pp-row pp-notes"><span class="pp-lbl">Notes:</span> ${escHtml(d.notes)}</div>`;
+    }
+    html += `</article>`;
+  });
+  html += `</section>`;
+
+  // Bookings
+  if (DATA.bookings && DATA.bookings.length){
+    html += `<section class="pp-section pp-bookings"><h2>Confirmed Bookings</h2><table class="pp-table">
+      <thead><tr><th>Date</th><th>Time</th><th>Title</th><th>Who</th></tr></thead><tbody>`;
+    DATA.bookings.forEach(b => {
+      html += `<tr><td>${escHtml(b.date||'')}</td><td>${escHtml(b.time||'')}</td><td>${escHtml(b.title||'')}</td><td>${escHtml(b.who||'')}</td></tr>`;
+    });
+    html += `</tbody></table></section>`;
+  }
+
+  // Saved places by city
+  html += `<section class="pp-section pp-places"><h2>Saved Places (${places.length})</h2>`;
+  MAP_CITIES_ORDER.forEach(city => {
+    const list = placesByCity[city];
+    if (!list || !list.length) return;
+    html += `<div class="pp-place-city"><h3>${escHtml(city)} <span class="pp-count">${list.length}</span></h3><ul class="pp-place-list">`;
+    list.forEach(p => {
+      const m = MAP_CAT_META[p.category] || {emoji:'',color:'#888'};
+      html += `<li><span class="pp-place-dot" style="background:${m.color}"></span><span class="pp-place-emoji">${m.emoji}</span><strong>${escHtml(p.name)}</strong> <span class="pp-place-cat">· ${escHtml(p.category)}</span>${p.note?`<div class="pp-place-note">${escHtml(p.note)}</div>`:''}</li>`;
+    });
+    html += `</ul></div>`;
+  });
+  html += `</section>`;
+
+  // Phrasebook
+  if (phrases.length){
+    html += `<section class="pp-section pp-phrases"><h2>Phrasebook (${phrases.length})</h2>`;
+    const byCat = {};
+    phrases.forEach(p => { (byCat[p.category||'Other'] = byCat[p.category||'Other'] || []).push(p); });
+    Object.keys(byCat).forEach(cat => {
+      html += `<div class="pp-phr-cat"><h3>${escHtml(cat)}</h3><table class="pp-phr-table"><tbody>`;
+      byCat[cat].forEach(ph => {
+        html += `<tr><td class="pp-phr-en">${escHtml(ph.en)}</td><td class="pp-phr-ja">${escHtml(ph.ja)}</td><td class="pp-phr-ro">${escHtml(ph.romaji)}</td></tr>`;
+        if (ph.note) html += `<tr><td colspan="3" class="pp-phr-note">↳ ${escHtml(ph.note)}</td></tr>`;
+      });
+      html += `</tbody></table></div>`;
+    });
+    html += `</section>`;
+  }
+
+  return html;
+}
+
 function exportPDF(){
-  // Switch to itinerary tab + expand all day cards + section cards
-  switchTab('itinerary', {noScroll:true, scrollToToday:false});
-  document.querySelectorAll('#tab-itinerary .day-card').forEach(c => c.classList.add('open'));
-  document.querySelectorAll('.section-card').forEach(c => c.classList.add('open'));
+  // Build the printable view into an isolated container, body gets .printing class
+  let host = document.getElementById('printableRoot');
+  if (!host){
+    host = document.createElement('div');
+    host.id = 'printableRoot';
+    document.body.appendChild(host);
+  }
+  host.innerHTML = buildPrintableHTML();
   document.body.classList.add('printing');
-  // Give layout a beat to settle, then print
+  // Wait for layout/fonts before opening print dialog
   setTimeout(()=>{
-    window.print();
-    // Cleanup once dialog closes
-    setTimeout(()=>document.body.classList.remove('printing'), 200);
-  }, 250);
+    try { window.print(); } catch(e){}
+    setTimeout(()=>{
+      document.body.classList.remove('printing');
+    }, 300);
+  }, 350);
 }
 window.exportPDF = exportPDF;
 window.addEventListener('afterprint', ()=>document.body.classList.remove('printing'));
@@ -149,7 +265,8 @@ function renderToday(){
     <div class="today-day-meta">
       ${target.hotel_name ? `<span>🏨 ${esc(target.hotel_name)}</span>` : ''}
       ${target.region ? `<span>🌏 ${esc(target.region)}</span>` : ''}
-    </div>`;
+    </div>
+    <button class="jump-today-btn" onclick="jumpToDay('${esc(String(target.day))}')">📋 Jump to today's full plan →</button>`;
   if (next) {
     const cd = countdownText(next._dt);
     html += `<div class="next-up">
@@ -372,6 +489,7 @@ function initMap(){
       <h2>🗺️ Interactive Trip Map</h2>
       <p>Click any pin or list item to see the live Google Maps listing — photos, reviews, hours, website.</p>
     </div>
+    <div class="map-legend">${MAP_CITIES_ORDER && Object.keys(MAP_CAT_META).map(c=>`<span class="legend-item"><span class="legend-dot" style="background:${MAP_CAT_META[c].color}"></span>${MAP_CAT_META[c].emoji} ${c}</span>`).join('')}</div>
     <div class="map-toolbar" id="mapCityBar">${cityChips}</div>
     <div class="map-toolbar" id="mapCatBar">${catChips}</div>
     <div class="map-layout">

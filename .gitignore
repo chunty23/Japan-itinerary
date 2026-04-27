@@ -17,3 +17,8 @@ live_check.png
 test_*.png
 *.bak
 *.bak2
+
+*.pdf
+patch*.py
+iphone_*.png
+live_*.png
