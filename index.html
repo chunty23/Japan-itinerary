@@ -78,8 +78,10 @@ a:hover{text-decoration:underline}
     linear-gradient(135deg,#0d0606 0%,#2b0a0d 50%,#4a0e16 100%);
   color:#fff;text-align:center;position:relative;overflow:hidden;
   border-bottom:1px solid var(--border);
-  /* Apple HIG: respect Dynamic Island / notch / status bar safe area */
-  padding-top: max(3.2rem, calc(env(safe-area-inset-top) + 1rem));
+  /* Apple HIG: respect Dynamic Island / notch / status bar safe area.
+     Buffer = 1.5rem (24pt) below safe-area-inset-top so the title clears
+     status-bar icons + Dynamic Island per Apple's 16-24pt guidance. */
+  padding-top: max(3.2rem, calc(env(safe-area-inset-top) + 1.5rem));
   padding-right: max(1.5rem, env(safe-area-inset-right));
   padding-bottom: 2.4rem;
   padding-left: max(1.5rem, env(safe-area-inset-left));
@@ -119,9 +121,9 @@ a:hover{text-decoration:underline}
   border:1px solid rgba(255,255,255,.2);color:#fff;width:38px;height:38px;border-radius:50%;
   cursor:pointer;display:grid;place-items:center;font-size:.95rem;backdrop-filter:blur(8px);
   transition:transform .2s;z-index:5;
-  /* Anchor below Dynamic Island, away from right-side icons */
-  top: max(1rem, calc(env(safe-area-inset-top) + .25rem));
-  right: max(1rem, calc(env(safe-area-inset-right) + .25rem));
+  /* Anchor 0.6rem (~10pt) below Dynamic Island per Apple HIG */
+  top: max(1rem, calc(env(safe-area-inset-top) + .6rem));
+  right: max(1rem, calc(env(safe-area-inset-right) + .35rem));
 }
 .dark-toggle:hover{transform:scale(1.08)}
 
@@ -548,7 +550,13 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 
 /* ──────── RESPONSIVE ──────── */
 @media(max-width:640px){
-  .hero{padding:2.4rem 1rem 1.8rem}
+  /* Keep safe-area on mobile — split padding so we don't override env() */
+  .hero{
+    padding-top: max(3.5rem, calc(env(safe-area-inset-top) + 1.5rem));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: 1.8rem;
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
   .tab-btn{padding:.7rem .85rem;font-size:.72rem}
   .container{padding:.85rem .8rem 4rem}
   .item-grid{grid-template-columns:1fr}
@@ -564,14 +572,17 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 
 /* ──────── PDF / PRINT BUTTON ──────── */
 .pdf-btn{position:absolute;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:.42rem .85rem;font-size:.78rem;font-weight:600;cursor:pointer;backdrop-filter:blur(4px);transition:all .18s;z-index:5;
-  top: max(1.1rem, calc(env(safe-area-inset-top) + .35rem));
-  right: max(3.6rem, calc(env(safe-area-inset-right) + 2.85rem));
+  /* Vertical: same top as dark-toggle so they align.
+     Horizontal: dark-toggle is 38px wide at right:1rem (occupies 16-54px
+     from right); we leave a 12px gap → pdf-btn right ≥ 4.1rem */
+  top: max(1rem, calc(env(safe-area-inset-top) + .6rem));
+  right: max(4.1rem, calc(env(safe-area-inset-right) + 3.45rem));
 }
 .pdf-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-1px)}
 @media(max-width:640px){
   .pdf-btn{padding:.36rem .7rem;font-size:.72rem;
-    top: max(.85rem, calc(env(safe-area-inset-top) + .15rem));
-    right: max(3rem, calc(env(safe-area-inset-right) + 2.5rem));
+    top: max(1rem, calc(env(safe-area-inset-top) + .6rem));
+    right: max(3.85rem, calc(env(safe-area-inset-right) + 3.2rem));
   }
 }
 
@@ -596,6 +607,105 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 }
 .legend-item{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}
 .legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+/* ──────── PDF SECTION PICKER DIALOG ──────── */
+.pdfdlg-backdrop{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(15,8,10,.62);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  animation:pdfdlg-fade .18s ease-out;
+}
+.pdfdlg-backdrop.open{display:flex}
+@keyframes pdfdlg-fade{from{opacity:0}to{opacity:1}}
+@keyframes pdfdlg-pop{from{transform:translateY(8px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+.pdfdlg{
+  background:var(--card);color:var(--text);
+  width:min(440px, 100%);max-height:calc(100vh - 2rem);
+  border-radius:18px;border:1px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+  overflow:hidden;display:flex;flex-direction:column;
+  animation:pdfdlg-pop .22s cubic-bezier(.2,.9,.3,1.2);
+}
+.pdfdlg-head{
+  padding:1.1rem 1.25rem .8rem;
+  background:linear-gradient(135deg, var(--accent) 0%, #a01030 100%);
+  color:#fff;
+}
+.pdfdlg-head h3{margin:0;font-size:1.05rem;font-weight:700;letter-spacing:.2px}
+.pdfdlg-head .pdfdlg-sub{margin:.2rem 0 0;font-size:.78rem;color:#ffd9e0;font-weight:400}
+.pdfdlg-body{padding:.85rem 1rem 0;overflow-y:auto;flex:1}
+.pdfdlg-toolbar{
+  display:flex;gap:.5rem;margin:0 0 .65rem;
+  font-size:.78rem;
+}
+.pdfdlg-mini{
+  flex:1;background:rgba(188,0,45,.08);color:var(--accent);
+  border:1px solid rgba(188,0,45,.22);
+  padding:.45rem .6rem;border-radius:999px;font-weight:600;
+  cursor:pointer;transition:background .15s;font-family:inherit;font-size:.78rem;
+}
+.pdfdlg-mini:hover{background:rgba(188,0,45,.16)}
+.pdfdlg-list{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.5rem}
+.pdfdlg-row{
+  display:flex;align-items:flex-start;gap:.7rem;
+  padding:.6rem .75rem;border-radius:12px;
+  border:1px solid var(--border);background:var(--bg);
+  cursor:pointer;transition:background .12s, border-color .12s;
+  user-select:none;
+}
+.pdfdlg-row:hover{background:rgba(188,0,45,.05);border-color:rgba(188,0,45,.25)}
+.pdfdlg-row.checked{background:rgba(188,0,45,.07);border-color:rgba(188,0,45,.35)}
+.pdfdlg-row input[type=checkbox]{
+  appearance:none;-webkit-appearance:none;
+  width:20px;height:20px;flex-shrink:0;margin-top:1px;
+  border:2px solid var(--border);border-radius:6px;
+  background:#fff;cursor:pointer;position:relative;transition:all .15s;
+}
+.pdfdlg-row input[type=checkbox]:checked{
+  background:var(--accent);border-color:var(--accent);
+}
+.pdfdlg-row input[type=checkbox]:checked::after{
+  content:'';position:absolute;left:5px;top:1px;
+  width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.pdfdlg-meta{flex:1;min-width:0}
+.pdfdlg-meta .pdfdlg-title{font-size:.92rem;font-weight:600;color:var(--text);display:flex;align-items:center;gap:.4rem}
+.pdfdlg-meta .pdfdlg-title .pdfdlg-count{
+  background:rgba(0,0,0,.06);color:var(--muted);
+  font-size:.7rem;font-weight:600;padding:.1rem .45rem;border-radius:999px;
+}
+.pdfdlg-meta .pdfdlg-desc{font-size:.74rem;color:var(--muted);margin-top:.15rem;line-height:1.35}
+.pdfdlg-foot{
+  display:flex;gap:.6rem;padding:.85rem 1rem 1rem;
+  border-top:1px solid var(--border);background:var(--card);
+}
+.pdfdlg-foot button{
+  flex:1;padding:.7rem 1rem;border-radius:999px;
+  font-family:inherit;font-size:.86rem;font-weight:600;cursor:pointer;
+  transition:transform .12s, box-shadow .15s, background .15s;
+}
+.pdfdlg-cancel{
+  background:transparent;color:var(--muted);
+  border:1px solid var(--border);
+}
+.pdfdlg-cancel:hover{background:rgba(0,0,0,.04);color:var(--text)}
+.pdfdlg-go{
+  background:linear-gradient(135deg, var(--accent) 0%, #a01030 100%);
+  color:#fff;border:none;
+  box-shadow:0 4px 14px rgba(188,0,45,.28);
+}
+.pdfdlg-go:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 18px rgba(188,0,45,.36)}
+.pdfdlg-go:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+body.dark .pdfdlg-row input[type=checkbox]{background:#2a2a2a;border-color:#444}
+body.dark .pdfdlg-row{background:rgba(255,255,255,.03)}
+body.dark .pdfdlg-row:hover{background:rgba(255,255,255,.06)}
+body.dark .pdfdlg-meta .pdfdlg-title .pdfdlg-count{background:rgba(255,255,255,.08)}
+@media(max-width:640px){
+  .pdfdlg{width:100%;border-radius:16px}
+  .pdfdlg-head{padding:1rem 1rem .7rem}
+}
 
 /* ──────── PRINTABLE PDF VIEW ──────── */
 #printableRoot{display:none}

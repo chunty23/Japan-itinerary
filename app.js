@@ -58,7 +58,8 @@ window.scrollToTodayCard = scrollToTodayCard;
 // ── Export itinerary as PDF — builds a dedicated, clean printable view
 function escHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-function buildPrintableHTML(){
+function buildPrintableHTML(opts){
+  const o = Object.assign({cover:true, itinerary:true, bookings:true, places:true, phrasebook:true}, opts||{});
   const days = (DATA.days || []).filter(d => d.day && /^\d+$/.test(String(d.day)));
   const meta = DATA.dayMeta || {};
   const places = (DATA.savedPlaces || []);
@@ -70,7 +71,7 @@ function buildPrintableHTML(){
   let html = '';
 
   // Cover
-  html += `<section class="pp-cover">
+  if (o.cover) html += `<section class="pp-cover">
     <div class="pp-flag">🎌</div>
     <h1>Japan 2026 · Family Itinerary</h1>
     <p class="pp-sub">May 21 – June 8, 2026 · 19 Days</p>
@@ -89,6 +90,7 @@ function buildPrintableHTML(){
   </section>`;
 
   // Daily itinerary
+  if (o.itinerary) {
   html += `<section class="pp-section pp-itin"><h2>Day-by-Day Itinerary</h2>`;
   let lastRegion = null;
   days.forEach((d) => {
@@ -123,9 +125,10 @@ function buildPrintableHTML(){
     html += `</article>`;
   });
   html += `</section>`;
+  } // end o.itinerary
 
   // Bookings
-  if (DATA.bookings && DATA.bookings.length){
+  if (o.bookings && DATA.bookings && DATA.bookings.length){
     html += `<section class="pp-section pp-bookings"><h2>Confirmed Bookings</h2><table class="pp-table">
       <thead><tr><th>Date</th><th>Time</th><th>Title</th><th>Who</th></tr></thead><tbody>`;
     DATA.bookings.forEach(b => {
@@ -135,6 +138,7 @@ function buildPrintableHTML(){
   }
 
   // Saved places by city
+  if (o.places) {
   html += `<section class="pp-section pp-places"><h2>Saved Places (${places.length})</h2>`;
   MAP_CITIES_ORDER.forEach(city => {
     const list = placesByCity[city];
@@ -147,9 +151,10 @@ function buildPrintableHTML(){
     html += `</ul></div>`;
   });
   html += `</section>`;
+  } // end o.places
 
   // Phrasebook
-  if (phrases.length){
+  if (o.phrasebook && phrases.length){
     html += `<section class="pp-section pp-phrases"><h2>Phrasebook (${phrases.length})</h2>`;
     const byCat = {};
     phrases.forEach(p => { (byCat[p.category||'Other'] = byCat[p.category||'Other'] || []).push(p); });
@@ -167,24 +172,130 @@ function buildPrintableHTML(){
   return html;
 }
 
-function exportPDF(){
-  // Build the printable view into an isolated container, body gets .printing class
+// ── PDF section picker dialog ──
+const PDF_SECTIONS = [
+  { key:'cover',     icon:'\ud83c\udf0c', title:'Cover page',
+    desc:'Title, route, travelers, dietary alerts, color legend.' },
+  { key:'itinerary', icon:'\ud83d\udcc5', title:'Day-by-day itinerary',
+    desc:'All 19 days grouped by region, with hotel, highlights, activities, and notes.' },
+  { key:'bookings',  icon:'\u2705', title:'Confirmed bookings',
+    desc:'Locked-in reservations table (date, time, who).' },
+  { key:'places',    icon:'\ud83d\uddfa\ufe0f', title:'Saved places',
+    desc:'All map pins grouped by city with notes.' },
+  { key:'phrasebook',icon:'\ud83d\udde3\ufe0f', title:'Phrasebook',
+    desc:'Useful Japanese phrases + kanji, organized by category.' },
+];
+
+function pdfCounts(){
+  const phrases = (DATA.phrasebook || []).length;
+  const places = (DATA.savedPlaces || []).length;
+  const bookings = (DATA.bookings || []).length;
+  const days = ((DATA.days||[]).filter(d=>d.day && /^\d+$/.test(String(d.day)))).length;
+  return { cover:1, itinerary:days, bookings, places, phrasebook:phrases };
+}
+
+function openPdfDialog(){
+  let bd = document.getElementById('pdfDialog');
+  if (!bd){
+    bd = document.createElement('div');
+    bd.id = 'pdfDialog';
+    bd.className = 'pdfdlg-backdrop';
+    bd.setAttribute('role','dialog');
+    bd.setAttribute('aria-modal','true');
+    bd.setAttribute('aria-labelledby','pdfDialogTitle');
+    const counts = pdfCounts();
+    bd.innerHTML = `
+      <div class="pdfdlg" role="document">
+        <div class="pdfdlg-head">
+          <h3 id="pdfDialogTitle">\ud83d\udcc4 Choose what to include</h3>
+          <p class="pdfdlg-sub">Pick the sections you want in your printable PDF.</p>
+        </div>
+        <div class="pdfdlg-body">
+          <div class="pdfdlg-toolbar">
+            <button type="button" class="pdfdlg-mini" data-act="all">\u2713 Select all</button>
+            <button type="button" class="pdfdlg-mini" data-act="none">\u2715 Deselect all</button>
+          </div>
+          <div class="pdfdlg-list">
+            ${PDF_SECTIONS.map(s => {
+              const c = counts[s.key];
+              const badge = (s.key==='cover') ? '' : `<span class="pdfdlg-count">${c}</span>`;
+              return `<label class="pdfdlg-row checked">
+                <input type="checkbox" data-key="${s.key}" checked>
+                <div class="pdfdlg-meta">
+                  <div class="pdfdlg-title">${s.icon} ${s.title}${badge}</div>
+                  <div class="pdfdlg-desc">${s.desc}</div>
+                </div>
+              </label>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="pdfdlg-foot">
+          <button type="button" class="pdfdlg-cancel" data-act="cancel">Cancel</button>
+          <button type="button" class="pdfdlg-go" data-act="go">\ud83d\udda8\ufe0f Generate PDF</button>
+        </div>
+      </div>`;
+    document.body.appendChild(bd);
+
+    const refreshGo = () => {
+      const any = bd.querySelectorAll('input[type=checkbox]:checked').length > 0;
+      bd.querySelector('.pdfdlg-go').disabled = !any;
+      bd.querySelectorAll('.pdfdlg-row').forEach(r => {
+        r.classList.toggle('checked', !!r.querySelector('input').checked);
+      });
+    };
+    bd.addEventListener('click', (e) => {
+      if (e.target === bd){ closePdfDialog(); return; }
+      const act = e.target.getAttribute && e.target.getAttribute('data-act');
+      if (act === 'all'){
+        bd.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = true);
+        refreshGo();
+      } else if (act === 'none'){
+        bd.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
+        refreshGo();
+      } else if (act === 'cancel'){
+        closePdfDialog();
+      } else if (act === 'go'){
+        const opts = {};
+        bd.querySelectorAll('input[type=checkbox]').forEach(c => opts[c.getAttribute('data-key')] = c.checked);
+        closePdfDialog();
+        runExportPDF(opts);
+      }
+    });
+    bd.addEventListener('change', (e) => {
+      if (e.target.matches('input[type=checkbox]')) refreshGo();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (bd.classList.contains('open') && e.key === 'Escape') closePdfDialog();
+    });
+  }
+  // Reset to all-checked each open
+  bd.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = true);
+  bd.querySelectorAll('.pdfdlg-row').forEach(r => r.classList.add('checked'));
+  bd.querySelector('.pdfdlg-go').disabled = false;
+  bd.classList.add('open');
+}
+
+function closePdfDialog(){
+  const bd = document.getElementById('pdfDialog');
+  if (bd) bd.classList.remove('open');
+}
+
+function runExportPDF(opts){
   let host = document.getElementById('printableRoot');
   if (!host){
     host = document.createElement('div');
     host.id = 'printableRoot';
     document.body.appendChild(host);
   }
-  host.innerHTML = buildPrintableHTML();
+  host.innerHTML = buildPrintableHTML(opts);
   document.body.classList.add('printing');
-  // Wait for layout/fonts before opening print dialog
   setTimeout(()=>{
     try { window.print(); } catch(e){}
-    setTimeout(()=>{
-      document.body.classList.remove('printing');
-    }, 300);
+    setTimeout(()=>{ document.body.classList.remove('printing'); }, 300);
   }, 350);
 }
+
+function exportPDF(){ openPdfDialog(); }
 window.exportPDF = exportPDF;
 window.addEventListener('afterprint', ()=>document.body.classList.remove('printing'));
 const _pdfBtn = document.getElementById('pdfBtn');
