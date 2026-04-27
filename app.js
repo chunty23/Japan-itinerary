@@ -23,16 +23,56 @@ window.toggleOpen = toggleOpen;
 })();
 
 // ── Tab switching
+function switchTab(name, opts){
+  opts = opts||{};
+  $$('.tab-btn').forEach(b => b.classList.remove('active'));
+  $$('.tab-content').forEach(t => t.classList.remove('active'));
+  const btn = document.querySelector('.tab-btn[data-tab="'+name+'"]');
+  const pane = document.getElementById('tab-'+name);
+  if (btn) btn.classList.add('active');
+  if (pane) pane.classList.add('active');
+  if (name === 'map') initMap();
+  if (!opts.noScroll) window.scrollTo({top:0,behavior:'smooth'});
+  // When entering Itinerary tab, auto-scroll to today's day-card unless explicitly disabled
+  if (name === 'itinerary' && opts.scrollToToday !== false) scrollToTodayCard();
+}
+window.switchTab = switchTab;
+
 $$('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    $$('.tab-btn').forEach(b => b.classList.remove('active'));
-    $$('.tab-content').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    $('#tab-' + btn.dataset.tab).classList.add('active');
-    if (btn.dataset.tab === 'map') initMap();
-    window.scrollTo({top:0,behavior:'smooth'});
-  });
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
 });
+
+// ── Auto-scroll to today's day card in the Itinerary tab
+function scrollToTodayCard(){
+  // wait a tick for layout
+  setTimeout(()=>{
+    const el = document.querySelector('#tab-itinerary .day-card.today-highlight');
+    if (el){
+      el.classList.add('open');
+      el.scrollIntoView({block:'center', behavior:'smooth'});
+    }
+  }, 80);
+}
+window.scrollToTodayCard = scrollToTodayCard;
+
+// ── Export itinerary as PDF (uses native browser print)
+function exportPDF(){
+  // Switch to itinerary tab + expand all day cards + section cards
+  switchTab('itinerary', {noScroll:true, scrollToToday:false});
+  document.querySelectorAll('#tab-itinerary .day-card').forEach(c => c.classList.add('open'));
+  document.querySelectorAll('.section-card').forEach(c => c.classList.add('open'));
+  document.body.classList.add('printing');
+  // Give layout a beat to settle, then print
+  setTimeout(()=>{
+    window.print();
+    // Cleanup once dialog closes
+    setTimeout(()=>document.body.classList.remove('printing'), 200);
+  }, 250);
+}
+window.exportPDF = exportPDF;
+window.addEventListener('afterprint', ()=>document.body.classList.remove('printing'));
+const _pdfBtn = document.getElementById('pdfBtn');
+if (_pdfBtn) _pdfBtn.addEventListener('click', exportPDF);
 
 // ── Scroll-to-top
 window.addEventListener('scroll', () => {
@@ -281,7 +321,7 @@ function renderBookings(){
 }
 
 // ── MAP TAB ─────────────────────────────────────────
-const MAP_CITIES_ORDER = ['Kagoshima','Kumamoto','Hiroshima','Miyajima','Himeji','Osaka','Nara','Nagano','Kyoto','Kyoto-North','Hakone','Atami','Izu','Tokyo','Narita','Seoul'];
+const MAP_CITIES_ORDER = ['Kagoshima','Fukuoka','Kumamoto','Hiroshima','Miyajima','Himeji','Osaka','Nara','Nagano','Kyoto','Kyoto-North','Hakone','Atami','Izu','Tokyo','Narita','Seoul'];
 const MAP_CAT_META = {
   'Dining':      {emoji:'🍜', color:'#E63946'},
   'Cafe':        {emoji:'☕', color:'#B5651D'},
@@ -777,6 +817,14 @@ renderPhrasebook();
 renderTips();
 renderSams();
 renderICN();
+
+// ── On load, if user lands on Itinerary tab + we have a today card, gently scroll it into view
+(function autoScrollOnLoad(){
+  // Default tab is Today, but if hash = #itinerary-today, auto-scroll
+  if (location.hash === '#itinerary-today'){
+    switchTab('itinerary', {scrollToToday:true});
+  }
+})();
 
 // ── Live re-render once a minute so countdowns/today update without reload
 setInterval(()=>{ try { renderToday(); } catch(e){} }, 60000);

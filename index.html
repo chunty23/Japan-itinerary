@@ -552,13 +552,34 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
   #map{height:420px}
 }
 
+/* ──────── PDF / PRINT BUTTON ──────── */
+.pdf-btn{position:absolute;top:1.1rem;right:3.6rem;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:.42rem .85rem;font-size:.78rem;font-weight:600;cursor:pointer;backdrop-filter:blur(4px);transition:all .18s;z-index:5}
+.pdf-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-1px)}
+@media(max-width:640px){.pdf-btn{top:.85rem;right:3rem;padding:.36rem .7rem;font-size:.72rem}}
+
 /* ──────── PRINT ──────── */
 @media print{
-  .tab-nav,.scroll-top,.dark-toggle,.day-rail,.search-wrap{display:none!important}
+  /* Always-hidden chrome */
+  .tab-nav,.scroll-top,.dark-toggle,.day-rail,.search-wrap,.pdf-btn,.map-toolbar,#map,.map-place-panel{display:none!important}
+  /* Only show itinerary tab when printing — hide everything else */
+  body.printing .tab-content{display:none!important}
+  body.printing .tab-content#tab-itinerary{display:block!important}
+  body.printing .day-card-body,body.printing .section-body,body.printing .ward-body{max-height:none!important;overflow:visible!important}
+  body.printing .day-card .day-card-body{display:block!important}
+  body.printing .day-card{break-inside:avoid;page-break-inside:avoid;border:1px solid #ccc!important;box-shadow:none!important;margin-bottom:.5rem!important}
+  body.printing .region-divider{break-before:page;page-break-before:always}
+  body.printing .region-divider:first-of-type{break-before:auto;page-break-before:auto}
+  body.printing .expand-icon{display:none!important}
+  body.printing .today-highlight{box-shadow:0 0 0 2px var(--accent)!important}
+  body.printing .qi-row{display:none!important}
+  /* Generic print rules (also for browser native print) */
   .tab-content{display:block!important;page-break-after:always}
-  .day-card-body,.section-body,.ward-body{max-height:none!important}
-  .hero{background:#1a0606!important;-webkit-print-color-adjust:exact;color-adjust:exact}
+  .day-card-body,.section-body,.ward-body{max-height:none!important;overflow:visible!important}
+  .hero{background:#1a0606!important;-webkit-print-color-adjust:exact;color-adjust:exact;padding:1.2rem 1rem!important}
+  .hero h1{font-size:1.4rem!important}
   body{background:#fff}
+  a{color:#444!important;text-decoration:none}
+  @page{margin:.6in .55in}
 }
 </style>
 </head>
@@ -567,6 +588,7 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 <!-- HERO -->
 <header class="hero">
   <button class="dark-toggle" id="darkToggle" title="Toggle theme">🌓</button>
+  <button class="pdf-btn" id="pdfBtn" title="Export itinerary as PDF">🖨️ PDF</button>
   <div class="hero-content">
     <h1><span class="flag">🎌</span> Japan 2026 · Family Itinerary</h1>
     <p class="subtitle">May 21 – June 8 · 19 Days · Kyushu › Hiroshima › Kyoto › Hakone › Tokyo › Atami › Home</p>

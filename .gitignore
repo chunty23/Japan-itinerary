@@ -10,3 +10,10 @@ m2.png
 m3.png
 __pycache__/
 .netlify/
+new_places.json
+new_places_resolved.json
+resolve_new_places.js
+live_check.png
+test_*.png
+*.bak
+*.bak2
