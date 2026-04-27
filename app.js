@@ -1118,3 +1118,24 @@ renderICN();
 
 // ── Live re-render once a minute so countdowns/today update without reload
 setInterval(()=>{ try { renderToday(); } catch(e){} }, 60000);
+
+// ── Hook used by extras.js to re-render after collaborative data loads/refreshes
+window.rerenderActiveTab = function(){
+  try { renderToday(); } catch(e){}
+  try { renderItinerary(); } catch(e){}
+  try { renderBookings(); } catch(e){}
+  try { renderTransport(); } catch(e){}
+  // Map: invalidate so it rebuilds with new pins next time it's opened
+  try {
+    if (typeof mapInited !== 'undefined' && mapInited){
+      mapInited = false;
+      const mapEl = document.getElementById('tab-map');
+      if (mapEl) mapEl.innerHTML = '';
+      if (mapState && mapState.map){ mapState.map.remove(); mapState.map = null; }
+      if (mapState) mapState.markers = new Map();
+      // If user is currently viewing Map, re-init now
+      const mapTabActive = document.querySelector('.tab-btn[data-tab="map"].active');
+      if (mapTabActive) initMap();
+    }
+  } catch(e){}
+};

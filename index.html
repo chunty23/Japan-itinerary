@@ -684,6 +684,207 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
 .scroll-top:hover{transform:scale(1.08)}
 .nowrap{white-space:nowrap}
 
+/* ──────── EXTRAS: FAB + ADD MODAL ──────── */
+.extras-fab{
+  position:fixed;
+  /* Sit above the scroll-top button (which is at bottom:1.25rem) */
+  bottom: calc(4.4rem + env(safe-area-inset-bottom));
+  right: calc(1.25rem + env(safe-area-inset-right));
+  height:48px; padding: 0 1.05rem 0 .9rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+  background: var(--accent); color:#fff; border:none; border-radius:999px;
+  font-family:inherit; font-size:.92rem; font-weight:600; letter-spacing:.01em;
+  cursor:pointer; box-shadow: 0 6px 20px rgba(188,0,45,.42), 0 1px 2px rgba(0,0,0,.18);
+  transition: transform .15s ease, box-shadow .2s ease, background .15s ease;
+  z-index: 60;
+}
+.extras-fab:hover{ transform: translateY(-1px); box-shadow: 0 10px 28px rgba(188,0,45,.5), 0 2px 4px rgba(0,0,0,.2); }
+.extras-fab:active{ transform: scale(.97); }
+.extras-fab:focus-visible{ outline:none; box-shadow: 0 0 0 3px rgba(255,255,255,.6), 0 0 0 5px rgba(188,0,45,.7); }
+.extras-fab svg{ display:block; }
+@media (max-width: 380px){ .extras-fab span{ display:none; } .extras-fab{ padding: 0; width:48px; justify-content:center; } }
+
+.extras-modal-backdrop{
+  position:fixed; inset:0; z-index:9100;
+  background: rgba(15,8,10,.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display:flex; align-items:flex-end; justify-content:center;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  animation: extras-fade .18s ease-out;
+}
+@media (min-width: 640px){ .extras-modal-backdrop{ align-items:center; } }
+@keyframes extras-fade{ from{opacity:0} to{opacity:1} }
+@keyframes extras-pop{ from{transform:translateY(16px) scale(.98); opacity:0} to{transform:none; opacity:1} }
+
+.extras-modal{
+  width: min(560px, 100%);
+  max-height: 92vh;
+  display:flex; flex-direction:column;
+  background: var(--card-bg, #fff);
+  color: var(--text);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.1);
+  overflow:hidden;
+  animation: extras-pop .22s cubic-bezier(.2,.8,.2,1);
+}
+body.dark .extras-modal{ background:#221b16; }
+
+.extras-modal-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 1rem 1.1rem .65rem;
+  border-bottom: 1px solid var(--border);
+}
+.extras-modal-header h3{
+  margin:0; font-family:'Noto Serif JP','Inter',serif; font-size:1.1rem; font-weight:600;
+}
+.extras-modal-close{
+  width:32px; height:32px; border-radius:50%; border:none;
+  background: transparent; color: var(--muted); cursor:pointer;
+  font-size:1.4rem; line-height:1; display:inline-flex; align-items:center; justify-content:center;
+  transition: background .15s, color .15s;
+}
+.extras-modal-close:hover{ background: var(--surface-offset, rgba(0,0,0,.05)); color: var(--text); }
+
+.extras-type-picker{
+  display:flex; gap:.4rem; padding:.7rem 1rem .6rem;
+  border-bottom:1px solid var(--border);
+  overflow-x:auto; scrollbar-width:none;
+}
+.extras-type-picker::-webkit-scrollbar{ display:none; }
+.extras-type-btn{
+  flex-shrink:0; padding:.5rem .85rem; border-radius:999px;
+  border:1px solid var(--border); background: transparent; color: var(--muted);
+  font-family:inherit; font-size:.82rem; font-weight:500; cursor:pointer;
+  white-space:nowrap; transition: background .15s, color .15s, border-color .15s;
+}
+.extras-type-btn:hover{ color: var(--text); border-color: var(--text); }
+.extras-type-btn.active{ background: var(--accent); color:#fff; border-color: var(--accent); }
+
+.extras-form{
+  padding: .9rem 1.1rem .4rem;
+  overflow-y:auto;
+  flex:1 1 auto;
+  min-height: 0;
+}
+.ex-section{ margin-bottom: 1rem; }
+.ex-section:last-child{ margin-bottom: .25rem; }
+.ex-label{
+  display:block; font-size:.75rem; font-weight:600; color: var(--muted);
+  text-transform: uppercase; letter-spacing:.04em; margin-bottom:.4rem;
+}
+.ex-hint{ font-weight:400; text-transform:none; letter-spacing:0; color: var(--muted); opacity:.8; }
+.ex-or{ font-size:.72rem; color: var(--muted); text-align:center; margin: .5rem 0; opacity:.7; letter-spacing:.05em; }
+.ex-input{
+  width:100%; padding:.65rem .85rem; margin-bottom:.5rem;
+  background: var(--surface, transparent);
+  border:1px solid var(--border); border-radius:10px;
+  font-family:inherit; font-size: .92rem; color: var(--text);
+  transition: border-color .15s, box-shadow .15s;
+}
+.ex-input:focus{ outline:none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(188,0,45,.18); }
+.ex-input::placeholder{ color: var(--muted); opacity:.7; }
+body.dark .ex-input{ background: rgba(255,255,255,.04); }
+select.ex-input{ appearance:none; -webkit-appearance:none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 2rem; }
+textarea.ex-input{ resize:vertical; min-height: 60px; }
+.ex-grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:.5rem; }
+.ex-grid-3{ display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap:.5rem; }
+.ex-grid-2 .ex-input, .ex-grid-3 .ex-input{ margin-bottom:0; }
+.ex-resolved{
+  margin-top:.4rem; padding:.55rem .75rem;
+  background: rgba(34,197,94,.10); border:1px solid rgba(34,197,94,.35);
+  border-radius:10px; font-size:.85rem; color: var(--text);
+  align-items:center; gap:.5rem; flex-wrap:wrap;
+  display: flex;
+}
+.ex-resolved[hidden]{ display: none !important; }
+.ex-resolved .ex-pin{ font-size:1rem; }
+.ex-resolved .ex-sub{ width:100%; color: var(--muted); font-size:.78rem; margin-top:.2rem; }
+
+.extras-modal-footer{
+  display:flex; justify-content:flex-end; gap:.6rem;
+  padding: .85rem 1.1rem; border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.extras-btn-ghost, .extras-btn-primary{
+  height:40px; padding: 0 1.1rem; border-radius:10px;
+  font-family:inherit; font-size:.88rem; font-weight:600; cursor:pointer;
+  transition: background .15s, transform .15s, box-shadow .15s;
+}
+.extras-btn-ghost{ background:transparent; border:1px solid var(--border); color: var(--text); }
+.extras-btn-ghost:hover{ background: var(--surface-offset, rgba(0,0,0,.04)); }
+.extras-btn-primary{ background: var(--accent); border:1px solid var(--accent); color:#fff; box-shadow: 0 2px 8px rgba(188,0,45,.3); }
+.extras-btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 4px 14px rgba(188,0,45,.4); }
+.extras-btn-primary:disabled{ opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+
+.extras-status{
+  font-size:.82rem; padding: 0 1.1rem .9rem;
+  min-height: 1em;
+}
+.extras-status.info{ color: var(--muted); }
+.extras-status.ok{ color: #16a34a; }
+.extras-status.err{ color: var(--accent); }
+
+/* Google Places Autocomplete dropdown — raise above modal */
+.pac-container{ z-index: 9200 !important; border-radius: 10px; box-shadow: 0 16px 40px rgba(0,0,0,.25); border:1px solid var(--border); margin-top:2px; }
+body.dark .pac-container{ background:#221b16; color:var(--text); }
+body.dark .pac-item{ color: var(--text); border-top-color: rgba(255,255,255,.08); }
+body.dark .pac-item:hover{ background: rgba(255,255,255,.06); }
+body.dark .pac-item-query{ color: var(--text); }
+body.dark .pac-matched{ color: var(--accent); }
+
+/* "Added by" tag rendered next to extras */
+.added-by-tag{
+  display:inline-flex; align-items:center; gap:.25rem;
+  font-size:.68rem; font-weight:500; color: var(--muted);
+  background: rgba(0,0,0,.05); border:1px solid var(--border);
+  padding: .12rem .5rem; border-radius:999px;
+  margin-left:.4rem; vertical-align: middle;
+}
+body.dark .added-by-tag{ background: rgba(255,255,255,.06); }
+.added-by-tag::before{ content:'+'; font-weight:700; color: var(--accent); }
+
+/* Day-card injection of group-added items */
+.extras-day-injection{
+  margin-top: 1rem; padding: .9rem 1rem;
+  background: linear-gradient(0deg, rgba(188,0,45,.04), rgba(188,0,45,.04)), var(--card-bg);
+  border: 1px dashed rgba(188,0,45,.35); border-radius: 12px;
+}
+body.dark .extras-day-injection{ background: linear-gradient(0deg, rgba(255,255,255,.03), rgba(255,255,255,.03)); }
+.extras-day-injection-header{
+  display:flex; align-items:center; gap:.45rem;
+  font-size:.78rem; font-weight:700; color: var(--accent);
+  text-transform:uppercase; letter-spacing:.06em; margin-bottom:.5rem;
+}
+.extras-day-injection-icon{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:18px; height:18px; border-radius:50%;
+  background: var(--accent); color:#fff; font-weight:800; font-size:.85rem;
+}
+.extras-day-injection-count{
+  font-size:.7rem; font-weight:600; color: var(--muted);
+  margin-left:.2rem; letter-spacing:.04em;
+}
+.extras-day-injection-list{ list-style:none; margin:0; padding:0; }
+.ex-day-item{
+  padding:.5rem 0; border-top:1px solid var(--border);
+  font-size:.9rem; color: var(--text);
+}
+.ex-day-item:first-child{ border-top:none; padding-top:0; }
+.ex-day-meta{
+  display:inline-block; margin-right:.5rem;
+  font-size:.72rem; color: var(--muted); font-weight:600;
+  text-transform:uppercase; letter-spacing:.04em;
+  font-variant-numeric: tabular-nums;
+}
+.ex-day-title{ font-weight:500; }
+.ex-day-link{
+  margin-left:.5rem; font-size:.78rem; color: var(--accent);
+  text-decoration:none; font-weight:600;
+}
+.ex-day-link:hover{ text-decoration: underline; }
+.ex-day-note{
+  font-size:.82rem; color: var(--muted); margin-top:.25rem; line-height:1.4;
+}
+
 /* ──────── RESPONSIVE ──────── */
 @media(max-width:640px){
   /* Toolbar handles safe-area on top; mobile keeps the same vertical-merge layout. */
@@ -976,10 +1177,16 @@ body.printing > *:not(#printableRoot){display:none!important}
 
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Top">↑</button>
 
+<!-- Apps Script web-app URL for collaborative editing.
+     Paste your URL into JAPAN2026_APPS_SCRIPT_URL below — see SETUP_EDITING.md.
+     If left blank, the "+ Add" button will tell editors setup isn't finished. -->
+<script>window.JAPAN2026_APPS_SCRIPT_URL = "";</script>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="config.js"></script>
 <script src="config.local.js" onerror="this.remove()"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
+<script src="extras.js"></script>
 </body>
 </html>
