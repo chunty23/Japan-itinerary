@@ -9,3 +9,14 @@
   # Maps Embed API to work). It's restricted by HTTP referrer in Google Cloud
   # Console to japan2026clegg.netlify.app + localhost. In Netlify env settings,
   # this var should NOT be marked "Contains secret values".
+  #
+  # Even with that, Netlify runs TWO secret scanners on the publish dir:
+  #   1. Env-var scan: looks for the literal value of any env var. Suppress
+  #      with SECRETS_SCAN_OMIT_KEYS=<comma-separated env var names>.
+  #   2. Smart detection: pattern-matches well-known secret formats
+  #      (Google API keys start with `AIza…`). Suppress with
+  #      SECRETS_SCAN_SMART_DETECTION_ENABLED=false.
+  # Both must be set or the build fails because the key is intentionally
+  # written into config.js by the build command above.
+  SECRETS_SCAN_OMIT_KEYS = "GOOGLE_MAPS_API_KEY"
+  SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
