@@ -1,4 +1,7 @@
 config.local.js
+.mcp.local.json
+.env
+.env.local
 coord-cache.json
 geocode-cache.json
 outlier-coords*.json
