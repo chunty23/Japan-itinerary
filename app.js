@@ -644,8 +644,42 @@ function filteredPlaces(){
   });
 }
 
-function initMap(){
+let leafletPromise = null;
+function loadLeaflet(){
+  if (typeof L !== 'undefined') return Promise.resolve();
+  if (leafletPromise) return leafletPromise;
+  leafletPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    s.crossOrigin = '';
+    s.onload = () => resolve();
+    s.onerror = () => { leafletPromise = null; reject(new Error('Leaflet failed to load')); };
+    document.head.appendChild(s);
+  });
+  return leafletPromise;
+}
+
+async function initMap(){
   if (mapInited) return;
+  mapInited = true;
+  const mapEl = document.getElementById('mapEnhanced');
+  if (mapEl){
+    mapEl.innerHTML = '<div role="status" style="display:flex;align-items:center;justify-content:center;min-height:240px;color:var(--muted);font-size:.9rem">Loading map…</div>';
+  }
+  try {
+    await loadLeaflet();
+    if (typeof L === 'undefined' || typeof L.map !== 'function'){
+      throw new Error('Leaflet loaded but L.map is unavailable');
+    }
+  } catch (err){
+    mapInited = false;
+    if (mapEl){
+      mapEl.innerHTML = '<div role="status" style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;line-height:1.5"><strong>Map unavailable offline.</strong><br>Pins for the trip are listed in the panel below.</div>';
+    }
+    console.warn('Leaflet load failed:', err);
+    return;
+  }
+  if (mapEl){ mapEl.innerHTML = ''; }
   const el = $('#tab-map');
   const places = DATA.savedPlaces || [];
   const cityCounts = {};
@@ -745,8 +779,6 @@ function initMap(){
 
     refreshMapView();
   }, 80);
-
-  mapInited = true;
 }
 
 function refreshMapView(){
