@@ -362,7 +362,7 @@ The build replaces the literal `%GOOGLE_MAPS_API_KEY%` placeholder in
 
 ### API key handling — read carefully
 
-- `GOOGLE_MAPS_API_KEY = AIzaSyCZ-YGTfDQ1DtYwoN7ziVQ0oesCD4iE22E`
+- `GOOGLE_MAPS_API_KEY = AIzaSy…REDACTED` — real value lives only in the Netlify env var (and the local `config.local.js` for dev). **Do not paste the literal key into this doc** — Netlify's smart secret-scanner pattern-matches `AIza…` strings in repo files and fails the build, regardless of how the env var itself is configured.
 - This is a **client-side, HTTP-referrer-restricted** key. Allowed referrers
   in Google Cloud Console:
   - `https://japan2026clegg.netlify.app/*`
