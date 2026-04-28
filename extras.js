@@ -35,7 +35,8 @@
         dayItems:  this.Day_Items.filter(p => String(p.day) === d),
         transport: this.Transport.filter(t => {
           // Transport rows match a day if depart_date matches that day's date_iso
-          const day = (window.DATA && DATA.days || []).find(x => String(x.day) === d);
+          const days = (typeof DATA !== 'undefined' && DATA.days) || [];
+          const day = days.find(x => String(x.day) === d);
           return day && t.depart_date && String(t.depart_date).slice(0,10) === day.date_iso;
         })
       };
@@ -81,7 +82,15 @@
 
   // ── MERGE INTO DATA (so existing renderers pick them up) ──────────────────
   function mergeIntoData(){
-    if (!window.DATA) return;
+    // DATA is declared in data.js as `const DATA = ...` at script-top-level,
+    // which means it's accessible as a bare identifier from this IIFE but is
+    // NOT exposed as window.DATA (only `var` adds to window). Earlier code
+    // checked `if (!window.DATA) return;` which always bailed silently —
+    // a pre-existing bug that meant collab + Add never actually merged.
+    if (typeof DATA === 'undefined'){
+      console.warn('[extras] mergeIntoData: DATA not defined; skipping');
+      return;
+    }
     const ex = window.tripExtras;
     // 1. Places → DATA.savedPlaces
     if (Array.isArray(DATA.savedPlaces)){
@@ -417,7 +426,8 @@
 
   // ── FORM BUILDERS ─────────────────────────────────────────────────────────
   function buildForm(type, el){
-    const dayOpts = (window.DATA && DATA.days || [])
+    // Same bug as in mergeIntoData/byDay — `window.DATA` is undefined; use bare DATA.
+    const dayOpts = ((typeof DATA !== 'undefined' && DATA.days) || [])
       .filter(d => d.date_iso && d.day)
       .map(d => `<option value="${esc(d.day)}">Day ${esc(d.day)} (${esc((d.date||'').split('·')[0].trim())})</option>`)
       .join('');
