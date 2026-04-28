@@ -733,11 +733,57 @@ async function initMap(){
 
   setTimeout(()=>{
     const map = L.map('mapEnhanced', {scrollWheelZoom:true}).setView([35.5, 136.5], 5);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    const tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors © CARTO',
       subdomains: 'abcd'
-    }).addTo(map);
+    });
+    let tileLoadCount = 0;
+    let tileErrorCount = 0;
+    let bannerShown = false;
+    tiles.on('tileload', () => {
+      tileLoadCount++;
+      // If banner is already up, hide it on first success (recovery)
+      if (bannerShown){
+        const banner = document.getElementById('mapTileBanner');
+        if (banner){ banner.remove(); bannerShown = false; }
+      }
+    });
+    tiles.on('tileerror', () => {
+      tileErrorCount++;
+    });
+    // Evaluation rules per expert review:
+    // - If navigator.onLine === false → user is fully offline, show banner immediately.
+    // - After 12s, if zero successes + 3+ errors → CDN/network broken.
+    // - After 12s, if errors >= 6 AND errors > successes*2 → partial CDN failure.
+    // 12s (not 8s) because Carto tiles can legitimately take 5-10s on slow Japan-roaming.
+    const showTileBanner = () => {
+      if (bannerShown) return;
+      bannerShown = true;
+      const wrap = document.getElementById('mapEnhanced');
+      if (!wrap || !wrap.parentElement) return;
+      const banner = document.createElement('div');
+      banner.id = 'mapTileBanner';
+      banner.setAttribute('role', 'status');
+      banner.className = 'map-tile-banner';
+      banner.innerHTML = '<span>Map tiles unavailable. Pins still visible — see list below.</span><button type="button" aria-label="Dismiss" class="map-tile-banner-close">&times;</button>';
+      banner.querySelector('.map-tile-banner-close').addEventListener('click', () => {
+        banner.remove();
+        bannerShown = false;
+      });
+      wrap.parentElement.appendChild(banner);
+    };
+    if (navigator.onLine === false){
+      // Skip the wait — show immediately when known offline.
+      setTimeout(showTileBanner, 200);
+    }
+    mapState.tileBannerTimer = setTimeout(() => {
+      if (!mapState.map) return; // map was torn down before timer fired
+      const totalFail = (tileLoadCount === 0 && tileErrorCount >= 3);
+      const partialFail = (tileErrorCount >= 6 && tileErrorCount > tileLoadCount * 2);
+      if (totalFail || partialFail) showTileBanner();
+    }, 12000);
+    tiles.addTo(map);
     mapState.map = map;
 
     // build all markers once
@@ -1117,6 +1163,7 @@ function renderDining(){
 // ── TRANSPORT ───────────────────────────────────────
 function renderTransport(){
   const el = $('#tab-transport');
+  (DATA.transport||[]).forEach((r,i) => { if (!r._sid) r._sid = 't'+i; });
   let html = `<div class="tab-header"><h2>🚄 Transportation</h2><p>JR Pass analysis, IC cards, and route notes</p></div>`;
   const sections = {};
   (DATA.transport||[]).forEach(r => {
@@ -1131,7 +1178,7 @@ function renderTransport(){
     if (rows.length) {
       html += `<table class="data-table"><tbody>`;
       rows.forEach(r => {
-        html += '<tr>';
+        html += `<tr data-sid="transport-${esc(r._sid)}">`;
         r.data.forEach(c => { if (String(c||'').trim()) html += '<td>'+nl2br(String(c))+'</td>'; });
         html += '</tr>';
       });
@@ -1179,10 +1226,18 @@ window.rerenderActiveTab = function(){
   try {
     if (typeof mapInited !== 'undefined' && mapInited){
       mapInited = false;
+      // Clear any pending tile-error banner timer so it doesn't fire after teardown
+      if (mapState && mapState.tileBannerTimer){
+        clearTimeout(mapState.tileBannerTimer);
+        mapState.tileBannerTimer = null;
+      }
       const mapEl = document.getElementById('tab-map');
       if (mapEl) mapEl.innerHTML = '';
       if (mapState && mapState.map){ mapState.map.remove(); mapState.map = null; }
       if (mapState) mapState.markers = new Map();
+      // Banner lives outside #mapEnhanced (sibling), so clean it up explicitly
+      const banner = document.getElementById('mapTileBanner');
+      if (banner) banner.remove();
       // If user is currently viewing Map, re-init now
       const mapTabActive = document.querySelector('.tab-btn[data-tab="map"].active');
       if (mapTabActive) initMap();

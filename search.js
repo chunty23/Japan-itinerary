@@ -78,13 +78,17 @@
       })),
     },
     { id:'transport',   label:'Transport',    emoji:'🚄', tab:'transport',
-      build: () => (DATA.transport||[]).filter(r=>Array.isArray(r.data)&&r.data.some(x=>x&&String(x).trim())).map((r,i)=> ({
-        sid:        'transport-t'+i,
-        title:      String(r.data.find(c => c && String(c).trim()) || 'Transport note').trim(),
-        desc:       r.data.filter(Boolean).slice(1).join(' · '),
-        searchText: r.data.filter(Boolean).join(' ') + ' ' + (r.section||''),
-        meta:       [r.section].filter(Boolean),
-      })),
+      build: () => {
+        // Ensure stable _sid even if renderTransport hasn't run yet (idempotent).
+        (DATA.transport||[]).forEach((r,i) => { if (!r._sid) r._sid = 't'+i; });
+        return (DATA.transport||[]).filter(r=>Array.isArray(r.data)&&r.data.some(x=>x&&String(x).trim())).map(r => ({
+          sid:        'transport-'+r._sid,
+          title:      String(r.data.find(c => c && String(c).trim()) || 'Transport note').trim(),
+          desc:       r.data.filter(Boolean).slice(1).join(' · '),
+          searchText: r.data.filter(Boolean).join(' ') + ' ' + (r.section||''),
+          meta:       [r.section].filter(Boolean),
+        }));
+      },
     },
     { id:'packing',     label:'Packing',      emoji:'🎒', tab:'packing',
       build: () => (DATA.packing||[]).map((p,i)=> ({
@@ -383,9 +387,13 @@
     renderFilters();
     const bd = $('#searchBackdrop');
     bd.classList.add('open');
-    const inp = $('#searchInput');
-    if (inp){ setTimeout(()=> inp.focus(), 60); }
     priorDocOverflow = document.documentElement.style.overflow; document.documentElement.style.overflow = 'hidden';
+    // Synchronous focus preserves the user-gesture chain so iOS Safari brings up
+    // the keyboard. classList.add('open') is synchronous DOM mutation; the
+    // `display:none → display:flex` style change is computed eagerly when focus()
+    // queries layout. No setTimeout — that breaks the iOS gesture chain.
+    const inp = $('#searchInput');
+    if (inp) inp.focus();
   }
   function closeModal(){
     const bd = $('#searchBackdrop');

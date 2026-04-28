@@ -113,19 +113,39 @@
       // 5 renderBookings groups (Flights/Hotels/Trains/Activities/To Book).
       const TYPE_TO_GROUP = { Hotel:'Hotels', Restaurant:'To Book', Activity:'Activities', Tour:'Activities', Other:'To Book' };
       ex.Bookings.forEach(b => {
-        const checkIn = b.check_in || '';
-        // datetime-local emits "YYYY-MM-DDTHH:mm"; match against the date prefix.
+        const checkIn  = b.check_in  || '';
+        const checkOut = b.check_out || '';
+        // datetime-local emits "YYYY-MM-DDTHH:mm" or full ISO. Match the date
+        // prefix against DATA.days[].date_iso to derive the trip-day number,
+        // and extract the HH:mm portion for the booking-card's time chip.
+        // Hotels: check-in ~3pm, restaurants/activities: reservation/start time.
         const checkInDate = checkIn.slice(0, 10);
-        const dayMatch = checkInDate ? (DATA.days||[]).find(d => d.date_iso === checkInDate) : null;
+        const dayMatch    = checkInDate ? (DATA.days||[]).find(d => d.date_iso === checkInDate) : null;
+        const tIn  = (checkIn.match(/T(\d{2}:\d{2})/)  || [,''])[1];
+        const tOut = (checkOut.match(/T(\d{2}:\d{2})/) || [,''])[1];
+        // Build a friendly time label: "15:00 → 11:00" (with arrow if both present)
+        // or just one side if only one is set. Skip midnight defaults (00:00).
+        let timeLabel = '';
+        if (tIn && tIn !== '00:00')  timeLabel = tIn;
+        if (tOut && tOut !== '00:00'){
+          timeLabel = timeLabel ? `${timeLabel} → ${tOut}` : tOut;
+        }
         const detailsParts = [];
         if (b.notes) detailsParts.push(b.notes);
         if (b.confirmation) detailsParts.push('Conf: ' + b.confirmation);
+        // Surface check-out date if it differs from check-in (multi-day stays).
+        // Format as MM-DD to match the booking-day card style (app.js:602 slice(5)).
+        const checkOutDate = checkOut.slice(0, 10);
+        if (checkOutDate && checkOutDate !== checkInDate){
+          detailsParts.push('Through ' + checkOutDate.slice(5));
+        }
         DATA.bookings.push({
           category: TYPE_TO_GROUP[b.type] || 'To Book',
           title:    b.name || '(untitled)',
           status:   'To Book',
           day:      dayMatch ? dayMatch.day : '',
           date:     checkInDate,
+          time:     timeLabel,
           who:      b.who || '',
           details:  detailsParts.join('\n'),
           url:      b.link || '',
@@ -481,8 +501,8 @@
           <input type="text" class="ex-input" id="exName" placeholder="Booking name *" required />
           <input type="text" class="ex-input" id="exCity" placeholder="City" />
           <div class="ex-grid-2">
-            <input type="datetime-local" class="ex-input" id="exCheckIn" placeholder="Check-in / start" />
-            <input type="datetime-local" class="ex-input" id="exCheckOut" placeholder="Check-out / end" />
+            <input type="datetime-local" class="ex-input" id="exCheckIn" aria-label="Check-in / start (date + time)" placeholder="Check-in / start" />
+            <input type="datetime-local" class="ex-input" id="exCheckOut" aria-label="Check-out / end (date + time)" placeholder="Check-out / end" />
           </div>
           <input type="text" class="ex-input" id="exWho" placeholder="Who (e.g. All 7, Kyle & Charlie)" />
           <input type="text" class="ex-input" id="exConfirmation" placeholder="Confirmation #" />

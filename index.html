@@ -605,7 +605,7 @@ body.dark .phrase-cat h3{color:#e8a4a4}
 .map-toolbar-divider{width:1px;height:18px;background:var(--border);margin:0 .25rem}
 .map-layout{
   display:grid;grid-template-columns:300px 1fr;gap:.85rem;align-items:stretch;
-  height:600px;
+  height:600px;position:relative;
 }
 .map-list{
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
@@ -632,6 +632,20 @@ body.dark .map-list-item.selected{background:rgba(224,57,90,.1)}
   overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .map-list-meta{font-size:.68rem;color:var(--muted);margin-top:.15rem}
 #mapEnhanced{height:100%;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);background:#e6e0d3}
+.map-tile-banner{
+  position:absolute; top:0; left:0; right:0; z-index:10;
+  background:rgba(220,80,40,.92); color:#fff;
+  padding:.55rem .75rem .55rem 1rem; font-size:.78rem; font-weight:500;
+  display:flex; align-items:center; gap:.5rem;
+  border-radius:var(--radius) var(--radius) 0 0;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+.map-tile-banner span{flex:1; line-height:1.4}
+.map-tile-banner-close{
+  background:transparent; border:none; color:#fff; font-size:1.1rem; line-height:1;
+  cursor:pointer; padding:.15rem .4rem; border-radius:6px; flex-shrink:0;
+}
+.map-tile-banner-close:hover{background:rgba(255,255,255,.15)}
 .map-place-panel{
   position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);
   background:var(--card);border-left:1px solid var(--border);
@@ -1141,6 +1155,35 @@ body.dark .search-target-highlight{
   0%,100%{box-shadow:0 0 0 0 rgba(224,57,90,0); background-color:transparent}
   20%{box-shadow:0 0 0 4px rgba(224,57,90,.45); background-color:rgba(255,235,150,.10)}
   60%{box-shadow:0 0 0 6px rgba(224,57,90,.28); background-color:rgba(255,235,150,.06)}
+}
+/* <tr> rows are clipped by overflow:hidden on .section-card / .section-body /
+   .data-table, so outline gets cut off at first/last rows. Use inset box-shadow
+   on <td> cells instead (paints on the cells, not the row, escaping the clip). */
+tr.search-target-highlight > td{
+  background:rgba(188,0,45,.08);
+  box-shadow:inset 0 3px 0 rgba(188,0,45,.55), inset 0 -3px 0 rgba(188,0,45,.55);
+  animation:searchTargetPulseRow 2.4s ease-out 0s 2;
+}
+tr.search-target-highlight > td:first-child{
+  box-shadow:inset 3px 0 0 rgba(188,0,45,.55), inset 0 3px 0 rgba(188,0,45,.55), inset 0 -3px 0 rgba(188,0,45,.55);
+}
+tr.search-target-highlight > td:last-child{
+  box-shadow:inset -3px 0 0 rgba(188,0,45,.55), inset 0 3px 0 rgba(188,0,45,.55), inset 0 -3px 0 rgba(188,0,45,.55);
+}
+body.dark tr.search-target-highlight > td{
+  background:rgba(224,57,90,.18);
+  box-shadow:inset 0 3px 0 rgba(224,57,90,.55), inset 0 -3px 0 rgba(224,57,90,.55);
+}
+body.dark tr.search-target-highlight > td:first-child{
+  box-shadow:inset 3px 0 0 rgba(224,57,90,.55), inset 0 3px 0 rgba(224,57,90,.55), inset 0 -3px 0 rgba(224,57,90,.55);
+}
+body.dark tr.search-target-highlight > td:last-child{
+  box-shadow:inset -3px 0 0 rgba(224,57,90,.55), inset 0 3px 0 rgba(224,57,90,.55), inset 0 -3px 0 rgba(224,57,90,.55);
+}
+@keyframes searchTargetPulseRow{
+  0%,100%{ background:transparent; }
+  20%{ background:rgba(255,235,150,.18); }
+  60%{ background:rgba(188,0,45,.10); }
 }
 
 /* ──────── PDF SECTION PICKER DIALOG ──────── */
