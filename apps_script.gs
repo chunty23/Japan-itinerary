@@ -12,6 +12,7 @@
  */
 
 const SHEET_ID = '1vBAilO53g5teNXc3IisZ2-22_JfcPi7wiaMG-bFxCnM';
+const SHARED_TOKEN = 'j2026-trip-add-9Hvm4kQp';  // anti-spam only — public in client JS; rotate by changing here AND in index.html, then redeploy script.
 const TABS = ['Places', 'Bookings', 'Transport', 'Day_Items'];
 
 function doGet(e) {
@@ -30,6 +31,9 @@ function doPost(e) {
     const body = JSON.parse(e.postData.contents || '{}');
     const type = String(body.type || '').trim();
     const row  = body.row || {};
+    if (typeof body.token !== 'string' || body.token !== SHARED_TOKEN) {
+      return jsonResponse_({ ok: false, error: 'Unauthorized' });
+    }
     if (TABS.indexOf(type) < 0) {
       return jsonResponse_({ ok: false, error: 'Unknown type: ' + type });
     }
@@ -58,9 +62,15 @@ function readTab_(ss, name) {
   const range = sheet.getDataRange().getValues();
   if (range.length < 2) return [];
   const headers = range[0];
+  // PII columns stripped from anonymous GET responses. Server still records them.
+  const PUBLIC_DENY = ['added_by_email', 'confirmation', 'reference'];
   return range.slice(1).map(r => {
     const obj = {};
-    headers.forEach((h, i) => { obj[h] = r[i]; });
+    headers.forEach((h, i) => {
+      const key = String(h || '').toLowerCase().trim();
+      if (PUBLIC_DENY.indexOf(key) >= 0) return;
+      obj[h] = r[i];
+    });
     return obj;
   }).filter(r => {
     const s = String(r.status || '').toLowerCase();

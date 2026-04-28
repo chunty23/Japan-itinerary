@@ -2,6 +2,15 @@
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 const esc = s => (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const safeUrl = u => {
+  if (u == null) return '#';
+  const s = String(u).trim();
+  if (!s) return '#';
+  if (/^\/\//.test(s)) return '#';
+  if (!/^(https?:|mailto:|tel:|\/|#)/i.test(s)) return '#';
+  return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+};
+window.safeUrl = safeUrl;
 const nl2br = s => esc(s||'').replace(/\n/g,'<br>');
 const nl2li = s => (s||'').split('\n').filter(l=>l.trim()).map(l=>'<li>'+linkify(esc(l))+'</li>').join('');
 const linkify = s => s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
@@ -526,7 +535,7 @@ function dayDetailsHTML(d){
   if (d.hotel) {
     html += `<div class="detail-section"><div class="detail-label">🏨 Hotel</div><div class="detail-text">${nl2br(d.hotel)}</div>`;
     if (d.hotel_url) {
-      html += `<div class="day-actions"><a class="day-action-btn" href="${esc(d.hotel_url)}" target="_blank" rel="noopener">📍 Map</a></div>`;
+      html += `<div class="day-actions"><a class="day-action-btn" href="${safeUrl(d.hotel_url)}" target="_blank" rel="noopener">📍 Map</a></div>`;
     }
     html += `</div>`;
   }
@@ -602,7 +611,7 @@ function renderBookings(){
           ${b.source?`<div class="b-source">Source: ${esc(b.source)}</div>`:''}
         </div>
         <div class="booking-actions">
-          ${b.url?`<a class="day-action-btn" href="${esc(b.url)}" target="_blank" rel="noopener">📍 Open</a>`:''}
+          ${b.url?`<a class="day-action-btn" href="${safeUrl(b.url)}" target="_blank" rel="noopener">📍 Open</a>`:''}
         </div>
       </div>`;
     });
@@ -829,8 +838,8 @@ function openPlacePanel(idx){
   const mapsUrl = p.url || `https://www.google.com/maps/search/?api=1&query=${query}`;
   const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${query}`;
   $('#mppActions').innerHTML = `
-    <a class="mpp-action primary" href="${esc(mapsUrl)}" target="_blank" rel="noopener">Open in Google Maps ↗</a>
-    <a class="mpp-action" href="${esc(dirUrl)}" target="_blank" rel="noopener">Directions →</a>
+    <a class="mpp-action primary" href="${safeUrl(mapsUrl)}" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+    <a class="mpp-action" href="${safeUrl(dirUrl)}" target="_blank" rel="noopener">Directions →</a>
   `;
 
   $('#mppPanel').classList.add('open');
@@ -1026,7 +1035,7 @@ function renderICN(){
     sections[s].push(r);
   });
   Object.entries(sections).forEach(([sec, list]) => {
-    html += `<div class="section-card open"><div.section-header" onclick="toggleOpen(this.parentElement)">${esc(sec)} <span class="shicon">▾</span></div><div class="section-body"><div class="section-inner">`;
+    html += `<div class="section-card open"><div class="section-header" onclick="toggleOpen(this.parentElement)">${esc(sec)} <span class="shicon">▾</span></div><div class="section-body"><div class="section-inner">`;
     list.forEach(row => {
       if (Array.isArray(row.data)) {
         html += `<div class="tip-card"><div class="tip-icon">🛍️</div><div class="tip-text">${row.data.filter(Boolean).map(x=>nl2br(x)).join(' · ')}</div></div>`;

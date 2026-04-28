@@ -138,7 +138,7 @@
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ type, row })
+      body: JSON.stringify({ type, row, token: window.JAPAN2026_SHARED_TOKEN || '' })
     });
     const json = await res.json();
     if (!json.ok) throw new Error(json.error || 'Save failed');
@@ -321,6 +321,12 @@
     m.querySelector('#extrasSubmit').addEventListener('click', async () => {
       const submitBtn = m.querySelector('#extrasSubmit');
       const status = m.querySelector('#extrasStatus');
+      const ident = getIdentity();
+      if (!ident || !ident.name || !ident.email){
+        status.textContent = 'You\'re no longer signed in. Click "Sign in as someone else" below.';
+        status.className = 'extras-status err';
+        return;
+      }
       const form = m.querySelector('#extrasForm');
       const row = collectForm(currentType, form);
       const err = validate(currentType, row);
@@ -625,7 +631,7 @@
 
   function collectForm(type, form){
     const v = id => (form.querySelector('#'+id) && form.querySelector('#'+id).value || '').trim();
-    const ident = getIdentity() || { name: 'Anonymous', email: '' };
+    const ident = getIdentity() || { name: '', email: '' };
     const addedBy = ident.name;
     const addedByEmail = ident.email;
     if (type === 'Places'){
@@ -737,7 +743,7 @@
             if (it.time) parts.push(esc(String(it.time)));
             if (it.section) parts.push(esc(String(it.section)));
             const meta = parts.length ? `<span class="ex-day-meta">${parts.join(' \u00b7 ')}</span>` : '';
-            const link = it.google_url ? ` <a class="ex-day-link" href="${esc(it.google_url)}" target="_blank" rel="noopener">Open in Maps \u2197</a>` : '';
+            const link = it.google_url ? ` <a class="ex-day-link" href="${window.safeUrl(it.google_url)}" target="_blank" rel="noopener">Open in Maps \u2197</a>` : '';
             const note = it.notes ? `<div class="ex-day-note">${esc(it.notes)}</div>` : '';
             const who  = it.who ? ` \u00b7 ${esc(it.who)}` : '';
             const by   = it.added_by ? `<span class="added-by-tag">${esc(it.added_by)}</span>` : '';
