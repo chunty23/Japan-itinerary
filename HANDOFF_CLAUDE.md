@@ -1,15 +1,15 @@
 # Japan 2026 Family Itinerary — Engineering Handoff
 
 > **Purpose:** Hand the entire project off to a Claude (or other AI) coding
-> assistant working from **GitLab + Netlify** with no prior context. Read this
+> assistant working from **GitHub + Netlify** with no prior context. Read this
 > top-to-bottom before making the first code change.
 >
 > **Maintainer of record:** Charlie (Kyle's husband) — lead trip planner and
 > primary editor of the live site.
 >
-> **Previous workflow:** GitHub (`chunty23/Japan-itinerary`) → Netlify auto-deploy.
-> **New workflow:** GitLab (TBD repo URL) → Netlify auto-deploy. Functionally
-> identical — only the git remote and the auth pattern change.
+> **Workflow:** GitHub (`chunty23/Japan-itinerary`) → Netlify auto-deploy from
+> `main`. No PR workflow — push directly to `main` (single focused commits so
+> `git revert <sha>` is a one-liner).
 
 ---
 
@@ -335,8 +335,7 @@ cp config.js config.local.js
 # config.local.js is loaded with onerror="this.remove()" so missing file is fine
 ```
 
-`config.local.js` should be in `.gitignore` (verify when you set up the GitLab
-clone).
+`config.local.js` should be in `.gitignore` (already configured in the repo).
 
 ---
 
@@ -380,24 +379,6 @@ twice in 2026-04 — see commits `faa0e4b`, `5a50a0d`.
   If you mark it secret, Netlify's secret-scan flags it (it ends up in shipped
   client JS by design) and the build fails.
 - If you rotate the key, also update the Cloud Console referrer list.
-
-### Migrating to GitLab
-
-1. Create the GitLab project (private).
-2. Push the existing repo: `git remote set-url origin <gitlab-url> && git push -u origin main`.
-3. In Netlify: **Site settings → Build & deploy → Continuous deployment →
-   Linked repository → Edit settings**. Choose GitLab, authorize, point to
-   the new project, branch `main`. Build command and publish dir stay the same.
-4. Confirm `GOOGLE_MAPS_API_KEY` env var is still set (it should survive the
-   repo swap, but verify).
-5. Push a no-op commit to `main` to trigger the first GitLab-sourced deploy.
-6. Verify the deploy at the same Netlify URL — it doesn't change.
-
-**For Claude (or any AI) to push to GitLab from a subagent / automation:**
-follow whatever connector or PAT-based auth pattern the new environment
-provides. The previous pattern was `gh` CLI with `api_credentials=["github"]`;
-the GitLab equivalent will be a project access token or `glab` CLI. Don't
-hard-code tokens — surface them through environment-level credentials.
 
 ---
 
@@ -545,8 +526,8 @@ ebf2da8 Phrasebook +83 (kanji-focused), PDF export, Today auto-scroll, +65 place
 
 | Service                | What it's for                                       | Credentials |
 | ---------------------- | --------------------------------------------------- | ----------- |
-| **Netlify**            | Hosting + auto-deploy from GitLab                   | Site ID `cda9b9c3-65fc-4598-96e5-a5c87e1d5dfa` |
-| **GitLab**             | Source repo (NEW — replacing GitHub)                | TBD |
+| **Netlify**            | Hosting + auto-deploy from GitHub                   | Site ID `cda9b9c3-65fc-4598-96e5-a5c87e1d5dfa` |
+| **GitHub**             | Source repo                                          | `chunty23/Japan-itinerary` |
 | **Google Cloud**       | Maps Embed API key                                  | Restricted to netlify domain + localhost |
 | **Google Sheets**      | Backing store for collaborative + Add               | Sheet ID `1vBAilO53g5teNXc3IisZ2-22_JfcPi7wiaMG-bFxCnM` |
 | **Google Apps Script** | Web-app endpoint that reads/writes the sheet       | Deployment URL hard-coded in `index.html` |
@@ -653,28 +634,46 @@ by impact. Pick a batch, ship it as one focused commit, watch the deploy.
 
 ---
 
-## 15a. Connectors available to AI sessions (added 2026-04-28)
+## 15a. Connectors / MCP servers — session-start self-check required
 
-The user has wired up the following connectors at the Claude Code app
-level. Future sessions should see them in their tool registry on session
-start. **Use them** — don't fall back to web fetches or asking the user
-to copy-paste data.
+**Important:** Charlie has enabled the following connectors in the **Claude
+consumer app** (mobile/web at claude.ai → Settings → Connectors): Gmail,
+Google Calendar, Google Drive, Netlify, Spotify, Hugging Face. **These do
+NOT carry over to Claude Code.** Claude consumer app and Claude Code use
+separate plumbing — the consumer app has its own connector layer; Claude
+Code uses MCP (Model Context Protocol) servers configured per-project or
+per-environment.
 
-| Connector | What it unlocks | Likely uses |
-| --------- | --------------- | ----------- |
-| **Netlify** | Trigger deploys, tail build logs, read/write env vars, list deploy history, manage form submissions | Watch the deploy after a push instead of "wait 50s and re-verify"; inspect failed-build logs without copy-paste; rotate `GOOGLE_MAPS_API_KEY` end-to-end (set env var → trigger redeploy) |
-| **Google Calendar** | Read existing events, create new ones, send invites | Generate the 19 day-by-day events from `DATA.days` (date, hotel, agenda, dietary cautions); add booked dining reservations (Chanko Wanko Jun 3, etc.); pre-create transit blocks for shinkansen + Hakone shuttles |
-| **Gmail** | Search inbox for booking confirmations, draft messages | Pull confirmation numbers from the 7 hotel + flight + activity emails into `DATA.bookings`; pre-draft the "trip URL is live" message to the family |
-| **Google Drive** | Read/write the source `Japan 2026 enhanced.xlsx` directly | Run `build_data.py` against the canonical sheet, not a stale local copy; sync changes back; share the printable PDF with the group |
+**At the start of every session**, do a self-check against your tool
+registry and report to Charlie which of these are actually present:
 
-Heuristics for using them well:
-- Before scraping or guessing — try the connector first.
+| Service | What it would unlock | Tool prefix to look for |
+| ------- | -------------------- | ----------------------- |
+| **GitHub** | Repo / PR / issue ops | `mcp__github__*` |
+| **Netlify** | Trigger deploys, tail build logs, read/write env vars, list deploy history | look for any `netlify` / `mcp__netlify__*` |
+| **Google Calendar** | Read events, create the 19 day-by-day trip events from `DATA.days` | look for `calendar` / `gcal` / `mcp__google_calendar__*` |
+| **Gmail** | Pull booking confirmation numbers from inbox into `DATA.bookings` | look for `gmail` / `mcp__gmail__*` |
+| **Google Drive** | Read/write the source `Japan 2026 enhanced.xlsx` directly so `build_data.py` runs against the canonical sheet | look for `drive` / `mcp__google_drive__*` |
+
+If a connector is **present**: use it instead of web-fetching or asking
+Charlie to copy-paste data.
+
+If a connector is **missing**: say so up front in your first message, and
+either (a) work around it (e.g. WebFetch for live-URL spot-checks, ask
+Charlie to relay info from Gmail), or (b) point Charlie at the MCP setup
+flow if they want to wire it in mid-session — Netlify and the Google
+Workspace trio have remote/HTTPS MCP servers that work in Claude Code on
+the web; Spotify and Hugging Face are STDIO-only and require local Claude
+Code CLI. **Never silently work around a missing connector** — surface it
+so Charlie knows the gap.
+
+Heuristics regardless of which connectors are wired:
 - For destructive / external-visible actions (sending emails, creating
   calendar events for everyone, modifying the canonical xlsx) — confirm
-  with the user before executing.
+  with Charlie before executing.
 - The Apps Script + Sheet for collaborative + Add (`apps_script.gs`,
   Sheet ID `1vBAilO53g5teNXc3IisZ2-22_JfcPi7wiaMG-bFxCnM`) is **separate**
-  from the source xlsx. Don't conflate them.
+  from the source `Japan 2026 enhanced.xlsx`. Don't conflate them.
 
 ---
 
@@ -693,7 +692,7 @@ content; this file (HANDOFF_CLAUDE.md) is sufficient for engineering work.
 ☐ Read this file end-to-end.
 ☐ Skim HANDOFF.md for content tone if doing copy work.
 ☐ Memorize the 3 dietary rules (Brady = no egg; Cody/JJ = no seafood/dashi).
-☐ Confirm Netlify is wired to GitLab (push a no-op if uncertain).
+☐ Confirm Netlify is wired to GitHub `chunty23/Japan-itinerary` `main` (push a no-op if uncertain).
 ☐ Start `python3 -m http.server 5000` in repo root.
 ☐ For local Maps preview, hit `?gmapsKey=…` once.
 ☐ When making changes:
@@ -712,4 +711,6 @@ content; this file (HANDOFF_CLAUDE.md) is sufficient for engineering work.
 
 *Last updated: 2026-04-28 by Charlie + Claude Code session (sticky-header
 fix, Netlify secret-scan workaround restored, multi-agent code review punch
-list, connectors documented).*
+list, security Batch A shipped — commit `ba63825`, GitLab-migration content
+removed since we're staying on GitHub, §15a rewritten to require session-
+start connector self-check rather than assume connectors are wired in).*
