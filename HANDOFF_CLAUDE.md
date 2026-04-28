@@ -677,6 +677,54 @@ Heuristics regardless of which connectors are wired:
 
 ---
 
+## 15b. Future enhancements (Charlie's wishlist)
+
+Ideas Charlie has flagged but not yet scheduled. Don't ship without
+explicit confirmation — these are roadmap, not punch list.
+
+### Map: "Locate me" button (on-demand, one-shot)
+
+**Goal:** in the Map tab, a button that asks the browser for the user's
+current location and centers the Leaflet map on it with a marker, so a
+traveler walking around can see which `savedPlaces` pins are nearby.
+
+**Approach (sketch):**
+- Add a button to the existing map toolbar — same row as the city/category
+  filter chips — labelled `📍 Locate me`.
+- On click: `map.locate({setView: true, maxZoom: 15, enableHighAccuracy: true})`.
+  Leaflet emits a `'locationfound'` event with `{latlng, accuracy}`. Drop a
+  blue circle marker (`L.circleMarker`) + accuracy radius circle
+  (`L.circle`). Recenter to `latlng`.
+- On `'locationerror'`: show an inline toast/status message like
+  "Location unavailable; tap pins manually." Same UX shape as the
+  Leaflet-load failure fallback shipped in commit `86bca59`.
+- **One-shot only** (Charlie's call): no `watchPosition`, no continuous
+  tracking. Tap the button again to refresh.
+
+**Constraints (non-negotiable):**
+- Gate behind explicit user click. Do NOT auto-prompt for location on
+  page load or on Map tab switch — that's hostile UX.
+- No persistence. Don't store coords in localStorage. Don't send to any
+  backend. Pure ephemeral, in-memory.
+- HTTPS-only. Netlify already serves over HTTPS so this is satisfied;
+  geolocation API silently fails on `http://` so local dev needs
+  `localhost` (which the API treats as secure).
+- Permission denied → graceful fallback message, don't keep prompting.
+
+**Out of scope for v1 (separate followups):**
+- Live tracking via `watchPosition` (battery drain, more invasive
+  permission UX).
+- "Within 1 km" filter that hides distant pins by haversine — clean
+  composition with city/category filters but a UX decision to make.
+- Compass/heading rotation of the map.
+- Background-location anything (PWA / SW territory; nope).
+
+**Estimated cost:** ~20-30 lines added inside `initMap` in `app.js`,
+plus a button in the toolbar HTML. No new dependencies — Leaflet's
+`map.locate()` is built in.
+
+---
+
 ## 16. The original handoff (HANDOFF.md)
 
 `HANDOFF.md` (in the repo root) is the **content-focused** handoff written
