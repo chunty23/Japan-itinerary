@@ -61,7 +61,7 @@ body.dark{
 /* Set --topbar-h directly in CSS so it includes env(safe-area-inset-top) before JS runs.
    Real measured value is set by JS on load/resize for accuracy. */
 :root{ --topbar-h: calc(env(safe-area-inset-top) + 60px); }
-html{scroll-behavior:smooth; overflow-x:hidden}
+html{scroll-behavior:smooth; overflow-x:clip}
 body{
   font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
   background:var(--bg);color:var(--text);line-height:1.6;
@@ -73,9 +73,12 @@ body{
   padding-bottom:env(safe-area-inset-bottom);
   overscroll-behavior-y:none;
   /* Global guard: never let stray long content force the page to scroll
-     sideways. Tab nav and the map have their own opt-in overflow. */
-  overflow-x:hidden;
-  max-width:100vw;
+     sideways. Tab nav and the map have their own opt-in overflow.
+     IMPORTANT: use `clip`, not `hidden` — `overflow:hidden` on html/body
+     creates a scroll-clip ancestor that breaks `position:sticky` on the
+     toolbar and tab-nav (header just scrolls away like a PDF). `clip`
+     prevents horizontal overflow without that side effect. */
+  overflow-x:clip;
 }
 /* Long words/URLs in cards must wrap, not push out the container. */
 .tab-content, .day-card, .day-details, .container, .next-up, .today-card{
