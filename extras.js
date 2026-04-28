@@ -501,8 +501,12 @@
           <input type="text" class="ex-input" id="exName" placeholder="Booking name *" required />
           <input type="text" class="ex-input" id="exCity" placeholder="City" />
           <div class="ex-grid-2">
-            <input type="datetime-local" class="ex-input" id="exCheckIn" aria-label="Check-in / start (date + time)" placeholder="Check-in / start" />
-            <input type="datetime-local" class="ex-input" id="exCheckOut" aria-label="Check-out / end (date + time)" placeholder="Check-out / end" />
+            <input type="date" class="ex-input" id="exCheckInDate" aria-label="Check-in date" placeholder="Check-in date" />
+            <input type="time" class="ex-input" id="exCheckInTime" aria-label="Check-in time" value="15:00" />
+          </div>
+          <div class="ex-grid-2">
+            <input type="date" class="ex-input" id="exCheckOutDate" aria-label="Check-out date" placeholder="Check-out date" />
+            <input type="time" class="ex-input" id="exCheckOutTime" aria-label="Check-out time" value="11:00" />
           </div>
           <input type="text" class="ex-input" id="exWho" placeholder="Who (e.g. All 7, Kyle & Charlie)" />
           <input type="text" class="ex-input" id="exConfirmation" placeholder="Confirmation #" />
@@ -518,6 +522,28 @@
         el.querySelector('#exPlaceId').value = data.place_id;
         if (!el.querySelector('#exLink').value) el.querySelector('#exLink').value = data.google_url || '';
       });
+      // Sensible time defaults per booking type. User can override.
+      // Hotel: 15:00 in / 11:00 out. Restaurant/Activity/Tour: single start time.
+      const TIME_DEFAULTS = {
+        Hotel:      { in:'15:00', out:'11:00' },
+        Restaurant: { in:'18:00', out:''      },
+        Activity:   { in:'10:00', out:''      },
+        Tour:       { in:'09:00', out:''      },
+        Other:      { in:'',      out:''      }
+      };
+      const exType = el.querySelector('#exType');
+      const exCiTime = el.querySelector('#exCheckInTime');
+      const exCoTime = el.querySelector('#exCheckOutTime');
+      const applyTimeDefaults = () => {
+        const d = TIME_DEFAULTS[exType.value] || TIME_DEFAULTS.Other;
+        exCiTime.value = d.in;
+        exCoTime.value = d.out;
+      };
+      // Initial render: Hotel is BOOKING_TYPES[0], so the value="15:00"/"11:00"
+      // attributes already match. But re-apply via JS so a future reorder of
+      // BOOKING_TYPES doesn't silently desync.
+      applyTimeDefaults();
+      exType.addEventListener('change', applyTimeDefaults);
     }
     else if (type === 'Transport'){
       el.innerHTML = `
@@ -692,11 +718,19 @@
       };
     }
     if (type === 'Bookings'){
+      // Combine the separate date + time inputs into ISO "YYYY-MM-DDTHH:mm" so
+      // mergeIntoData (which expects datetime-local format) can parse it cleanly.
+      // If user hasn't picked a date, leave check_in/check_out empty entirely.
+      const ciDate = v('exCheckInDate');
+      const ciTime = v('exCheckInTime') || '15:00';
+      const coDate = v('exCheckOutDate');
+      const coTime = v('exCheckOutTime') || '11:00';
       return {
         added_by: addedBy, added_by_email: addedByEmail,
         type: v('exType'), name: v('exName'),
         city: v('exCity'),
-        check_in: v('exCheckIn'), check_out: v('exCheckOut'),
+        check_in:  ciDate ? `${ciDate}T${ciTime}` : '',
+        check_out: coDate ? `${coDate}T${coTime}` : '',
         who: v('exWho'), confirmation: v('exConfirmation'),
         link: v('exLink'),
         address: v('exAddress'),

@@ -752,11 +752,16 @@ async function initMap(){
     tiles.on('tileerror', () => {
       tileErrorCount++;
     });
-    // Evaluation rules per expert review:
-    // - If navigator.onLine === false → user is fully offline, show banner immediately.
-    // - After 12s, if zero successes + 3+ errors → CDN/network broken.
-    // - After 12s, if errors >= 6 AND errors > successes*2 → partial CDN failure.
-    // 12s (not 8s) because Carto tiles can legitimately take 5-10s on slow Japan-roaming.
+    // Banner trigger rules — refined after Mac WiFi-off testing showed the
+    // earlier thresholds didn't fire because (a) navigator.onLine reports true
+    // on macOS even with WiFi off when other interfaces are present, and
+    // (b) tileerror events sometimes don't fire fast enough on stalled
+    // requests. New rules, ordered by responsiveness:
+    //   1. If navigator.onLine === false → show immediately (best signal we have).
+    //   2. window 'offline' event fires while map is open → show.
+    //   3. After 5s, if tileLoadCount === 0 → show (regardless of error count;
+    //      if tiles are merely slow, the auto-hide on first tileload dismisses).
+    //   4. After 12s, partial-CDN-fail rule still applies for the half-broken case.
     const showTileBanner = () => {
       if (bannerShown) return;
       bannerShown = true;
@@ -774,14 +779,24 @@ async function initMap(){
       wrap.parentElement.appendChild(banner);
     };
     if (navigator.onLine === false){
-      // Skip the wait — show immediately when known offline.
       setTimeout(showTileBanner, 200);
     }
+    // Listen for live network-loss while the map is open. Stored on mapState
+    // so rerenderActiveTab can remove the listener during map teardown.
+    const onOffline = () => { if (mapState.map) showTileBanner(); };
+    window.addEventListener('offline', onOffline);
+    mapState.offlineHandler = onOffline;
     mapState.tileBannerTimer = setTimeout(() => {
-      if (!mapState.map) return; // map was torn down before timer fired
-      const totalFail = (tileLoadCount === 0 && tileErrorCount >= 3);
+      if (!mapState.map) return;
+      // No successes after 5s is the strongest "tiles broken" signal we have
+      // that doesn't depend on tileerror firing reliably across browsers.
+      if (tileLoadCount === 0) showTileBanner();
+    }, 5000);
+    mapState.tileBannerTimer2 = setTimeout(() => {
+      if (!mapState.map) return;
+      // Partial-CDN-failure check: many errors AND errors dominate successes.
       const partialFail = (tileErrorCount >= 6 && tileErrorCount > tileLoadCount * 2);
-      if (totalFail || partialFail) showTileBanner();
+      if (partialFail) showTileBanner();
     }, 12000);
     tiles.addTo(map);
     mapState.map = map;
@@ -1226,10 +1241,19 @@ window.rerenderActiveTab = function(){
   try {
     if (typeof mapInited !== 'undefined' && mapInited){
       mapInited = false;
-      // Clear any pending tile-error banner timer so it doesn't fire after teardown
+      // Clear any pending tile-error banner timers so they don't fire after teardown
       if (mapState && mapState.tileBannerTimer){
         clearTimeout(mapState.tileBannerTimer);
         mapState.tileBannerTimer = null;
+      }
+      if (mapState && mapState.tileBannerTimer2){
+        clearTimeout(mapState.tileBannerTimer2);
+        mapState.tileBannerTimer2 = null;
+      }
+      // Detach the offline listener too — re-attached on next initMap.
+      if (mapState && mapState.offlineHandler){
+        window.removeEventListener('offline', mapState.offlineHandler);
+        mapState.offlineHandler = null;
       }
       const mapEl = document.getElementById('tab-map');
       if (mapEl) mapEl.innerHTML = '';
