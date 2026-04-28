@@ -418,8 +418,8 @@
   // ── FORM BUILDERS ─────────────────────────────────────────────────────────
   function buildForm(type, el){
     const dayOpts = (window.DATA && DATA.days || [])
-      .filter(d => d.date_iso)
-      .map(d => `<option value="${esc(d.day)}">Day ${esc(d.day)} · ${esc((d.date||'').split('·')[0].trim())} · ${esc((d.city||'').split('\n')[0].replace(/[^\p{L}\p{N} ]+/gu,'').trim())}</option>`)
+      .filter(d => d.date_iso && d.day)
+      .map(d => `<option value="${esc(d.day)}">Day ${esc(d.day)} (${esc((d.date||'').split('·')[0].trim())})</option>`)
       .join('');
     const whoOpts = TRAVELERS.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
 
