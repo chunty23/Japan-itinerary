@@ -1068,11 +1068,12 @@ function renderICN(){
   });
   Object.entries(sections).forEach(([sec, list]) => {
     html += `<div class="section-card open"><div class="section-header" onclick="toggleOpen(this.parentElement)">${esc(sec)} <span class="shicon">▾</span></div><div class="section-body"><div class="section-inner">`;
-    list.forEach(row => {
+    list.forEach((row, i) => {
+      if (!row._sid) row._sid = 'i'+i;
       if (Array.isArray(row.data)) {
-        html += `<div class="tip-card"><div class="tip-icon">🛍️</div><div class="tip-text">${row.data.filter(Boolean).map(x=>nl2br(x)).join(' · ')}</div></div>`;
+        html += `<div class="tip-card" data-sid="icn-${row._sid}"><div class="tip-icon">🛍️</div><div class="tip-text">${row.data.filter(Boolean).map(x=>nl2br(x)).join(' · ')}</div></div>`;
       } else {
-        html += `<div class="tip-card"><div class="tip-icon">🛍️</div><div class="tip-text">${nl2br(JSON.stringify(row))}</div></div>`;
+        html += `<div class="tip-card" data-sid="icn-${row._sid}"><div class="tip-icon">🛍️</div><div class="tip-text">${nl2br(JSON.stringify(row))}</div></div>`;
       }
     });
     html += `</div></div></div>`;
@@ -1173,6 +1174,7 @@ window.rerenderActiveTab = function(){
   try { renderItinerary(); } catch(e){}
   try { renderBookings(); } catch(e){}
   try { renderTransport(); } catch(e){}
+  try { renderICN(); } catch(e){}
   // Map: invalidate so it rebuilds with new pins next time it's opened
   try {
     if (typeof mapInited !== 'undefined' && mapInited){

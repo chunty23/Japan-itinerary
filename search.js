@@ -122,6 +122,15 @@
         meta:       [w.area || w.city, w.price].filter(Boolean),
       })),
     },
+    { id:'icn',         label:'ICN Skincare', emoji:'🇰🇷', tab:'icn',
+      build: () => (DATA.icn||[]).filter(r => r && (Array.isArray(r.data) ? r.data.some(x=>x&&String(x).trim()) : true)).map((r,i)=> ({
+        sid:        'icn-'+(r._sid || ('i'+i)),
+        title:      String((Array.isArray(r.data) ? r.data.find(c => c && String(c).trim()) : r.section) || 'ICN note').trim(),
+        desc:       Array.isArray(r.data) ? r.data.filter(Boolean).slice(1).join(' · ') : '',
+        searchText: (Array.isArray(r.data) ? r.data.filter(Boolean).join(' ') : JSON.stringify(r||{})) + ' ' + (r.section||''),
+        meta:       [r.section].filter(Boolean),
+      })),
+    },
   ];
 
   // Build the unified index. Re-run if data changes (rerenderActiveTab).
@@ -368,6 +377,7 @@
   }
 
   // ── Modal open/close ──────────────────────────────────
+  let priorDocOverflow = '';
   function openModal(){
     if (!INDEX.length) buildIndex();
     renderFilters();
@@ -375,12 +385,12 @@
     bd.classList.add('open');
     const inp = $('#searchInput');
     if (inp){ setTimeout(()=> inp.focus(), 60); }
-    document.documentElement.style.overflow = 'hidden';
+    priorDocOverflow = document.documentElement.style.overflow; document.documentElement.style.overflow = 'hidden';
   }
   function closeModal(){
     const bd = $('#searchBackdrop');
     bd.classList.remove('open');
-    document.documentElement.style.overflow = '';
+    document.documentElement.style.overflow = priorDocOverflow;
   }
 
   // ── Wire up ──────────────────────────────────────────
@@ -395,12 +405,20 @@
 
     const inp = $('#searchInput');
     const clear = $('#searchClear');
+    let searchDebounce = null;
+    const flushSearch = () => {
+      if (searchDebounce){ clearTimeout(searchDebounce); searchDebounce = null; runSearch(inp ? inp.value : ''); }
+    };
     if (inp){
       inp.addEventListener('input', () => {
         if (clear) clear.classList.toggle('show', inp.value.length > 0);
-        runSearch(inp.value);
+        if (searchDebounce) clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => { searchDebounce = null; runSearch(inp.value); }, 100);
       });
       inp.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter'){
+          flushSearch();
+        }
         const list = $('#searchResults');
         const btns = list ? list.querySelectorAll('.search-result') : [];
         if (e.key === 'ArrowDown'){

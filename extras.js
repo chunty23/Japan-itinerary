@@ -100,16 +100,29 @@
     // 2. Bookings → DATA.bookings (existing renderer reads this)
     if (Array.isArray(DATA.bookings)){
       DATA.bookings = DATA.bookings.filter(b => !b._extra);
+      // Map extras BOOKING_TYPES (Hotel/Restaurant/Activity/Tour/Other) onto the
+      // 5 renderBookings groups (Flights/Hotels/Trains/Activities/To Book).
+      const TYPE_TO_GROUP = { Hotel:'Hotels', Restaurant:'To Book', Activity:'Activities', Tour:'Activities', Other:'To Book' };
       ex.Bookings.forEach(b => {
+        const checkIn = b.check_in || '';
+        // datetime-local emits "YYYY-MM-DDTHH:mm"; match against the date prefix.
+        const checkInDate = checkIn.slice(0, 10);
+        const dayMatch = checkInDate ? (DATA.days||[]).find(d => d.date_iso === checkInDate) : null;
+        const detailsParts = [];
+        if (b.notes) detailsParts.push(b.notes);
+        if (b.confirmation) detailsParts.push('Conf: ' + b.confirmation);
         DATA.bookings.push({
-          category: b.type || 'Other',
-          name: b.name, city: b.city || '',
-          when: b.check_in || '',
-          who: b.who || '',
-          confirmation: b.confirmation || '',
-          link: b.link || '',
-          notes: b.notes || '',
-          _extra: true, _addedBy: b.added_by || ''
+          category: TYPE_TO_GROUP[b.type] || 'To Book',
+          title:    b.name || '(untitled)',
+          status:   'To Book',
+          day:      dayMatch ? dayMatch.day : '',
+          date:     checkInDate,
+          who:      b.who || '',
+          details:  detailsParts.join('\n'),
+          url:      b.link || '',
+          city:     b.city || '',
+          _extra:   true,
+          _addedBy: b.added_by || ''
         });
       });
     }
@@ -296,9 +309,10 @@
         </div>
       </div>`;
     document.body.appendChild(m);
+    const _priorBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    const close = () => { m.remove(); document.body.style.overflow = ''; };
+    const close = () => { try { m.remove(); } finally { document.body.style.overflow = _priorBodyOverflow; } };
     m.addEventListener('click', e => { if (e.target === m) close(); });
     m.querySelector('.extras-modal-close').addEventListener('click', close);
     m.querySelector('#extrasCancel').addEventListener('click', close);
@@ -591,9 +605,10 @@
           </footer>
         </div>`;
       document.body.appendChild(m);
+      const _priorBodyOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
 
-      const close = (val) => { m.remove(); document.body.style.overflow = ''; resolve(val || null); };
+      const close = (val) => { try { m.remove(); } finally { document.body.style.overflow = _priorBodyOverflow; resolve(val || null); } };
       m.addEventListener('click', e => { if (e.target === m) close(null); });
       m.querySelector('.extras-modal-close').addEventListener('click', () => close(null));
       m.querySelector('#idCancel').addEventListener('click', () => close(null));
