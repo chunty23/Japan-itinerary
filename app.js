@@ -556,7 +556,7 @@ function renderItinerary(){
     const cityShort = (d.city||'').split('\n')[0];
     const teaser = ((d.highlights||'').split('\n').filter(l=>l.trim())[0]) || '';
     const isToday = i === idx;
-    html += `<div class="day-card ${isToday?'today-highlight':''}" data-day="${esc(String(d.day))}" onclick="toggleOpen(this)">
+    html += `<div class="day-card ${isToday?'today-highlight':''}" data-day="${esc(String(d.day))}" data-sid="day-${esc(String(d.day))}" onclick="toggleOpen(this)">
       <div class="day-card-header">
         <div class="day-num">${esc(d.day)}<small>DAY</small></div>
         <div class="day-info">
@@ -578,6 +578,8 @@ function renderBookings(){
   const groups = ['Flights','Hotels','Trains','Activities','To Book'];
   const colorMap = {'Flights':'badge-flight','Hotels':'badge-hotel','Trains':'badge-train','Activities':'badge-activity','To Book':'badge-tobook'};
   let html = `<div class="tab-header"><h2>✅ Bookings & Confirmations</h2><p>Every confirmed reservation, in one place. Pulled from your inbox &amp; calendar.</p></div>`;
+  // ensure each booking has a stable sid based on its DATA index
+  (DATA.bookings||[]).forEach((b,i)=>{ if(!b._sid) b._sid = 'b'+i; });
   groups.forEach(g => {
     const items = (DATA.bookings||[]).filter(b => b.category === g);
     if (!items.length) return;
@@ -586,8 +588,8 @@ function renderBookings(){
         ${g === 'Flights'?'✈️':g==='Hotels'?'🏨':g==='Trains'?'🚄':g==='Activities'?'🎟️':'📋'} ${esc(g)} <span class="shicon">▾</span></div>
       <div class="section-body"><div class="section-inner" style="padding:0">`;
     items.sort((a,b)=>(a.day||0)-(b.day||0));
-    items.forEach(b => {
-      html += `<div class="booking-row">
+    items.forEach((b,i) => {
+      html += `<div class="booking-row" data-sid="booking-${b._sid}">
         <div class="booking-day"><span class="bd-num">${b.day||'?'}</span>${esc((b.date||'').slice(5))}</div>
         <div class="booking-info">
           <div class="b-title">${esc(b.title)}</div>
@@ -872,7 +874,7 @@ function renderPacking(){
     html += `<div class="packing-cat"><h3>${esc(cat)}</h3><div class="packing-list">`;
     items.forEach(it=>{
       const isChecked = checked[it._idx];
-      html += `<div class="pack-item ${isChecked?'checked':''}" data-idx="${it._idx}">
+      html += `<div class="pack-item ${isChecked?'checked':''}" data-idx="${it._idx}" data-sid="pack-${it._idx}">
         <div class="pack-check">${isChecked?'✓':''}</div>
         <div class="pack-info"><div class="pack-name">${esc(it.item)}</div>${it.note?'<div class="pack-note">'+esc(it.note)+'</div>':''}</div>
       </div>`;
@@ -896,7 +898,8 @@ function renderPacking(){
 function renderPhrasebook(){
   const el = $('#tab-phrasebook');
   const cats = {};
-  (DATA.phrasebook||[]).forEach(p=>{
+  (DATA.phrasebook||[]).forEach((p,i)=>{
+    if (!p._sid) p._sid = 'p'+i;
     if (!cats[p.category]) cats[p.category]=[];
     cats[p.category].push(p);
   });
@@ -904,7 +907,7 @@ function renderPhrasebook(){
   Object.entries(cats).forEach(([cat,items])=>{
     html += `<div class="phrase-cat"><h3>${esc(cat)}</h3>`;
     items.forEach(p=>{
-      html += `<div class="phrase-card" data-ja="${esc(p.ja)}">
+      html += `<div class="phrase-card" data-ja="${esc(p.ja)}" data-sid="phrase-${p._sid}">
         <div class="phrase-en">${esc(p.en)}</div>
         <div class="phrase-ja">${esc(p.ja)}</div>
         <div class="phrase-romaji">${esc(p.romaji)}</div>
@@ -929,6 +932,7 @@ function renderPhrasebook(){
 
 // ── FOOD / ATTRACTIONS / SHOPPING (sectioned grids) ──
 function renderGridTab(tabId, items, title, subtitle, hasBooking){
+  items.forEach((it,i)=>{ if(!it._sid) it._sid = 'i'+i; });
   const el = $('#'+tabId);
   let html = `<div class="tab-header"><h2>${title}</h2><p>${subtitle}</p></div>`;
   html += `<div class="search-wrap"><input type="search" placeholder="Search…" oninput="filterGrid('${tabId}', this.value)"></div>`;
@@ -942,7 +946,7 @@ function renderGridTab(tabId, items, title, subtitle, hasBooking){
     html += `<div class="section-card open"><div class="section-header" onclick="toggleOpen(this.parentElement)">${esc(sec)} <span class="shicon">▾</span></div><div class="section-body"><div class="section-inner"><div class="item-grid">`;
     list.forEach(f => {
       const must = hasBooking && (f.booked||'').toLowerCase()==='yes';
-      html += `<div class="item-card${must?' must-try':''}" data-search="${esc((f.name||'')+' '+(f.desc||'')+' '+(f.city||''))}">`;
+      html += `<div class="item-card${must?' must-try':''}" data-sid="${tabId.replace('tab-','')}-${f._sid}" data-search="${esc((f.name||'')+' '+(f.desc||'')+' '+(f.city||''))}">`;
       html += `<div class="ic-name">${esc(f.name||'')}</div>`;
       if (f.city) html += `<div class="ic-sub">${esc(f.city)}</div>`;
       html += `<div class="ic-badges">`;
@@ -973,7 +977,8 @@ function renderTips(){
   const el = $('#tab-tips');
   let html = `<div class="tab-header"><h2>💡 Tips & Notes</h2><p>${(DATA.tips||[]).length} field-tested tips</p></div>`;
   const sections = {};
-  (DATA.tips||[]).forEach(t => {
+  (DATA.tips||[]).forEach((t,i) => {
+    if (!t._sid) t._sid = 'tip'+i;
     const s = t.section || 'Other';
     if (!sections[s]) sections[s] = [];
     sections[s].push(t);
@@ -981,7 +986,7 @@ function renderTips(){
   Object.entries(sections).forEach(([sec, list])=>{
     html += `<div class="section-card open"><div class="section-header" onclick="toggleOpen(this.parentElement)">${esc(sec)} <span class="shicon">▾</span></div><div class="section-body"><div class="section-inner" style="padding:0">`;
     list.forEach(t=>{
-      html += `<div class="tip-card"><div class="tip-icon">${t.category?(t.category.charAt(0)==='💴'?'💴':'💡'):'💡'}</div><div class="tip-text"><strong>${esc(t.category||'')}</strong> · ${nl2br(t.tip||'')}</div></div>`;
+      html += `<div class="tip-card" data-sid="tip-${t._sid}"><div class="tip-icon">${t.category?(t.category.charAt(0)==='💴'?'💴':'💡'):'💡'}</div><div class="tip-text"><strong>${esc(t.category||'')}</strong> · ${nl2br(t.tip||'')}</div></div>`;
     });
     html += `</div></div></div>`;
   });
@@ -993,7 +998,8 @@ function renderSams(){
   const el = $('#tab-sams');
   let html = `<div class="tab-header"><h2>📖 Sam's Ward Guide</h2><p>Local picks across Tokyo's wards</p></div>`;
   const sections = {};
-  (DATA.wards||[]).forEach(w => {
+  (DATA.wards||[]).forEach((w,i) => {
+    if (!w._sid) w._sid = 'w'+i;
     const s = w.area || w.city || 'Other';
     if (!sections[s]) sections[s] = [];
     sections[s].push(w);
@@ -1001,7 +1007,7 @@ function renderSams(){
   Object.entries(sections).forEach(([area, list])=>{
     html += `<div class="ward-section open"><div class="ward-header" onclick="toggleOpen(this.parentElement)">${esc(area)} (${list.length}) <span class="shicon">▾</span></div><div class="ward-body">`;
     list.forEach(w => {
-      html += `<div class="ward-item">${w.star?'<span class="wi-star">★</span>':'<span class="wi-star" style="opacity:0">·</span>'}<div class="wi-info"><div class="wi-name">${esc(w.name||'')}</div>${w.price?'<div class="wi-meta">'+esc(w.price)+'</div>':''}<div class="wi-desc">${nl2br(w.desc||'')}</div></div></div>`;
+      html += `<div class="ward-item" data-sid="ward-${w._sid}">${w.star?'<span class="wi-star">★</span>':'<span class="wi-star" style="opacity:0">·</span>'}<div class="wi-info"><div class="wi-name">${esc(w.name||'')}</div>${w.price?'<div class="wi-meta">'+esc(w.price)+'</div>':''}<div class="wi-desc">${nl2br(w.desc||'')}</div></div></div>`;
     });
     html += `</div></div>`;
   });
@@ -1039,7 +1045,8 @@ function renderDining(){
   let html = `<div class="tab-header"><h2>🍽️ Group Dining Guide</h2><p>${(DATA.dining||[]).length} restaurants vetted for groups of 7 with Brady (no egg) &amp; Cody/JJ (no seafood)</p></div>`;
   html += `<div class="search-wrap"><input type="search" placeholder="Search restaurants…" oninput="filterGrid('tab-dining', this.value)"></div>`;
   const sections = {};
-  (DATA.dining||[]).forEach(d => {
+  (DATA.dining||[]).forEach((d,i) => {
+    if (!d._sid) d._sid = 'd'+i;
     const s = d.section || 'Other';
     if (!sections[s]) sections[s] = [];
     sections[s].push(d);
@@ -1048,7 +1055,7 @@ function renderDining(){
     html += `<div class="section-card open"><div class="section-header" onclick="toggleOpen(this.parentElement)">${esc(sec)} <span class="shicon">▾</span></div><div class="section-body"><div class="section-inner">`;
     list.forEach(d => {
       const isTop = (d.name||'').includes('⭐') || (d.name||'').includes('TOP') || (d.name||'').includes('BOOKED');
-      html += `<div class="dining-card ${isTop?'top-pick':''} item-card" data-search="${esc((d.name||'')+' '+(d.details||''))}">
+      html += `<div class="dining-card ${isTop?'top-pick':''} item-card" data-sid="dining-${d._sid}" data-search="${esc((d.name||'')+' '+(d.details||''))}">
         <div class="dc-name">${esc(d.name||'')}</div>
         <div class="dc-type">${nl2br(d.type||'')}</div>
         <div class="dc-grid">
