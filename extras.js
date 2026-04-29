@@ -523,13 +523,17 @@
         if (!el.querySelector('#exLink').value) el.querySelector('#exLink').value = data.google_url || '';
       });
       // Sensible time defaults per booking type. User can override.
-      // Hotel: 15:00 in / 11:00 out. Restaurant/Activity/Tour: single start time.
+      // NOTE: iOS Safari's <input type="time"> doesn't visually clear when
+      // .value is set to '' — the picker reverts to the current device time,
+      // which is misleading. So we set explicit non-empty defaults for every
+      // type rather than blank values for "no end time". The OUT time is the
+      // typical end of a booking slot for that activity type.
       const TIME_DEFAULTS = {
-        Hotel:      { in:'15:00', out:'11:00' },
-        Restaurant: { in:'18:00', out:''      },
-        Activity:   { in:'10:00', out:''      },
-        Tour:       { in:'09:00', out:''      },
-        Other:      { in:'',      out:''      }
+        Hotel:      { in:'15:00', out:'11:00' },  // check-in / next-day check-out
+        Restaurant: { in:'18:00', out:'20:00' },  // typical 2-hour reservation slot
+        Activity:   { in:'10:00', out:'12:00' },  // typical 2-hour activity
+        Tour:       { in:'09:00', out:'17:00' },  // typical full-day tour
+        Other:      { in:'12:00', out:'13:00' }   // generic 1-hour placeholder
       };
       const exType = el.querySelector('#exType');
       const exCiTime = el.querySelector('#exCheckInTime');
@@ -544,6 +548,24 @@
       // BOOKING_TYPES doesn't silently desync.
       applyTimeDefaults();
       exType.addEventListener('change', applyTimeDefaults);
+
+      // Prefill date inputs to avoid an iOS Safari trap where the date
+      // picker visually shows today's date but .value is actually empty
+      // until the user actively confirms the picker. Without prefill,
+      // submitting yields check_in='' and the booking renders with no
+      // day/date/time — exactly what bit Charlie's "Test Time 2" test.
+      // Default: today if today is in the trip range, else trip start.
+      const tripDays = ((typeof DATA !== 'undefined' && DATA.days) || [])
+        .filter(d => d.date_iso);
+      const tripStart = tripDays.length ? tripDays[0].date_iso : '';
+      const tripEnd   = tripDays.length ? tripDays[tripDays.length - 1].date_iso : '';
+      const todayIso  = new Date().toISOString().slice(0, 10);
+      const defaultDate = (tripStart && tripEnd && todayIso >= tripStart && todayIso <= tripEnd)
+        ? todayIso : tripStart;
+      const exCiDate = el.querySelector('#exCheckInDate');
+      const exCoDate = el.querySelector('#exCheckOutDate');
+      if (exCiDate && !exCiDate.value && defaultDate) exCiDate.value = defaultDate;
+      if (exCoDate && !exCoDate.value && defaultDate) exCoDate.value = defaultDate;
     }
     else if (type === 'Transport'){
       el.innerHTML = `
