@@ -766,7 +766,7 @@ async function initMap(){
       if (bannerShown) return;
       bannerShown = true;
       const wrap = document.getElementById('mapEnhanced');
-      if (!wrap || !wrap.parentElement) return;
+      if (!wrap) return;
       const banner = document.createElement('div');
       banner.id = 'mapTileBanner';
       banner.setAttribute('role', 'status');
@@ -776,7 +776,10 @@ async function initMap(){
         banner.remove();
         bannerShown = false;
       });
-      wrap.parentElement.appendChild(banner);
+      // Attach inside #mapEnhanced (Leaflet container, position:relative) so
+      // the banner only spans the map column, not the entire .map-layout
+      // (which on desktop also contains the .map-list aside).
+      wrap.appendChild(banner);
     };
     if (navigator.onLine === false){
       setTimeout(showTileBanner, 200);

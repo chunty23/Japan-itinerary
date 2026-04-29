@@ -142,7 +142,10 @@
         DATA.bookings.push({
           category: TYPE_TO_GROUP[b.type] || 'To Book',
           title:    b.name || '(untitled)',
-          status:   'To Book',
+          // status reflects the user's "Booked?" checkbox at submit time.
+          // String 'yes' is what extras.js writes; readback may be a Sheet
+          // boolean coerced to string. Coerce defensively.
+          status:   (String(b.booked || '').toLowerCase() === 'yes' || b.booked === true) ? 'Booked' : 'To Book',
           day:      dayMatch ? dayMatch.day : '',
           date:     checkInDate,
           time:     timeLabel,
@@ -155,7 +158,16 @@
         });
       });
     }
-    // 3. Transport → DATA.transport
+    // 3. Transport → DATA.transport (always) + DATA.bookings (when mode has a
+    //    matching Bookings group: Flight → Flights, Train/Shinkansen → Trains).
+    //    Charlie's "I added a train booking, but it is not showing up in the
+    //    bookings tab" — Transport rows that ARE bookings should surface there.
+    const TRANSPORT_TO_BOOKING_GROUP = {
+      Flight: 'Flights',
+      Train: 'Trains',
+      Shinkansen: 'Trains'
+      // Bus / Ferry / Taxi / Rental Car / Walk → no Bookings entry (Transport tab only)
+    };
     if (Array.isArray(DATA.transport)){
       DATA.transport = DATA.transport.filter(t => !t._extra);
       ex.Transport.forEach(t => {
@@ -165,6 +177,37 @@
           who: t.who, carrier: t.carrier, ref: t.reference, link: t.link,
           notes: t.notes,
           _extra: true, _addedBy: t.added_by || ''
+        });
+      });
+    }
+    if (Array.isArray(DATA.bookings)){
+      ex.Transport.forEach(t => {
+        const group = TRANSPORT_TO_BOOKING_GROUP[t.mode];
+        if (!group) return; // skip non-bookable transport modes
+        const departDate = String(t.depart_date || '').slice(0, 10);
+        const dayMatch = departDate ? (DATA.days||[]).find(d => d.date_iso === departDate) : null;
+        const tDep = (String(t.depart_time || '').match(/(\d{2}:\d{2})/) || [,''])[1];
+        const tArr = (String(t.arrive_time || '').match(/(\d{2}:\d{2})/) || [,''])[1];
+        let timeLabel = '';
+        if (tDep && tDep !== '00:00') timeLabel = tDep;
+        if (tArr && tArr !== '00:00') timeLabel = timeLabel ? `${timeLabel} → ${tArr}` : tArr;
+        const detailsParts = [];
+        if (t.from || t.to) detailsParts.push(`${t.from || '?'} → ${t.to || '?'}`);
+        if (t.carrier) detailsParts.push(t.carrier);
+        if (t.reference) detailsParts.push('Ref: ' + t.reference);
+        if (t.notes) detailsParts.push(t.notes);
+        DATA.bookings.push({
+          category: group,
+          title:    `${t.mode}: ${t.from || '?'} → ${t.to || '?'}`,
+          status:   (String(t.booked || '').toLowerCase() === 'yes' || t.booked === true) ? 'Booked' : 'To Book',
+          day:      dayMatch ? dayMatch.day : '',
+          date:     departDate,
+          time:     timeLabel,
+          who:      t.who || '',
+          details:  detailsParts.join('\n'),
+          url:      t.link || '',
+          _extra:   true,
+          _addedBy: t.added_by || ''
         });
       });
     }
@@ -512,6 +555,7 @@
           <input type="text" class="ex-input" id="exConfirmation" placeholder="Confirmation #" />
           <input type="url" class="ex-input" id="exLink" placeholder="Booking link (optional)" />
           <textarea class="ex-input" id="exNotes" rows="2" placeholder="Notes"></textarea>
+          <label class="ex-checkbox"><input type="checkbox" id="exBooked"> <span>Booked? (auto-checks if you enter a confirmation #)</span></label>
         </div>
         <input type="hidden" id="exLat"><input type="hidden" id="exLng"><input type="hidden" id="exPlaceId"><input type="hidden" id="exAddress">`;
       attachAutocomplete(el.querySelector('#exPacName'), data => {
@@ -566,6 +610,16 @@
       const exCoDate = el.querySelector('#exCheckOutDate');
       if (exCiDate && !exCiDate.value && defaultDate) exCiDate.value = defaultDate;
       if (exCoDate && !exCoDate.value && defaultDate) exCoDate.value = defaultDate;
+
+      // Auto-check "Booked?" when confirmation # gets a value (one-way: once
+      // user manually toggles the checkbox, stop auto-toggling on subsequent typing).
+      const confInput = el.querySelector('#exConfirmation');
+      const bookedBox = el.querySelector('#exBooked');
+      let userTouchedBooked = false;
+      bookedBox.addEventListener('change', () => { userTouchedBooked = true; });
+      confInput.addEventListener('input', () => {
+        if (!userTouchedBooked && confInput.value.trim()) bookedBox.checked = true;
+      });
     }
     else if (type === 'Transport'){
       el.innerHTML = `
@@ -585,7 +639,17 @@
           <input type="text" class="ex-input" id="exReference" placeholder="Reference / seat / booking #" />
           <input type="url" class="ex-input" id="exLink" placeholder="Link (optional)" />
           <textarea class="ex-input" id="exNotes" rows="2" placeholder="Notes"></textarea>
+          <label class="ex-checkbox"><input type="checkbox" id="exBooked"> <span>Booked? (auto-checks if you enter a reference #)</span></label>
         </div>`;
+      // Auto-check "Booked?" when reference # gets a value (one-way: once user
+      // manually toggles the checkbox, stop auto-toggling on subsequent typing).
+      const refInput = el.querySelector('#exReference');
+      const bookedBox = el.querySelector('#exBooked');
+      let userTouchedBooked = false;
+      bookedBox.addEventListener('change', () => { userTouchedBooked = true; });
+      refInput.addEventListener('input', () => {
+        if (!userTouchedBooked && refInput.value.trim()) bookedBox.checked = true;
+      });
     }
     else if (type === 'Day_Items'){
       el.innerHTML = `
@@ -724,6 +788,7 @@
 
   function collectForm(type, form){
     const v = id => (form.querySelector('#'+id) && form.querySelector('#'+id).value || '').trim();
+    const checked = id => !!(form.querySelector('#'+id) && form.querySelector('#'+id).checked);
     const ident = getIdentity() || { name: '', email: '' };
     const addedBy = ident.name;
     const addedByEmail = ident.email;
@@ -757,7 +822,8 @@
         link: v('exLink'),
         address: v('exAddress'),
         lat: v('exLat'), lng: v('exLng'), place_id: v('exPlaceId'),
-        notes: v('exNotes')
+        notes: v('exNotes'),
+        booked: checked('exBooked') ? 'yes' : ''
       };
     }
     if (type === 'Transport'){
@@ -769,7 +835,8 @@
         depart_time: v('exDepartTime'), arrive_time: v('exArriveTime'),
         who: v('exWho'), carrier: v('exCarrier'),
         reference: v('exReference'), link: v('exLink'),
-        notes: v('exNotes')
+        notes: v('exNotes'),
+        booked: checked('exBooked') ? 'yes' : ''
       };
     }
     if (type === 'Day_Items'){
