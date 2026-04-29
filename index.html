@@ -701,10 +701,13 @@ body.dark .mpp-close:hover{background:rgba(255,255,255,.15)}
   .map-list{max-height:320px;order:2}
   #mapEnhanced{height:380px;order:1}
   .map-toolbar{font-size:.7rem}
-  /* Mobile place panel: bottom sheet that slides up */
+  /* Mobile place panel: bottom sheet that slides up. Use 100dvh so the
+     panel fully covers the viewport (excluding browser chrome) — earlier
+     88vh left a 12% gap at the bottom anchor where the underlying
+     Leaflet map showed through, which Charlie reported as a "bad overlay". */
   .map-place-panel{
     width:100vw;left:0;right:0;top:auto;
-    height:88vh;height:88dvh;
+    height:100vh;height:100dvh;
     border-left:none;border-top:1px solid var(--border);
     border-top-left-radius:18px;border-top-right-radius:18px;
     transform:translateY(100%);
